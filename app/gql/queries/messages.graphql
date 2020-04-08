@@ -3,6 +3,7 @@ query messages($cursor: String, $limit: Int) {
     edges {
       id
       text
+      createdAt
       user {
         id
         username

@@ -1,0 +1,17 @@
+<button
+  disabled={{this.moarDisabled}}
+  type="button"
+  class="uk-button uk-button-default"
+  {{on "click" this.fetchMore}}
+>
+  <span class="uk-form-icon" uk-icon="icon: world"></span>
+  MOAR!
+</button>
+<br />
+{{#each this.messages.edges as |msg|}}
+  &lt;{{moment-format msg.createdAt "YYYY-MM-DD HH:mm:ss"}}&gt; {{msg.id
+  }} {{msg.text}}
+  <br />
+{{/each}}
+<hr />
+{{yield}}

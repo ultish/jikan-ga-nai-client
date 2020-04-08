@@ -1,7 +1,6 @@
 import Component from "@glimmer/component";
 import { queryManager } from "ember-apollo-client";
 import ApolloService from "ember-apollo-client/services/apollo";
-import queryMe from "jikan-ga-nai/gql/queries/me.graphql";
 
 import { task } from "ember-concurrency-decorators";
 import { computed, action, get } from "@ember/object";
