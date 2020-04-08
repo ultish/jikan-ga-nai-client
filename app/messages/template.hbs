@@ -1,0 +1,35 @@
+<div class="uk-container uk-container-xlarge">
+  Messages:
+  <table class="uk-table uk-table-divider">
+    <thead>
+      <tr>
+        <th>
+          Method #1
+        </th>
+        <th>
+          Method #2
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>
+          {{#each this.sortedMsgs as |msg|}}
+            {{msg.id}}: {{msg.text}} by {{msg.user.username}}
+            <br />
+          {{/each}}
+        </td>
+        <td>
+          hello
+          {{#each this.model.edges as |m|}}
+            {{m.text}}
+            <br />
+          {{/each}}
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <Input id="text" @value="" class="uk-input" />
+  {{outlet}}
+</div>

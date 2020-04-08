@@ -1,0 +1,40 @@
+<nav uk-navbar class="uk-navbar-container">
+  <div class="uk-navbar-left">
+    <div class="uk-inline">
+      <LinkTo @route="home" @class="uk-navbar-item uk-logo">
+        <span class="uk-form-icon" uk-icon="icon: bolt"></span>
+      </LinkTo>
+    </div>
+    <ul class="uk-navbar-nav">
+      <li class="uk-active">
+        <LinkTo @route="home">
+          Tracker
+        </LinkTo>
+      </li>
+      <li class="uk-parent">
+        <LinkTo @route="messages">
+          Chat
+        </LinkTo>
+      </li>
+    </ul>
+  </div>
+  <div class="uk-navbar-right">
+    {{#if this.authentication.authedMe.username}}
+      <span class="uk-margin-right">
+        <i>
+          {{this.greetings}} {{this.authentication.authedMe.username}}
+        </i>
+      </span>
+    {{/if}}
+    <div class="uk-inline uk-margin-right">
+      <button
+        type="button"
+        class="uk-button uk-button-default"
+        {{on "click" this.logout}}
+      >
+        <span class="uk-form-icon" uk-icon="icon: sign-out"></span>
+        logout
+      </button>
+    </div>
+  </div>
+</nav>

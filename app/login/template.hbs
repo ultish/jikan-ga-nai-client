@@ -1,0 +1,53 @@
+<div
+  class="uk-height-large uk-background-cover uk-flex"
+  uk-parallax="bgy: -200"
+  style={{this.background}}
+  scale="1"
+>
+  <div class="uk-position-center">
+    <h1
+      class="uk-width-1-2@m uk-text-center uk-margin-auto uk-margin-auto-vertical uk-light"
+    >
+      Login
+    </h1>
+    <form class="uk-form-stacked" {{on "submit" this.login}}>
+      <div class="uk-margin-small uk-light">
+        <div class="uk-inline">
+          <span class="uk-form-icon" uk-icon="icon: user"></span>
+          <Input @value={{this.username}} class="uk-input" />
+        </div>
+      </div>
+      <div class="uk-margin-small uk-light">
+        <div class="uk-inline">
+          <span class="uk-form-icon" uk-icon="icon: lock"></span>
+          <Input @value={{this.password}} @type="password" class="uk-input" />
+        </div>
+      </div>
+      <br />
+      <div class="uk-flex uk-flex-column uk-flex-middle">
+        <Input
+          @type="submit"
+          @value="Launch"
+          class="uk-button uk-button-primary uk-flex-none"
+        />
+        <br />
+        <LinkTo @route="signup">
+          Need to create an account?
+        </LinkTo>
+      </div>
+    </form>
+  </div>
+</div>
+
+{{#if this.errors.length}}
+  <div class="uk-flex uk-flex-column uk-flex-middle uk-margin uk-alert-danger">
+    {{! <div uk-alert class="uk-alert-danger"> }}
+    <h3 class="uk-alert-danger">
+      Could not login
+    </h3>
+    {{#each this.errors as |error|}}
+      {{error.message}}<br />
+    {{/each}}
+    {{! </div> }}
+  </div>
+{{/if}}

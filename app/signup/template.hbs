@@ -1,0 +1,75 @@
+<div
+  class="uk-container uk-container-xlarge uk-flex uk-flex-column uk-flex-middle"
+>
+  <form
+    class="uk-form-stacked uk-flex uk-flex-column uk-flex-middle"
+    {{on "submit" this.signup}}
+  >
+    <div>
+      <label class="uk-form-label">
+        Username
+      </label>
+      <div class="uk-form-controls">
+        <div class="uk-inline uk-margin">
+          <span class="uk-form-icon" uk-icon="icon: user"></span>
+          <Input
+            @value={{this.username}}
+            @class="uk-input"
+            @minlength="2"
+            @autofocus="true"
+          />
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="uk-form-label">
+        Password
+      </div>
+      <div class="uk-form-controls">
+        <div class="uk-inline uk-margin">
+          <span class="uk-form-icon" uk-icon="icon: lock"></span>
+          <Input
+            @value={{this.password}}
+            @type="password"
+            @class="uk-input"
+            @minlength="7"
+            @maxlength="42"
+          />
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="uk-form-label">
+        Email
+      </div>
+      <div class="uk-form-controls">
+        <div class="uk-inline uk-margin">
+          <span class="uk-form-icon" uk-icon="icon: mail"></span>
+          <Input @value={{this.email}} @class="uk-input" @type="email" />
+        </div>
+      </div>
+    </div>
+    <Input
+      @type="submit"
+      @value="Create"
+      class="uk-button uk-button-primary uk-flex"
+    />
+  </form>
+
+  {{#if this.errors.length}}
+    <div
+      class="uk-flex uk-flex-column uk-flex-middle uk-margin uk-padding uk-alert-danger"
+    >
+      <h3 class="uk-alert-danger">
+        Could not Create Account
+      </h3>
+      {{#each this.errors as |error|}}
+        {{error.name}}<br />
+        {{#each error.details as |detail|}}
+          {{detail}}
+        {{/each}}
+      {{/each}}
+    </div>
+  {{/if}}
+</div>
+{{outlet}}
