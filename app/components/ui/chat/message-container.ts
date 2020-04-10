@@ -75,7 +75,7 @@ export default class UiChatMessageContainer extends Component<
   get messages(): GetMessages {
     const messages = this.fetchMessages.lastSuccessful?.value;
 
-    console.log("messages computing...");
+    console.log("messages computing...", messages);
     return messages;
   }
 

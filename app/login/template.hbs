@@ -14,13 +14,18 @@
       <div class="uk-margin-small uk-light">
         <div class="uk-inline">
           <span class="uk-form-icon" uk-icon="icon: user"></span>
-          <Input @value={{this.username}} class="uk-input" />
+          <Input @value={{this.username}} class="uk-input" name="username" />
         </div>
       </div>
       <div class="uk-margin-small uk-light">
         <div class="uk-inline">
           <span class="uk-form-icon" uk-icon="icon: lock"></span>
-          <Input @value={{this.password}} @type="password" class="uk-input" />
+          <Input
+            @value={{this.password}}
+            @type="password"
+            class="uk-input"
+            name="password"
+          />
         </div>
       </div>
       <br />

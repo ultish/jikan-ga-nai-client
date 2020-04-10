@@ -7,9 +7,13 @@ import { queryManager } from "ember-apollo-client";
 import signUp from "jikan-ga-nai/gql/mutations/signUp.graphql";
 import { SignUp } from "jikan-ga-nai/interfaces/sign-up";
 import { htmlSafe } from "@ember/string";
+import Authentication from "jikan-ga-nai/services/authentication";
+import { inject as service } from "@ember/service";
 
 export default class Signup extends Controller {
   @queryManager({ service: "apollo" }) apollo!: ApolloService;
+  @service authentication!: Authentication;
+
   @tracked
   username = "";
   @tracked
@@ -56,7 +60,8 @@ export default class Signup extends Controller {
 
       if (success) {
         localStorage.setItem("x-token", success.signUp.token);
-        this.transitionToRoute("home");
+        await this.authentication.loginWithToken(true);
+        await this.transitionToRoute("home");
       }
     } catch (e) {
       console.warn(e);

@@ -17,6 +17,8 @@ export default class Application extends Controller {
 
   onRouteActivate = () => {
     this.greetings = this.availableGreets[Math.floor(Math.random() * 3)];
+
+    // this.authentication.loginWithToken();
   };
 
   @action

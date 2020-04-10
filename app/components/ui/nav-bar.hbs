@@ -19,22 +19,29 @@
     </ul>
   </div>
   <div class="uk-navbar-right">
-    {{#if this.authentication.authedMe.username}}
+    {{#if this.atLogin}}
       <span class="uk-margin-right">
-        <i>
-          {{this.greetings}} {{this.authentication.authedMe.username}}
-        </i>
+        🚀
       </span>
+    {{else}}
+      {{this.me.me.username}} -
+      {{#if this.authentication.authedMe.username}}
+        <span class="uk-margin-right">
+          <i>
+            {{this.greetings}} {{this.authentication.authedMe.username}}
+          </i>
+        </span>
+      {{/if}}
+      <div class="uk-inline uk-margin-right">
+        <button
+          type="button"
+          class="uk-button uk-button-default"
+          {{on "click" this.logout}}
+        >
+          <span class="uk-form-icon" uk-icon="icon: sign-out"></span>
+          logout
+        </button>
+      </div>
     {{/if}}
-    <div class="uk-inline uk-margin-right">
-      <button
-        type="button"
-        class="uk-button uk-button-default"
-        {{on "click" this.logout}}
-      >
-        <span class="uk-form-icon" uk-icon="icon: sign-out"></span>
-        logout
-      </button>
-    </div>
   </div>
 </nav>

@@ -1,9 +1,8 @@
 import Service from "@ember/service";
 import { tracked } from "@glimmer/tracking";
-// import ApolloService from "ember-apollo-client/services/apollo";
-// import Apollo from "jikan-ga-nai/services/apollo";
 import { IUser } from "jikan-ga-nai/interfaces/user";
-import { queryManager } from "ember-apollo-client";
+import { GetMe } from "jikan-ga-nai/interfaces/get-me";
+import { queryManager, getObservable } from "ember-apollo-client";
 import queryMe from "jikan-ga-nai/gql/queries/me.graphql";
 import User from "jikan-ga-nai/models/user";
 
@@ -18,6 +17,8 @@ export default class Authentication extends Service {
 
   @tracked
   token?: string;
+
+  fetchMe?: GetMe;
 
   getToken() {
     if (!this.token) {
@@ -38,7 +39,7 @@ export default class Authentication extends Service {
     this.authedMe = null;
     localStorage.setItem("x-token", "");
 
-    await this.apollo.apolloClient.clearStore();
+    await this.apollo.apolloClient.resetStore();
   }
 
   async login(username: string, password: string) {
@@ -53,42 +54,65 @@ export default class Authentication extends Service {
 
       this.setToken(login.signIn.token);
 
+      const me = login.signIn.user;
+      this.authedMe = new User(me.id, me.username, me.email, me.role);
+
       // TODO: this is a bit odd. Without re-querying apollo, it maintains a connection that
       // isn't logged in. So logging in again here by making a query via the new token will
       // re-create the apollo link but this time with the new token..
-      const me = await this.loginWithToken();
-      return me;
+
+      // refetchQueries doesn't work as the x-token isn't set yet...
+      // so here we want to refresh the cached query for ME
+      // await this.loginWithToken();
+
+      // reset the cache and re-query all existing queries
+      await this.apollo.apolloClient.resetStore();
     } catch (e) {
       console.warn(e);
       throw e;
     }
   }
 
-  async loginWithToken() {
-    const token = this.getToken();
-    if (token) {
-      try {
-        const me: IUser = await this.apollo.query(
-          {
-            query: queryMe,
-            fetchPolicy: "network-only",
-          },
-          "me"
-        );
+  async loginWithToken(reset: boolean = false) {
+    let result = this.fetchMe;
 
+    if (result) {
+      const observable = getObservable(result);
+
+      let refetched = await observable?.refetch();
+      refetched = refetched.data;
+
+      const me = refetched.me;
+      if (me) {
         this.authedMe = new User(me.id, me.username, me.email, me.role);
-        return {
-          me: this.authedMe,
-          testMe: me,
-        };
+      } else {
+        this.authedMe = null;
+      }
+    } else {
+      try {
+        result = await this.apollo.watchQuery({
+          query: queryMe,
+        });
+        this.fetchMe = result;
+
+        const me = result?.me;
+        if (me) {
+          this.authedMe = new User(me.id, me.username, me.email, me.role);
+        } else {
+          this.authedMe = null;
+        }
       } catch (e) {
         this.authedMe = null;
         console.warn("Invalid login...");
         throw e;
       }
-    } else {
-      return null;
     }
+
+    if (reset) {
+      this.apollo.apolloClient.resetStore();
+    }
+    console.log("loginWithToken", result);
+    return result;
   }
 }
 

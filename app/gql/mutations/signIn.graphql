@@ -1,5 +1,11 @@
 mutation signIn($login: String!, $password: String!) {
   signIn(login: $login, password: $password) {
     token
+    user {
+      id
+      username
+      role
+      email
+    }
   }
 }

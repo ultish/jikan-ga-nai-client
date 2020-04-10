@@ -1,5 +1,5 @@
 import Component from "@glimmer/component";
-import { queryManager } from "ember-apollo-client";
+import { queryManager, getObservable } from "ember-apollo-client";
 import ApolloService from "ember-apollo-client/services/apollo";
 
 import { task } from "ember-concurrency-decorators";
@@ -8,6 +8,8 @@ import { inject as service } from "@ember/service";
 import Authentication from "jikan-ga-nai/services/authentication";
 import RouterService from "@ember/routing/router-service";
 import { tracked } from "@glimmer/tracking";
+
+import queryMe from "jikan-ga-nai/gql/queries/me.graphql";
 
 interface UiNavbarArgs {}
 
@@ -19,6 +21,7 @@ export default class UiNavbar extends Component<UiNavbarArgs> {
   @tracked
   greetings = "";
   availableGreets = ["Hello", "Welcome", "こんにちは"];
+  loginObserver?: any;
 
   constructor(owner: unknown, args: UiNavbarArgs) {
     super(owner, args);
@@ -30,6 +33,8 @@ export default class UiNavbar extends Component<UiNavbarArgs> {
   @action
   async logout() {
     await this.authentication.logout();
+
+    // TODO we already clear the cache in logout, why doesn't it update the user name ?
     debugger;
 
     // this also works, but it's strange that i have to call fetchMe after
@@ -40,31 +45,31 @@ export default class UiNavbar extends Component<UiNavbarArgs> {
     this.router.transitionTo("login");
   }
 
+  @tracked
+  test?: any;
+
   @task({ drop: true })
   fetchMe: any = function* (this: UiNavbar) {
-    console.log("task fetch");
-    return yield this.authentication.loginWithToken();
+    const login = yield this.authentication.loginWithToken();
+
+    this.test = login;
+    console.log("task fetch", this.test);
+
+    return login;
   };
 
-  @computed("fetchMe.lastSuccessful.value")
+  @computed("fetchMe.last.value.me.{username,id}")
   get me() {
-    /*
-    nothing actually will recompute this unforunately.
+    console.log(
+      "test",
+      this.fetchMe.last?.value?.me?.username,
+      this.fetchMe.last?.value
+    );
+    return this.fetchMe.last.value;
+  }
 
-    even tho at logout we clear the apollo cache, it's not linked
-    to the object returned from the fetchMe task for some reason.
-    I'm sure if we tried to re-fetch the fetchMe task, it would return 
-    nothing and hence update the username, but that defeats the point.
-
-
-    OR
-    Should we be subscribing to a LOGOUT event instead? and then 
-    subscribe to it here so we know when to refetch???
-    is that inefficient?
-      // seems silly to do this as the logout action just clears the 
-      // x-token and the server side has no other action
-    */
-    console.log("me? ", this.fetchMe.lastSuccessful?.value);
-    return this.fetchMe.lastSuccessful?.value;
+  @computed("router.currentRouteName")
+  get atLogin() {
+    return this.router.currentRouteName === "login";
   }
 }

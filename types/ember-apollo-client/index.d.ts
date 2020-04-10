@@ -14,4 +14,5 @@ export function queryManager<T = ApolloService>(
   opts: Opts
 ): ComputedProperty<T>; // @queryManager({service: 'name'})
 
-export function getObservable(queryResult: object): Function | undefined;
+// Custom type data
+export function getObservable(queryResult: object): any;
