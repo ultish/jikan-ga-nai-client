@@ -19,6 +19,12 @@ export default class AuthRoute extends Route {
       return;
     }
 
+    /*
+      TODO what's the goal here?
+      Check if ME is in the cache, if not, redirect to login?
+      // need to ensure there's only every 1 version of the ME query i think.
+    */
+
     const xToken = localStorage.getItem("x-token");
     if (xToken) {
       try {

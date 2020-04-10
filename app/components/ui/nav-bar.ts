@@ -34,26 +34,12 @@ export default class UiNavbar extends Component<UiNavbarArgs> {
   async logout() {
     await this.authentication.logout();
 
-    // TODO we already clear the cache in logout, why doesn't it update the user name ?
-    debugger;
-
-    // this also works, but it's strange that i have to call fetchMe after
-    // login to "clear" the state. Effectively the computed proprerty acts
-    // as the trigger to the updated "store" value
-    await this.fetchMe.perform();
-
     this.router.transitionTo("login");
   }
-
-  @tracked
-  test?: any;
 
   @task({ drop: true })
   fetchMe: any = function* (this: UiNavbar) {
     const login = yield this.authentication.loginWithToken();
-
-    this.test = login;
-    console.log("task fetch", this.test);
 
     return login;
   };
