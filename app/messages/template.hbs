@@ -18,14 +18,13 @@
       <tr>
         <td>
           {{#each this.sortedMsgs as |msg|}}
-            {{msg.id}}: {{msg.text}} by {{msg.user.username}}
+            {{msg.user.username}}: {{msg.id}}: {{msg.text}}
             <br />
           {{/each}}
         </td>
         <td>
-          hello
           {{#each this.model.edges as |m|}}
-            {{m.text}}
+            {{m.user.username}}: {{m.id}}: {{m.text}}
             <br />
           {{/each}}
         </td>

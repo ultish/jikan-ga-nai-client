@@ -4,12 +4,14 @@ import { queryManager, getObservable } from "ember-apollo-client";
 import ApolloService from "ember-apollo-client/services/apollo";
 
 import { task } from "ember-concurrency-decorators";
-import { computed, action } from "@ember/object";
+import { computed, action, set } from "@ember/object";
 
 import { tracked } from "@glimmer/tracking";
 
 import { GetMessages } from "jikan-ga-nai/interfaces/get-messages";
 import queryMessages from "jikan-ga-nai/gql/queries/messages.graphql";
+import mutateCreateMessage from "jikan-ga-nai/gql/mutations/createMessage.graphql";
+
 import messageCreated from "jikan-ga-nai/gql/subscriptions/message-created.graphql";
 
 interface UiChatMessageContainerArgs {}
@@ -32,6 +34,9 @@ export default class UiChatMessageContainer extends Component<
   observer?: any;
   @tracked
   hasNextPage = false;
+  @tracked
+  text = "";
+  limit = 1;
 
   get moarDisabled() {
     return !this.hasNextPage;
@@ -54,7 +59,7 @@ export default class UiChatMessageContainer extends Component<
         */
         // fetchPolicy: "cache-and-network",
         variables: {
-          limit: 1,
+          limit: this.limit,
           cursor: this.cursor,
         },
       },
@@ -98,7 +103,7 @@ export default class UiChatMessageContainer extends Component<
     this.observer?.fetchMore({
       query: queryMessages,
       variables: {
-        limit: 1,
+        limit: this.limit,
         cursor: this.cursor,
       },
       updateQuery: (previousResult: any, { fetchMoreResult }: any) => {
@@ -124,5 +129,71 @@ export default class UiChatMessageContainer extends Component<
         };
       },
     });
+  }
+
+  @action
+  async createMessage(e: Event) {
+    e.preventDefault();
+
+    const value = await this.apollo.mutate({
+      mutation: mutateCreateMessage,
+      variables: {
+        text: this.text,
+      },
+      update: (cache, result) => {
+        debugger;
+        console.log(queryMessages);
+
+        /*
+        we can read the query from the cache without providing any variables
+        here because we've set the messages.graphql with a @connection 
+        directive that gives the query a stable key in the cache. Because
+        the paramaters in the directive ignore all other fields, any read
+        request from the cache for queryMessages will result in the same 
+        object being returned. 
+
+        This means you can have multiple readQuery/writeQuery components all
+        updating each other and returning the same result.
+        */
+        const cachedMessages: any = cache.readQuery({
+          query: queryMessages,
+        });
+
+        const newMessage = result?.data?.createMessage;
+
+        const currentMessages = cachedMessages?.messages?.edges ?? [];
+
+        // const newCacheMessages = [newMessage].concat(currentMessages);
+        const newCacheMessages = currentMessages.concat(newMessage);
+
+        // set(cachedMessages.messages, "edges", newCache);
+
+        const currentPageInfo = cachedMessages.messages.pageInfo;
+
+        const newCache = {
+          messages: {
+            edges: newCacheMessages,
+            pageInfo: {
+              endCursor: currentPageInfo.endCursor,
+              hasNextPage: currentPageInfo.hasNextPage,
+              __typename: currentPageInfo.__typename,
+            },
+            __typename: cachedMessages.messages.__typename,
+          },
+        };
+
+        // cachedMessages.messages.edges = newCache;
+
+        cache.writeQuery({
+          query: queryMessages,
+          data: newCache,
+        });
+
+        console.log("data updated in cache", newCache);
+        debugger;
+      },
+    });
+
+    this.text = "";
   }
 }

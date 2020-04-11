@@ -53,7 +53,7 @@ export default class Messages extends AuthRoute {
     // from a subscription pov.
     console.log("setup contorller", model);
 
-    model.edges.forEach((msg) => controller.addToCache(msg));
+    model?.edges.forEach((msg) => controller.addToCache(msg));
   }
 
   resetController(
@@ -117,8 +117,11 @@ export default class Messages extends AuthRoute {
     const q = this.apollo.watchQuery(
       {
         query: messages,
-        // notifyOnNetworkStatusChange: true,
-        fetchPolicy: "cache-and-network", //"network-only" //"cache-and-network"
+        variables: {
+          limit: 4,
+        },
+        notifyOnNetworkStatusChange: true,
+        // fetchPolicy: "cache-and-network", //"network-only" //"cache-and-network"
       },
       /**
        * this is the resultsKey param.
@@ -141,11 +144,6 @@ export default class Messages extends AuthRoute {
       "messages"
     ) as Promise<GetMessages>;
 
-    q.then((msgs) => {
-      console.log("model hook", msgs);
-    });
-
-    // this.set("_model", q);
     return q;
   }
 }

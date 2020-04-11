@@ -1,5 +1,5 @@
 query messages($cursor: String, $limit: Int) {
-  messages(cursor: $cursor, limit: $limit) {
+  messages(cursor: $cursor, limit: $limit) @connection(key: "testing") {
     edges {
       id
       text

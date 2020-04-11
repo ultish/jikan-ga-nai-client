@@ -14,7 +14,12 @@
       <div class="uk-margin-small uk-light">
         <div class="uk-inline">
           <span class="uk-form-icon" uk-icon="icon: user"></span>
-          <Input @value={{this.username}} class="uk-input" name="username" />
+          <Input
+            @value={{this.username}}
+            class="uk-input"
+            name="username"
+            @autofocus="true"
+          />
         </div>
       </div>
       <div class="uk-margin-small uk-light">
