@@ -16,3 +16,4 @@ export function queryManager<T = ApolloService>(
 
 // Custom type data
 export function getObservable(queryResult: object): any;
+export function unsubscribe(subscription: object): void;

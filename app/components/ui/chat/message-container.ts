@@ -1,10 +1,12 @@
 import Component from "@glimmer/component";
-import { queryManager, getObservable } from "ember-apollo-client";
+import { queryManager, getObservable, unsubscribe } from "ember-apollo-client";
 
 import ApolloService from "ember-apollo-client/services/apollo";
 
 import { task } from "ember-concurrency-decorators";
-import { computed, action, set } from "@ember/object";
+import { computed, action } from "@ember/object";
+import { sort } from "@ember/object/computed";
+import { isPresent } from "@ember/utils";
 
 import { tracked } from "@glimmer/tracking";
 
@@ -31,12 +33,19 @@ export default class UiChatMessageContainer extends Component<
   }
 
   cursor?: string;
+  getMessagesQuery?: GetMessages;
   observer?: any;
   @tracked
   hasNextPage = false;
   @tracked
   text = "";
   limit = 1;
+
+  willDestroy() {
+    if (this.getMessagesQuery) {
+      unsubscribe(this.getMessagesQuery);
+    }
+  }
 
   get moarDisabled() {
     return !this.hasNextPage;
@@ -66,8 +75,11 @@ export default class UiChatMessageContainer extends Component<
       "messages"
     );
 
+    this.getMessagesQuery = messages;
     this.observer = getObservable(messages);
     this.cursor = messages.pageInfo.endCursor;
+
+    console.log("fetch messages cursor", this.cursor);
 
     this.hasNextPage = messages.pageInfo.hasNextPage;
 
@@ -76,6 +88,14 @@ export default class UiChatMessageContainer extends Component<
     return messages;
   };
 
+  /*
+  currently this needs @computed so that the @sort below will fire.
+  lastSuccessful.value will return nothing at init so the sortedMsgs 
+  returns nothing and requires this computed value to re-calculate
+  for sortedMsgs to recalculate. 
+
+  May be a better way to do this.
+  */
   @computed("fetchMessages.lastSuccessful.value")
   get messages(): GetMessages {
     const messages = this.fetchMessages.lastSuccessful?.value;
@@ -83,6 +103,30 @@ export default class UiChatMessageContainer extends Component<
     console.log("messages computing...", messages);
     return messages;
   }
+
+  /*
+  Interesting, this actually works and fires correctly even though messages.edges is 
+  a Plain array 🤔
+
+  Why I think it works:
+  Because messsages is also a get() function, it gains tracking in Ember. This 
+  tracking will notify others when the array changes and so this computed sort
+  will get notified.
+  */
+  @sort("messages.edges", (a, b) => {
+    console.log("sorting now...");
+
+    const aId = Number.parseInt(a.id);
+    const bId = Number.parseInt(b.id);
+
+    if (aId > bId) {
+      return 1;
+    } else if (aId < bId) {
+      return -1;
+    }
+    return 0;
+  })
+  sortedMsgs!: [any];
 
   /**
    * This function fetches more messages from the server using the
@@ -135,13 +179,16 @@ export default class UiChatMessageContainer extends Component<
   async createMessage(e: Event) {
     e.preventDefault();
 
-    const value = await this.apollo.mutate({
+    if (!isPresent(this.text)) {
+      return;
+    }
+
+    await this.apollo.mutate({
       mutation: mutateCreateMessage,
       variables: {
         text: this.text,
       },
       update: (cache, result) => {
-        debugger;
         console.log(queryMessages);
 
         /*
@@ -164,15 +211,13 @@ export default class UiChatMessageContainer extends Component<
         const currentMessages = cachedMessages?.messages?.edges ?? [];
 
         // const newCacheMessages = [newMessage].concat(currentMessages);
-        const newCacheMessages = currentMessages.concat(newMessage);
-
-        // set(cachedMessages.messages, "edges", newCache);
+        // const newCacheMessages = currentMessages.concat(newMessage);
 
         const currentPageInfo = cachedMessages.messages.pageInfo;
 
         const newCache = {
           messages: {
-            edges: newCacheMessages,
+            edges: [...currentMessages, newMessage],
             pageInfo: {
               endCursor: currentPageInfo.endCursor,
               hasNextPage: currentPageInfo.hasNextPage,
@@ -182,15 +227,12 @@ export default class UiChatMessageContainer extends Component<
           },
         };
 
-        // cachedMessages.messages.edges = newCache;
-
         cache.writeQuery({
           query: queryMessages,
           data: newCache,
         });
 
         console.log("data updated in cache", newCache);
-        debugger;
       },
     });
 

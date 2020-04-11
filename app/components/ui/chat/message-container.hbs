@@ -1,18 +1,28 @@
-<button
-  disabled={{this.moarDisabled}}
-  type="button"
-  class="uk-button uk-button-default"
-  {{on "click" this.fetchMore}}
->
-  <span class="uk-form-icon" uk-icon="icon: world"></span>
-  MOAR!
-</button>
+<div class="uk-inline">
+  <button
+    disabled={{this.moarDisabled}}
+    type="button"
+    class="uk-button uk-button-default"
+    {{on "click" this.fetchMore}}
+  >
+    <span class="uk-form-icon" uk-icon="icon: world"></span>
+    MOAR!
+  </button>
+</div>
 <br />
 {{#each this.messages.edges as |msg|}}
   &lt;{{moment-format
     msg.createdAt
     "YYYY-MM-DD HH:mm:ss"
-  }}&gt; {{msg.user.username}}: {{msg.id}} {{msg.text}}
+  }}&gt; {{msg.user.username}}: [{{msg.id}}] {{msg.text}}
+  <br />
+{{/each}}
+<hr />
+{{#each this.sortedMsgs as |msg|}}
+  &lt;{{moment-format
+    msg.createdAt
+    "YYYY-MM-DD HH:mm:ss"
+  }}&gt; {{msg.user.username}}: [{{msg.id}}] {{msg.text}}
   <br />
 {{/each}}
 <hr />

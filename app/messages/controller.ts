@@ -2,6 +2,7 @@ import Controller from "@ember/controller";
 import { A } from "@ember/array";
 import { sort } from "@ember/object/computed";
 import { Message } from "jikan-ga-nai/interfaces/message";
+import { getObservable } from "ember-apollo-client";
 
 export default class Messages extends Controller {
   constructor() {
@@ -11,10 +12,19 @@ export default class Messages extends Controller {
   // Can define a Message interface and make these use that type instead
   msgCache = A<Message>();
 
+  msgObserver?: any;
+
   onRouteActivate = () => {
     this.msgCache.clear();
     console.log("route activated ", this.msgCache);
+
+    this.msgObserver = getObservable(this.model);
   };
+
+  get isLoading() {
+    // not sure when this is meant to change...
+    return this.msgObserver?.lastResult.loading;
+  }
 
   @sort("msgCache", (a, b) => {
     console.log("sorting now...");
