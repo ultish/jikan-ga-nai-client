@@ -10,14 +10,14 @@
   </button>
 </div>
 <br />
-{{#each this.messages.edges as |msg|}}
+{{!-- {{#each this.messages.edges as |msg|}}
   &lt;{{moment-format
     msg.createdAt
     "YYYY-MM-DD HH:mm:ss"
   }}&gt; {{msg.user.username}}: [{{msg.id}}] {{msg.text}}
   <br />
 {{/each}}
-<hr />
+<hr /> --}}
 {{#each this.sortedMsgs as |msg|}}
   &lt;{{moment-format
     msg.createdAt

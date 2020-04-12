@@ -116,8 +116,6 @@ export default class UiChatMessageContainer extends Component<
   will get notified.
   */
   @sort("messages.edges", (a, b) => {
-    console.log("sorting now...");
-
     const aId = Number.parseInt(a.id);
     const bId = Number.parseInt(b.id);
 
