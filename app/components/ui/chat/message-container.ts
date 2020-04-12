@@ -37,14 +37,15 @@ export default class UiChatMessageContainer extends Component<
   @tracked
   text = "";
 
-  cursor?: string;
-  getMessagesQuery?: GetMessages;
-  observer?: any;
+  cursor: null | string = null;
+  getMessagesQuery: null | GetMessages = null;
+  observer: any = null;
 
   limit = 1;
 
   willDestroy() {
     if (this.getMessagesQuery) {
+      // remove our subscription to the watchQuery
       unsubscribe(this.getMessagesQuery);
     }
   }
@@ -81,41 +82,24 @@ export default class UiChatMessageContainer extends Component<
     this.observer = getObservable(messages);
     this.cursor = messages.pageInfo.endCursor;
 
-    console.log("fetch messages cursor", this.cursor);
-
     this.hasNextPage = messages.pageInfo.hasNextPage;
-
-    console.log("fetch messages computing...");
 
     return messages;
   };
 
   /*
-  currently this needs @computed so that the @sort below will fire.
-  lastSuccessful.value will return nothing at init so the sortedMsgs 
-  returns nothing and requires this computed value to re-calculate
-  for sortedMsgs to recalculate. 
+  This computed sort works because the template file refers to the 
+  key 'sortedMsgs', which in turn refers to 'edges'. 'edges' is a 
+  tracked property because of this, and it gets notified of changes
+  by ember-apollo-client performing Ember.setProperties() against
+  the apollo cached object when getting updates to the cache.
 
-  May be a better way to do this.
+  So no magic here, just Ember tracking properties as it said it 
+  would with it's auto-tracking features, and ember-apollo-client
+  performing the correct 'set' functions that trigger Ember's 
+  reactive code
   */
-  @computed("fetchMessages.lastSuccessful.value")
-  get messages(): GetMessages {
-    const messages = this.fetchMessages.lastSuccessful?.value;
-
-    console.log("messages computing...", messages);
-    return messages;
-  }
-
-  /*
-  Interesting, this actually works and fires correctly even though messages.edges is 
-  a Plain array 🤔
-
-  Why I think it works:
-  Because messsages is also a get() function, it gains tracking in Ember. This 
-  tracking will notify others when the array changes and so this computed sort
-  will get notified.
-  */
-  @sort("messages.edges", (a, b) => {
+  @sort("fetchMessages.lastSuccessful.value.edges", (a, b) => {
     const aId = Number.parseInt(a.id);
     const bId = Number.parseInt(b.id);
 
@@ -208,11 +192,8 @@ export default class UiChatMessageContainer extends Component<
 
         const newMessage = result?.data?.createMessage;
 
+        // use ?? to default values, won't be interpreted until necessary unlike ||
         const currentMessages = cachedMessages?.messages?.edges ?? [];
-
-        // const newCacheMessages = [newMessage].concat(currentMessages);
-        // const newCacheMessages = currentMessages.concat(newMessage);
-
         const currentPageInfo = cachedMessages.messages.pageInfo;
 
         const newCache = {
