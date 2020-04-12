@@ -4,7 +4,7 @@ import { queryManager, getObservable, unsubscribe } from "ember-apollo-client";
 import ApolloService from "ember-apollo-client/services/apollo";
 
 import { task } from "ember-concurrency-decorators";
-import { computed, action, observer } from "@ember/object";
+import { computed, action } from "@ember/object";
 import { sort } from "@ember/object/computed";
 import { isPresent } from "@ember/utils";
 
@@ -16,7 +16,6 @@ import mutateCreateMessage from "jikan-ga-nai/gql/mutations/createMessage.graphq
 
 import messageCreated from "jikan-ga-nai/gql/subscriptions/message-created.graphql";
 
-import { on } from "@ember/object/evented";
 interface UiChatMessageContainerArgs {}
 
 /**
