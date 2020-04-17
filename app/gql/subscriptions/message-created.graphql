@@ -3,6 +3,7 @@ subscription {
     message {
       id
       text
+      createdAt
       user {
         id
         username

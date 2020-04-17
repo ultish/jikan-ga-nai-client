@@ -35,16 +35,16 @@ export default class Messages extends AuthRoute {
     // notify controller for any setup on activate
     controller.onRouteActivate();
 
-    this.messagesCreatedSub = await this.apollo.subscribe(
-      {
-        query: messageCreated,
-      },
-      "messageCreated"
-    );
+    // this.messagesCreatedSub = await this.apollo.subscribe(
+    //   {
+    //     query: messageCreated,
+    //   },
+    //   "messageCreated"
+    // );
 
     // TODO it looks like the subscription only fires an event named "event"
     // and you can't seem to change it?
-    addListener(this.messagesCreatedSub, "event", this.handleEvent);
+    // addListener(this.messagesCreatedSub, "event", this.handleEvent);
 
     // TODO: not ideal either. Basically nothing is using the model hook
     // in the controller as it's not a live array unless the watchQuery
@@ -65,42 +65,19 @@ export default class Messages extends AuthRoute {
   ) {
     super.resetController(controller, isExiting, transition);
 
-    if (isExiting) {
-      removeListener(this.messagesCreatedSub, "event", this.handleEvent);
-    }
+    // if (isExiting) {
+    //   removeListener(this.messagesCreatedSub, "event", this.handleEvent);
+    // }
   }
 
-  handleEvent = (event: any) => {
-    console.log("created", event);
+  // handleEvent = (event: any) => {
+  //   console.log("created", event);
 
-    let controller = this.controller as MessagesController;
+  //   let controller = this.controller as MessagesController;
 
-    controller.addToCache(event.message);
+  //   controller.addToCache(event.message);
 
-    // if (this._model) {
-    //   const observable = getObservable(this._model);
-    //   console.log(observable);
-    //   const result = observable.refetch();
-    //   debugger;
-    // }
-
-    // TODO this re-fetches the entire messages query for 1 subscription
-    // event. not ideal...
-    /**
-     * surely there's a way to update the model with just the payload
-     * we were pushed instead of re-running this entire query!
-     */
-    // await this.apollo.query(
-    //   {
-    //     query: messages,
-    //     fetchPolicy: "network-only"
-    //   },
-    //   "messages"
-    // );
-
-    // without the model using network-only fetchPolicy, it only returns cached results
-    // this.model();
-  };
+  // };
 
   model(): Promise<GetMessages> {
     // watchQuery will update it's results from the Store (apollo cache)

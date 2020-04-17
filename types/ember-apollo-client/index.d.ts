@@ -1,5 +1,6 @@
 import ComputedProperty from "@ember/object/computed";
 import ApolloService from "ember-apollo-client/services/apollo";
+import { ObservableQuery } from "apollo-client/core/ObservableQuery";
 
 interface Opts {
   service: string;
@@ -15,5 +16,5 @@ export function queryManager<T = ApolloService>(
 ): ComputedProperty<T>; // @queryManager({service: 'name'})
 
 // Custom type data
-export function getObservable(queryResult: object): any;
+export function getObservable(queryResult: object): ObservableQuery | null;
 export function unsubscribe(subscription: object): void;

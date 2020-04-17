@@ -2,19 +2,21 @@ import Component from "@glimmer/component";
 import { queryManager, getObservable, unsubscribe } from "ember-apollo-client";
 
 import ApolloService from "ember-apollo-client/services/apollo";
+import { ObservableQuery } from "apollo-client/core/ObservableQuery";
 
 import { task } from "ember-concurrency-decorators";
 import { computed, action } from "@ember/object";
 import { sort } from "@ember/object/computed";
 import { isPresent } from "@ember/utils";
-
+import { addListener, removeListener } from "@ember/object/events";
 import { tracked } from "@glimmer/tracking";
+
+import { Message } from "jikan-ga-nai/interfaces/message";
 
 import { GetMessages } from "jikan-ga-nai/interfaces/get-messages";
 import queryMessages from "jikan-ga-nai/gql/queries/messages.graphql";
 import mutateCreateMessage from "jikan-ga-nai/gql/mutations/createMessage.graphql";
-
-import messageCreated from "jikan-ga-nai/gql/subscriptions/message-created.graphql";
+import subMessageCreated from "jikan-ga-nai/gql/subscriptions/message-created.graphql";
 
 interface UiChatMessageContainerArgs {}
 
@@ -30,6 +32,7 @@ export default class UiChatMessageContainer extends Component<
     super(owner, args);
 
     this.fetchMessages.perform();
+    // this.subscribe();
   }
 
   @tracked
@@ -39,7 +42,8 @@ export default class UiChatMessageContainer extends Component<
 
   cursor: null | string = null;
   getMessagesQuery: null | GetMessages = null;
-  observer: any = null;
+  observer: ObservableQuery | null = null;
+  messagesCreatedSub: any;
 
   limit = 1;
 
@@ -48,10 +52,45 @@ export default class UiChatMessageContainer extends Component<
       // remove our subscription to the watchQuery
       unsubscribe(this.getMessagesQuery);
     }
+    if (this.messagesCreatedSub) {
+      this.messagesCreatedSub.apolloUnsubscribe();
+      // removeListener(this.messagesCreatedSub, "event", this.handleEvent);
+    }
   }
 
-  get moarDisabled() {
-    return !this.hasNextPage;
+  async subscribe(observer: ObservableQuery) {
+    observer.subscribeToMore({
+      document: subMessageCreated,
+      updateQuery: (prev, { subscriptionData }) => {
+        if (!subscriptionData.data) {
+          return prev;
+        }
+
+        const newMsg = subscriptionData.data.messageCreated.message;
+        const prevMsgs = prev.messages.edges;
+        const prevPageInfo = prev.messages.pageInfo;
+        const found = prevMsgs.find((msg: Message) => msg.id === newMsg.id);
+
+        if (found) {
+          // already have this msg
+          return prev;
+        }
+
+        const newCache = {
+          messages: {
+            edges: [newMsg, ...prev.messages.edges],
+            pageInfo: {
+              endCursor: prevPageInfo.endCursor,
+              hasNextPage: prevPageInfo.hasNextPage,
+              __typename: prevPageInfo.__typename,
+            },
+            __typename: prev.messages.__typename,
+          },
+        };
+
+        return newCache;
+      },
+    });
   }
 
   @task({ drop: true })
@@ -80,6 +119,11 @@ export default class UiChatMessageContainer extends Component<
 
     this.getMessagesQuery = messages;
     this.observer = getObservable(messages);
+
+    if (this.observer) {
+      this.subscribe(this.observer);
+    }
+
     this.cursor = messages.pageInfo.endCursor;
 
     this.hasNextPage = messages.pageInfo.hasNextPage;
@@ -196,9 +240,18 @@ export default class UiChatMessageContainer extends Component<
         const currentMessages = cachedMessages?.messages?.edges ?? [];
         const currentPageInfo = cachedMessages.messages.pageInfo;
 
+        const found = currentMessages.find(
+          (msg: Message) => msg.id === newMessage.id
+        );
+
+        let messages = [...currentMessages];
+        if (!found) {
+          messages.pushObject(newMessage);
+        }
+
         const newCache = {
           messages: {
-            edges: [...currentMessages, newMessage],
+            edges: messages,
             pageInfo: {
               endCursor: currentPageInfo.endCursor,
               hasNextPage: currentPageInfo.hasNextPage,
@@ -218,5 +271,9 @@ export default class UiChatMessageContainer extends Component<
     });
 
     this.text = "";
+  }
+
+  get moarDisabled() {
+    return !this.hasNextPage;
   }
 }

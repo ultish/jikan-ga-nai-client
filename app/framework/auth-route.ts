@@ -29,7 +29,7 @@ export default class AuthRoute extends Route {
     if (xToken) {
       try {
         // try to login with the x-token
-        // await await this.authentication.loginWithToken();
+        await this.authentication.loginWithToken();
       } catch (e) {
         console.warn("Invalid login, redirecting...");
         this.transitionTo("login");
