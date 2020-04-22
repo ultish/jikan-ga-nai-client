@@ -10,23 +10,16 @@
   </button>
 </div>
 <br />
-{{!-- {{#each this.messages.edges as |msg|}}
-  &lt;{{moment-format
-    msg.createdAt
-    "YYYY-MM-DD HH:mm:ss"
-  }}&gt; {{msg.user.username}}: [{{msg.id}}] {{msg.text}}
-  <br />
-{{/each}}
-<hr /> --}}
-{{#each this.sortedMsgs as |msg|}}
-  &lt;{{moment-format
-    msg.createdAt
-    "YYYY-MM-DD HH:mm:ss"
-  }}&gt; {{msg.user.username}}: [{{msg.id}}] {{msg.text}}
-  <br />
-{{/each}}
-<hr />
-
+<div uk-overflow-auto>
+  {{#each this.sortedMsgs as |msg|}}
+    &lt;{{moment-format
+      msg.createdAt
+      "YYYY-MM-DD HH:mm:ss"
+    }}&gt; {{msg.user.username}}: [{{msg.id}}] {{msg.text}}
+    <br />
+  {{/each}}
+  <hr />
+</div>
 <form class="uk-flex" {{on "submit" this.createMessage}}>
   <div class="uk-inline uk-flex-1">
     <span class="uk-form-icon" uk-icon="icon: comment"></span>

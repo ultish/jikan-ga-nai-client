@@ -1,0 +1,21 @@
+<div id="pages-tracker" class="uk-container uk-container-xlarge">
+  <div id="tracked-days">
+    Days List
+    <ul>
+      {{#each this.sortedDays as |day|}}
+        <li>
+          {{day.id}} {{day.date}} {{day.mode}}
+        </li>
+      {{/each}}
+    </ul>
+  </div>
+  <div id="track-container">
+    Container
+    <div id="tracked-tasks">
+      tracked tasks
+    </div>
+    <div id="timesheet">
+      timesheet
+    </div>
+  </div>
+</div>

@@ -1,1 +1,40 @@
 @import "ember-uikit";
+
+#pages-tracker {
+  background-color: aquamarine;
+  position: relative;
+
+  #tracked-days {
+    background-color: saddlebrown;
+    width: 250px;
+    height: calc(100vh - 100px);
+    position: absolute;
+    top: 0;
+    left: 0;
+    overflow-y: auto;
+  }
+  #track-container {
+    background-color: seagreen;
+    height: calc(100vh - 100px);
+    position: absolute;
+
+    top: 0;
+    left: 250px;
+    right: 0;
+    overflow: hidden;
+  }
+
+  #tracked-tasks {
+    background-color: seagreen;
+    height: calc(100% - 300px);
+    width: calc(100vw - 250px);
+    background-color: rgb(45, 42, 238);
+    overflow-y: auto;
+  }
+  #timesheet {
+    height: 300px;
+    width: calc(100vw - 250px);
+    background-color: greenyellow;
+    overflow-y: auto;
+  }
+}

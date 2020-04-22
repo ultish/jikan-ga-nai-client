@@ -1,0 +1,14 @@
+query trackedDays($cursor: String, $limit: Int) {
+  trackedDays(cursor: $cursor, limit: $limit)
+    @connection(key: "fetchTrackedDays") {
+    edges {
+      id
+      date
+      mode
+    }
+    pageInfo {
+      endCursor
+      hasNextPage
+    }
+  }
+}

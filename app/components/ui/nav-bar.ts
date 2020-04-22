@@ -1,5 +1,5 @@
 import Component from "@glimmer/component";
-import { queryManager, getObservable } from "ember-apollo-client";
+import { queryManager } from "ember-apollo-client";
 import ApolloService from "ember-apollo-client/services/apollo";
 
 import { task } from "ember-concurrency-decorators";
@@ -8,8 +8,6 @@ import { inject as service } from "@ember/service";
 import Authentication from "jikan-ga-nai/services/authentication";
 import RouterService from "@ember/routing/router-service";
 import { tracked } from "@glimmer/tracking";
-
-import queryMe from "jikan-ga-nai/gql/queries/me.graphql";
 
 interface UiNavbarArgs {}
 

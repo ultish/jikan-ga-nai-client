@@ -11,4 +11,5 @@ Router.map(function () {
   this.route("signup");
   this.route("messages");
   this.route("home", { path: "/" });
+  this.route('tracker');
 });

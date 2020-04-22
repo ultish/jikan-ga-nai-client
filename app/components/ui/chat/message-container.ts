@@ -5,10 +5,9 @@ import ApolloService from "ember-apollo-client/services/apollo";
 import { ObservableQuery } from "apollo-client/core/ObservableQuery";
 
 import { task } from "ember-concurrency-decorators";
-import { computed, action } from "@ember/object";
+import { action } from "@ember/object";
 import { sort } from "@ember/object/computed";
 import { isPresent } from "@ember/utils";
-import { addListener, removeListener } from "@ember/object/events";
 import { tracked } from "@glimmer/tracking";
 
 import { Message } from "jikan-ga-nai/interfaces/message";
@@ -32,7 +31,6 @@ export default class UiChatMessageContainer extends Component<
     super(owner, args);
 
     this.fetchMessages.perform();
-    // this.subscribe();
   }
 
   @tracked
@@ -54,9 +52,10 @@ export default class UiChatMessageContainer extends Component<
     }
     if (this.messagesCreatedSub) {
       this.messagesCreatedSub.apolloUnsubscribe();
-      // removeListener(this.messagesCreatedSub, "event", this.handleEvent);
     }
   }
+
+  // TODO refactor common code
 
   async subscribe(observer: ObservableQuery) {
     observer.subscribeToMore({

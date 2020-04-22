@@ -1,6 +1,9 @@
-<div class="uk-container uk-container-xlarge">
+<div
+  class="uk-container uk-container-xlarge"
+  uk-height-viewport="offset-top: true"
+>
   <Ui::Chat::MessageContainer />
-
+  {{!-- 
   <table class="uk-table uk-table-divider">
     <thead>
       <tr>
@@ -28,8 +31,8 @@
         </td>
       </tr>
     </tbody>
-  </table>
+  </table> --}}
 
-  <Input id="text" @value="" class="uk-input" />
+  {{! <Input id="text" @value="" class="uk-input" /> }}
   {{outlet}}
 </div>
