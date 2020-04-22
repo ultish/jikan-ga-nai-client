@@ -84,15 +84,13 @@ export default class PagesTracker extends Component<PagesTrackerArgs> {
   @sort(
     "fetchTrackedDays.lastSuccessful.value.edges",
     (a: TrackedDay, b: TrackedDay) => {
-      // TODO use dates instead
-      debugger;
-      const aId = Number.parseInt(a.id);
-      const bId = Number.parseInt(b.id);
+      const aId = new Date(a.date).getTime();
+      const bId = new Date(b.date).getTime();
 
       if (aId > bId) {
-        return 1;
-      } else if (aId < bId) {
         return -1;
+      } else if (aId < bId) {
+        return 1;
       }
       return 0;
     }
