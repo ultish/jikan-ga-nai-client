@@ -1,5 +1,9 @@
-<div id="pages-tracker" class="uk-container uk-container-xlarge">
-  <div id="tracked-days">
+<div
+  id="pages-tracker"
+  class="uk-container uk-container-xlarge"
+  local-class="pages-tracker"
+>
+  <div id="tracked-days" local-class="tracked-days">
     Days List
     <ul>
       {{#each this.sortedDays as |day|}}
@@ -9,12 +13,11 @@
       {{/each}}
     </ul>
   </div>
-  <div id="track-container">
-    Container
-    <div id="tracked-tasks">
+  <div id="track-container" local-class="track-container">
+    <div id="tracked-tasks" local-class="tracked-tasks">
       tracked tasks
     </div>
-    <div id="timesheet">
+    <div id="timesheet" local-class="timesheet">
       timesheet
     </div>
   </div>
