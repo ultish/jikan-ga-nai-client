@@ -46,19 +46,21 @@ export default class PagesTracker extends Component<PagesTrackerArgs> {
   calculateScale() {
     const scale = scaleTime();
 
-    const TIMEBLOCK_WIDTH = 15;
+    const TIMEBLOCK_WIDTH = 60;
 
     const availableWidth = this.containerWidth - TRACKED_TASKS_WIDTH;
     const numBlocks = Math.floor(availableWidth / TIMEBLOCK_WIDTH);
     const usedWidth = numBlocks * TIMEBLOCK_WIDTH;
 
-    this.stopTime = this.startTime.clone().add(numBlocks * 15, "minutes");
+    this.stopTime = this.startTime
+      .clone()
+      .add(numBlocks * TIMEBLOCK_WIDTH, "minutes");
 
     scale
       .domain([this.startTime.toDate(), this.stopTime.toDate()])
       .range([0, usedWidth]);
 
-    const ticks = scale.ticks();
+    const ticks = scale.ticks(numBlocks);
 
     this.scale = scale;
     this.ticks = ticks;

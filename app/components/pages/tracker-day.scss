@@ -27,6 +27,7 @@ $sideWidth: 200px;
 
   .tick-hour {
     width: 60px;
+    min-width: 60px;
     height: 50px;
     display: inline-block;
     &:nth-child(odd) {

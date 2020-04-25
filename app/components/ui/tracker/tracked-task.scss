@@ -19,8 +19,8 @@ $tasksWidth: 300px;
 
 .square {
   width: 15px;
+  min-width: 15px;
   height: 20px;
-  // border-right: 1px solid white;
 
   &:nth-child(odd) {
     background: blueviolet;
