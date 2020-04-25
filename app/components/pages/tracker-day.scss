@@ -1,22 +1,49 @@
+$sideWidth: 200px;
+
 .track-container {
   height: calc(100vh - 100px);
   position: absolute;
 
   top: 0;
-  left: 250px;
+  left: $sideWidth;
   right: 0;
   overflow: hidden;
 }
 
-.tracked-tasks {
-  height: calc(100% - 300px);
-  width: calc(100vw - 250px);
+.tracked-tasks-container {
+  height: calc(100% - 100px);
+  width: calc(100vw - #{$sideWidth});
   background-color: rgb(24, 24, 41);
   overflow-y: auto;
+  position: relative;
 }
+
+.tick-container {
+  position: absolute;
+  top: 0;
+  left: 300px;
+  display: flex;
+  flex-direction: row;
+
+  .tick-hour {
+    width: 60px;
+    height: 50px;
+    display: inline-block;
+    &:nth-child(odd) {
+      background-color: burlywood;
+    }
+  }
+}
+.time-container {
+  position: absolute;
+  top: 60px;
+  left: 0;
+  width: 100%;
+}
+
 .timesheet {
-  height: 300px;
-  width: calc(100vw - 250px);
+  height: 100px;
+  width: calc(100vw - #{$sideWidth});
   background-color: rgb(37, 37, 37);
   overflow-y: auto;
 }

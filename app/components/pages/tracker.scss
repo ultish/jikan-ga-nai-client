@@ -3,33 +3,10 @@
 }
 .tracked-days {
   background-color: rgb(19, 18, 18);
-  width: 250px;
+  width: 200px;
   height: calc(100vh - 100px);
   position: absolute;
   top: 0;
   left: 0;
   overflow-y: auto;
 }
-// }
-// .track-container {
-//   height: calc(100vh - 100px);
-//   position: absolute;
-
-//   top: 0;
-//   left: 250px;
-//   right: 0;
-//   overflow: hidden;
-// }
-
-// .tracked-tasks {
-//   height: calc(100% - 300px);
-//   width: calc(100vw - 250px);
-//   background-color: rgb(24, 24, 41);
-//   overflow-y: auto;
-// }
-// .timesheet {
-//   height: 300px;
-//   width: calc(100vw - 250px);
-//   background-color: rgb(37, 37, 37);
-//   overflow-y: auto;
-// }

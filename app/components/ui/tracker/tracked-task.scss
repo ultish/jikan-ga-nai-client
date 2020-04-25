@@ -1,0 +1,28 @@
+$tasksWidth: 300px;
+.tracked-tasks {
+  color: white;
+  background-color: black;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: $tasksWidth;
+}
+.tracked-time {
+  position: absolute;
+  top: 0;
+  left: $tasksWidth;
+  background-color: blue;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+}
+
+.square {
+  width: 15px;
+  height: 20px;
+  // border-right: 1px solid white;
+
+  &:nth-child(odd) {
+    background: blueviolet;
+  }
+}

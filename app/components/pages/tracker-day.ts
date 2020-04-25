@@ -7,95 +7,69 @@ import { ObservableQuery } from "apollo-client/core/ObservableQuery";
 import { task } from "ember-concurrency-decorators";
 import { sort } from "@ember/object/computed";
 import { computed, action, get } from "@ember/object";
-import { inject as service } from "@ember/service";
-import Authentication from "jikan-ga-nai/services/authentication";
-import RouterService from "@ember/routing/router-service";
-import { tracked } from "@glimmer/tracking";
 
-import queryTrackedDays from "jikan-ga-nai/gql/queries/trackedDays.graphql";
-import { GetTrackedDays } from "jikan-ga-nai/interfaces/get-tracked-days";
-import { TrackedDay } from "jikan-ga-nai/interfaces/tracked-day";
+import { scaleTime, ScaleTime } from "d3-scale";
+import jQuery from "jquery";
+import { tracked } from "@glimmer/tracking";
+import moment, { Moment } from "moment";
 
 interface PagesTrackerArgs {
   dayId: number;
 }
 
+const TRACKED_TASKS_WIDTH = 300;
+
 export default class PagesTracker extends Component<PagesTrackerArgs> {
   @queryManager() apollo!: ApolloService;
 
-  // @tracked
-  // hasNextPage = false;
-  // limit = 10;
-  // cursor: null | string = null;
-  // observer: ObservableQuery | null = null;
-  // fetchTrackedDaysQuery: null | GetTrackedDays = null;
+  @tracked containerWidth = 0;
+  @tracked startTime: Moment;
+  @tracked stopTime: Moment;
+  @tracked scale?: ScaleTime<Number, Number>;
+  @tracked ticks?: Date[];
+  tickFormat?: Function;
 
-  // constructor(owner: unknown, args: PagesTrackerArgs) {
-  //   super(owner, args);
-  //   this.fetchTrackedDays.perform();
-  // }
+  constructor(owner: unknown, args: PagesTrackerArgs) {
+    super(owner, args);
+    this.startTime = moment().startOf("day").add(6, "hours");
+    this.stopTime = this.startTime.clone().add(8, "hours");
+  }
 
-  // willDestroy() {
-  //   if (this.fetchTrackedDaysQuery) {
-  //     // remove our subscription to the watchQuery
-  //     unsubscribe(this.fetchTrackedDaysQuery);
-  //   }
-  //   // if (this.messagesCreatedSub) {
-  //   //   this.messagesCreatedSub.apolloUnsubscribe();
-  //   // }
-  // }
+  @action
+  didResize() {
+    const container = jQuery("#tracked-tasks-container");
+    this.containerWidth = container.width() ?? 0;
 
-  // @task({ drop: true })
-  // fetchTrackedDays: any = function* (this: PagesTracker) {
-  //   const trackedDays: GetTrackedDays = yield this.apollo.watchQuery(
-  //     {
-  //       query: queryTrackedDays,
-  //       /*
-  //       by using default fetch policy, it will return cached results
-  //       once the query has been called once (and cache hasn't expired).
+    this.calculateScale();
+  }
 
-  //       Now the benefit of the fetchMore down below is that it will
-  //       update your cached results, so instead of just returning 1
-  //       message like this query would, it returns everything that was
-  //       added to the query result that's in the cache, that was updated
-  //       by the fetchMore function.
-  //       */
-  //       // fetchPolicy: "cache-and-network",
-  //       variables: {
-  //         limit: this.limit,
-  //         cursor: this.cursor,
-  //       },
-  //     },
-  //     "trackedDays"
-  //   );
+  calculateScale() {
+    const scale = scaleTime();
 
-  //   this.fetchTrackedDaysQuery = trackedDays;
-  //   this.observer = getObservable(trackedDays);
+    const TIMEBLOCK_WIDTH = 15;
 
-  //   // if (this.observer) {
-  //   //   this.subscribe(this.observer);
-  //   // }
+    const availableWidth = this.containerWidth - TRACKED_TASKS_WIDTH;
+    const numBlocks = Math.floor(availableWidth / TIMEBLOCK_WIDTH);
+    const usedWidth = numBlocks * TIMEBLOCK_WIDTH;
 
-  //   this.cursor = trackedDays.pageInfo.endCursor;
+    this.stopTime = this.startTime.clone().add(numBlocks * 15, "minutes");
 
-  //   this.hasNextPage = trackedDays.pageInfo.hasNextPage;
+    scale
+      .domain([this.startTime.toDate(), this.stopTime.toDate()])
+      .range([0, usedWidth]);
 
-  //   return trackedDays;
-  // };
+    const ticks = scale.ticks();
 
-  // @sort(
-  //   "fetchTrackedDays.lastSuccessful.value.edges",
-  //   (a: TrackedDay, b: TrackedDay) => {
-  //     const aId = new Date(a.date).getTime();
-  //     const bId = new Date(b.date).getTime();
+    this.scale = scale;
+    this.ticks = ticks;
+    this.tickFormat = scale.tickFormat();
 
-  //     if (aId > bId) {
-  //       return -1;
-  //     } else if (aId < bId) {
-  //       return 1;
-  //     }
-  //     return 0;
-  //   }
-  // )
-  // sortedDays!: [any];
+    console.log(scale);
+  }
+
+  get formattedTicks() {
+    return this.ticks?.map((date) =>
+      this.tickFormat ? this.tickFormat(date) : date
+    );
+  }
 }

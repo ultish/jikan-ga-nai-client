@@ -1,7 +1,20 @@
 <div id="track-container" local-class="track-container">
-  <div id="tracked-tasks" local-class="tracked-tasks">
-    tracked tasks:
-    {{@dayId}}
+  <div
+    id="tracked-tasks-container"
+    local-class="tracked-tasks-container"
+    {{did-resize this.didResize}}
+    {{did-insert this.didResize}}
+  >
+    <div local-class="tick-container">
+      {{#each this.formattedTicks as |tick|}}
+        <div local-class="tick-hour">
+          {{tick}}
+        </div>
+      {{/each}}
+    </div>
+    <div local-class="time-container">
+      <Ui::Tracker::TrackedTask @ticks={{this.ticks}} @scale={{this.scale}} />
+    </div>
   </div>
   <div id="timesheet" local-class="timesheet">
     timesheet
