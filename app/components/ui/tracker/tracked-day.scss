@@ -1,0 +1,15 @@
+.tracked-day {
+  background-color: greenyellow;
+  border-bottom: 1px solid green;
+  cursor: pointer;
+
+  &:hover {
+    background-color: hotpink;
+  }
+
+  &.odd-week {
+    background-color: indianred;
+    color: white;
+    border-color: red;
+  }
+}

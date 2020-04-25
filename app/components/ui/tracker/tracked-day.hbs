@@ -1,0 +1,9 @@
+<div
+  local-class="tracked-day"
+  class={{concat "uk-padding-small " this.classes}}
+  role="button"
+  {{on "click" (fn this.click @day)}}
+>
+  {{moment-format @day.date "YYYY-MM-DD ddd"}}
+  {{yield}}
+</div>

@@ -4,21 +4,18 @@
   local-class="pages-tracker"
 >
   <div id="tracked-days" local-class="tracked-days">
-    Days List
-    <ul>
-      {{#each this.sortedDays as |day|}}
-        <li>
-          {{day.id}} {{day.date}} {{day.mode}}
-        </li>
-      {{/each}}
-    </ul>
+    {{#each this.sortedDays as |day|}}
+      {{!-- {{moment-format day.date "YYYY/MM/DD ddd"}} {{day.mode}} --}}
+      <Ui::Tracker::TrackedDay @day={{day}} />
+    {{/each}}
   </div>
-  <div id="track-container" local-class="track-container">
+  {{yield}}
+  {{! <div id="track-container" local-class="track-container">
     <div id="tracked-tasks" local-class="tracked-tasks">
       tracked tasks
     </div>
     <div id="timesheet" local-class="timesheet">
       timesheet
     </div>
-  </div>
+  </div> }}
 </div>
