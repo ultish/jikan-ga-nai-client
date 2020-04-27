@@ -22,6 +22,7 @@ $tasksWidth: 300px;
   min-width: 15px;
   height: 20px;
   cursor: pointer;
+  opacity: 0.5;
 
   &:nth-child(odd) {
     background: blueviolet;
@@ -42,6 +43,7 @@ $tasksWidth: 300px;
   &:global(.block-selected-add),
   &:global(.block-selected-add-active) {
     transform: scaleY($focusScale);
+    opacity: 1;
   }
   &:global(.block-selected-remove),
   &:global(.block-selected-remove-active) {
@@ -56,8 +58,10 @@ $tasksWidth: 300px;
 
   &:global(.checked) {
     background-color: hotpink;
+    opacity: 1;
   }
   &:hover {
     background: white;
+    opacity: 1;
   }
 }
