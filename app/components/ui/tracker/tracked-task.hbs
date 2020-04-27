@@ -6,12 +6,14 @@
   <div local-class="tracked-time">
     {{#each this.squares as |square|}}
       <div
-        local-class={{concat "square" (if square.checked " checked")}}
+        local-class="square"
         role="button"
         tabindex="0"
         {{on "keyup" (fn this.clickBlock square)}}
         {{on "click" (fn this.clickBlock square)}}
         {{css-transition blockSelected=square.selected}}
+        {{css-transition checked=square.checked}}
+        {{!-- local-class={{concat "square" (if square.checked " checked")}} --}}
       ></div>
     {{/each}}
   </div>

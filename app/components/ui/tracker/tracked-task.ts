@@ -45,6 +45,7 @@ export default class UiTrackedDay extends Component<UiTrackedTaskArgs> {
   @action
   clickBlock(block: TimeBlock, e: KeyboardEvent | MouseEvent) {
     debugger;
+    e.preventDefault;
     if (e instanceof KeyboardEvent) {
       if (e.code === "Space") {
         // made a selection
@@ -57,7 +58,7 @@ export default class UiTrackedDay extends Component<UiTrackedTaskArgs> {
 
           selected.forEach((block) => {
             block.checked = setCheckAll;
-            block.selected = false;
+            // block.selected = false;
           });
           this.lastBlockClicked = null;
         }
