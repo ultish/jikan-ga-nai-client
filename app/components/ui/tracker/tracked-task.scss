@@ -11,7 +11,7 @@ $tasksWidth: 300px;
   position: absolute;
   top: 0;
   left: $tasksWidth;
-  background-color: blue;
+  background-color: grey;
   width: 100%;
   display: flex;
   flex-direction: row;
@@ -21,8 +21,43 @@ $tasksWidth: 300px;
   width: 15px;
   min-width: 15px;
   height: 20px;
+  cursor: pointer;
 
   &:nth-child(odd) {
     background: blueviolet;
+  }
+  &:nth-child(even) {
+    background: red;
+  }
+
+  $focusScale: 1.2;
+
+  &:focus {
+    outline: 1px solid blue;
+    transform: scaleY($focusScale);
+  }
+
+  // using the :global pseudoselector from ember-css-modules as this class is set by ember-css-transitions
+  &:global(.block-selected),
+  &:global(.block-selected-add),
+  &:global(.block-selected-add-active) {
+    transform: scaleY($focusScale);
+  }
+  &:global(.block-selected-remove),
+  &:global(.block-selected-remove-active) {
+    transform: scaleY(1);
+  }
+  &:global(.block-selected-add) {
+    transition: all cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.15s;
+  }
+  &:global(.block-selected-remove) {
+    transition: all cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.1s;
+  }
+
+  &.checked {
+    background-color: hotpink;
+  }
+  &:hover {
+    background: white;
   }
 }

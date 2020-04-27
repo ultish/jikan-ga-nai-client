@@ -1,11 +1,18 @@
-<div {{did-resize this.didResize}}>
+<div {{did-resize this.didResize}} {{on-click-outside this.clearSelections}}>
   IMA TASK
   <div local-class="tracked-tasks">
     asd
   </div>
   <div local-class="tracked-time">
     {{#each this.squares as |square|}}
-      <div local-class="square"></div>
+      <div
+        local-class={{concat "square" (if square.checked " checked")}}
+        role="button"
+        tabindex="0"
+        {{on "keyup" (fn this.clickBlock square)}}
+        {{on "click" (fn this.clickBlock square)}}
+        {{css-transition blockSelected=square.selected}}
+      ></div>
     {{/each}}
   </div>
 </div>

@@ -49,7 +49,7 @@ export default class PagesTracker extends Component<PagesTrackerArgs> {
     const TIMEBLOCK_WIDTH = 60;
 
     const availableWidth = this.containerWidth - TRACKED_TASKS_WIDTH;
-    const numBlocks = Math.floor(availableWidth / TIMEBLOCK_WIDTH);
+    const numBlocks = Math.floor(availableWidth / TIMEBLOCK_WIDTH) - 1;
     const usedWidth = numBlocks * TIMEBLOCK_WIDTH;
 
     this.stopTime = this.startTime

@@ -28,7 +28,7 @@ $sideWidth: 200px;
   .tick-hour {
     width: 60px;
     min-width: 60px;
-    height: 50px;
+    height: calc(100vh - 100px - 100px);
     display: inline-block;
     &:nth-child(odd) {
       background-color: burlywood;
