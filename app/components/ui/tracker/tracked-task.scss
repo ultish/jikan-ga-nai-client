@@ -59,6 +59,13 @@ $tasksWidth: 300px;
   &:global(.checked) {
     background-color: hotpink;
     opacity: 1;
+
+    &:nth-child(odd) {
+      background: #0fc90f;
+    }
+    &:nth-child(even) {
+      background: #15d656;
+    }
   }
   &:hover {
     background: white;
