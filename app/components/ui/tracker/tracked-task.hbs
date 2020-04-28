@@ -3,8 +3,9 @@
   <div local-class="tracked-tasks">
     asd
   </div>
-  <div local-class="tracked-time">
-    {{#each this.squares as |square|}}
+  <AnimatedContainer local-class="tracked-time">
+    {{#animated-each this.squares use=this.transition duration=1000 as |square|
+    }}
       <div
         local-class="square"
         role="button"
@@ -13,8 +14,11 @@
         {{on "click" (fn this.clickBlock square)}}
         {{css-transition blockSelected=square.selected}}
         {{css-transition checked=square.checked}}
-        {{!-- local-class={{concat "square" (if square.checked " checked")}} --}}
-      ></div>
-    {{/each}}
-  </div>
+      >
+        {{#animated-if square.checked use=this.transitionChecked}}
+          <div local-class="block-checked"></div>
+        {{/animated-if}}
+      </div>
+    {{/animated-each}}
+  </AnimatedContainer>
 </div>

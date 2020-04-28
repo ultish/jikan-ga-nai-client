@@ -4,6 +4,10 @@ import moment from "moment";
 import { action, computed } from "@ember/object";
 import { ScaleTime } from "d3-scale";
 import { tracked } from "@glimmer/tracking";
+// @ts-ignore
+import move from "ember-animated/motions/move";
+import { fadeOut, fadeIn } from "ember-animated/motions/opacity";
+import { easeOut, easeIn } from "ember-animated/easings/cosine";
 
 interface UiTrackedTaskArgs {
   day: TrackedDay;
@@ -44,7 +48,6 @@ export default class UiTrackedDay extends Component<UiTrackedTaskArgs> {
 
   @action
   clickBlock(block: TimeBlock, e: KeyboardEvent | MouseEvent) {
-    debugger;
     e.preventDefault;
     if (e instanceof KeyboardEvent) {
       if (e.code === "Space") {
@@ -103,7 +106,7 @@ export default class UiTrackedDay extends Component<UiTrackedTaskArgs> {
       }
     }
 
-    console.log(block, e);
+    // console.log(block, e);s
   }
 
   /**
@@ -127,5 +130,25 @@ export default class UiTrackedDay extends Component<UiTrackedTaskArgs> {
       }
     });
     return blocks;
+  }
+
+  *transition({ keptSprites, removedSprites, insertedSprites }) {
+    keptSprites.forEach(move);
+    insertedSprites.forEach((sprite) => {
+      sprite.startAtPixel({ x: window.innerWidth });
+      move(sprite, { easing: easeOut });
+      fadeIn(sprite);
+    });
+  }
+
+  *transitionChecked({ keptSprites, removedSprites, insertedSprites }) {
+    insertedSprites.forEach((sprite: any) => {
+      fadeIn(sprite, { easing: easeOut, duration: 200 });
+    });
+    removedSprites.forEach((sprite) => {
+      sprite.endAtPixel({ y: 0 });
+      move(sprite, { easing: easeIn });
+      fadeOut(sprite);
+    });
   }
 }

@@ -66,7 +66,7 @@ export default class PagesTracker extends Component<PagesTrackerArgs> {
     this.ticks = ticks;
     this.tickFormat = scale.tickFormat();
 
-    console.log(scale);
+    // console.log(scale);
   }
 
   get formattedTicks() {
