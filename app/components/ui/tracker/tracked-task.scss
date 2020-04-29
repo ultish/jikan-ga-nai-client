@@ -37,10 +37,11 @@ $checkedBorder: #093bdf;
 
   &:focus {
     outline: 1px solid $checkedBorder;
-    transform: scaleY($focusScale);
+    // transform: scaleY($focusScale);
   }
 
   // using the :global pseudoselector from ember-css-modules as this class is set by ember-css-transitions
+  &.block-selected,
   &:global(.block-selected),
   &:global(.block-selected-add),
   &:global(.block-selected-add-active) {

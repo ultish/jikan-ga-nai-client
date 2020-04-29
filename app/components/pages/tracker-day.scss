@@ -30,6 +30,8 @@ $sideWidth: 200px;
     min-width: 60px;
     height: calc(100vh - 100px - 100px);
     display: inline-block;
+    user-select: none;
+    text-align: center;
     &:nth-child(odd) {
       background-color: rgb(240, 240, 240);
     }

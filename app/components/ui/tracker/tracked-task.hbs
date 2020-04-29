@@ -4,21 +4,23 @@
     asd
   </div>
   <AnimatedContainer local-class="tracked-time">
-    {{#animated-each this.squares use=this.transition duration=1000 as |square|
-    }}
+    {{#each this.squares as |square|}}
       <div
-        local-class="square"
+        local-class={{concat "square" (if square.selected " block-selected")}}
         role="button"
         tabindex="0"
-        {{on "keyup" (fn this.clickBlock square)}}
-        {{on "click" (fn this.clickBlock square)}}
-        {{css-transition blockSelected=square.selected}}
-        {{css-transition checked=square.checked}}
+        {{on "keyup" (fn this.keyUp square)}}
+        {{on "click" (fn this.mouseClick square)}}
+        {{on "mousedown" (fn this.mouseDown square)}}
+        {{on "mouseover" (fn this.mouseOver square)}}
+        {{on "mouseleave" (fn this.mouseLeave square)}}
+        {{!-- {{css-transition blockSelected=square.selected}}
+        {{css-transition checked=square.checked}} --}}
       >
         {{#animated-if square.checked use=this.transitionChecked}}
           <div local-class="block-checked"></div>
         {{/animated-if}}
       </div>
-    {{/animated-each}}
+    {{/each}}
   </AnimatedContainer>
 </div>

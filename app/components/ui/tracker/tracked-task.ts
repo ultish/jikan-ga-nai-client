@@ -6,6 +6,7 @@ import { ScaleTime } from "d3-scale";
 import { tracked } from "@glimmer/tracking";
 // @ts-ignore
 import move from "ember-animated/motions/move";
+// @ts-ignore
 import { fadeOut, fadeIn } from "ember-animated/motions/opacity";
 import { easeOut, easeIn } from "ember-animated/easings/cosine";
 
@@ -19,6 +20,9 @@ class TimeBlock {
   @tracked selected = false;
   @tracked checked = false;
   date: Date;
+
+  mouseOver = false;
+  mouseDown = false;
 
   constructor(date: Date) {
     this.date = date;
@@ -47,66 +51,91 @@ export default class UiTrackedDay extends Component<UiTrackedTaskArgs> {
   }
 
   @action
-  clickBlock(block: TimeBlock, e: KeyboardEvent | MouseEvent) {
-    e.preventDefault;
-    if (e instanceof KeyboardEvent) {
-      if (e.code === "Space") {
-        // made a selection
-        const selected = this.squares.filterBy("selected");
-        if (selected.length) {
-          const setCheckAll = !!selected.filter((block) => !block.checked)
-            .length;
-          // if one time block within the selection is not checked, we will
-          // set all time blocks in selection to checked
-
-          selected.forEach((block) => {
-            block.checked = setCheckAll;
-            // block.selected = false;
-          });
-          this.lastBlockClicked = null;
-        }
-      } else if (e.code === "Tab") {
-        this.lastBlockClicked = block;
-        // clear all other selections
-        this.squares.forEach((block) => (block.selected = false));
-        block.selected = true;
-      }
-    } else if (e instanceof MouseEvent) {
-      if (e.shiftKey) {
-        // take the last clicked date, up to current clicked date, and select everything in b/w
-        // don't actually toggle anything yet, but highlight them
-        if (this.lastBlockClicked) {
-          const startIndex = this.squares.indexOf(this.lastBlockClicked);
-          const endIndex = this.squares.indexOf(block);
-
-          let start = startIndex;
-          let end = endIndex;
-          if (startIndex > endIndex) {
-            // going backwards
-            start = endIndex;
-            end = startIndex;
-          }
-
-          for (let i = start; i <= end; i++) {
-            this.squares[i].selected = true;
-          }
-        }
-        // clear the last block
-        this.lastBlockClicked = null;
-      } else {
-        // on mouse click, this currently will toggle the checked state
-        // while also setting up the last block clicked
-
-        this.lastBlockClicked = block;
-        // clear all other selections
-        this.squares.forEach((block) => (block.selected = false));
-
-        // block.selected = true;
-        block.checked = !block.checked;
-      }
+  mouseDown(block: TimeBlock, e: MouseEvent) {
+    // record if they've left-clicked down
+    if (e.buttons === 1) {
+      block.mouseDown = true;
     }
+  }
 
-    // console.log(block, e);s
+  @action
+  mouseLeave(block: TimeBlock, e: MouseEvent) {
+    // if they're leaving and still clicking down, flag box checked
+    // and reset mouseDown, mouseOver
+    if (block.mouseDown && e.buttons === 1) {
+      block.checked = !block.checked;
+    }
+    block.mouseDown = false;
+    block.mouseOver = false;
+  }
+
+  @action
+  mouseOver(block: TimeBlock, e: MouseEvent) {
+    // if we'ver mouse-over and still left-clicking, flag box checked
+    if (!block.mouseOver && e.buttons === 1) {
+      block.mouseOver = true;
+      block.checked = !block.checked;
+    }
+  }
+
+  @action
+  mouseClick(block: TimeBlock, e: MouseEvent) {
+    block.mouseDown = false;
+    if (e.shiftKey) {
+      // take the last clicked date, up to current clicked date, and select everything in b/w
+      // don't actually toggle anything yet, but highlight them
+      if (this.lastBlockClicked) {
+        const startIndex = this.squares.indexOf(this.lastBlockClicked);
+        const endIndex = this.squares.indexOf(block);
+
+        let start = startIndex;
+        let end = endIndex;
+        if (startIndex > endIndex) {
+          // going backwards
+          start = endIndex;
+          end = startIndex;
+        }
+
+        for (let i = start; i <= end; i++) {
+          this.squares[i].selected = true;
+        }
+      }
+      // clear the last block
+      this.lastBlockClicked = null;
+    } else {
+      // on mouse click, this currently will toggle the checked state
+      // while also setting up the last block clicked
+
+      this.lastBlockClicked = block;
+      // clear all other selections
+      this.squares.forEach((block) => (block.selected = false));
+
+      block.checked = !block.checked;
+    }
+  }
+
+  @action
+  keyUp(block: TimeBlock, e: KeyboardEvent) {
+    e.preventDefault;
+    if (e.code === "Space") {
+      // made a selection
+      const selected = this.squares.filterBy("selected");
+      if (selected.length) {
+        const setCheckAll = !!selected.filter((block) => !block.checked).length;
+        // if one time block within the selection is not checked, we will
+        // set all time blocks in selection to checked
+
+        selected.forEach((block) => {
+          block.checked = setCheckAll;
+        });
+        this.lastBlockClicked = null;
+      }
+    } else if (e.code === "Tab") {
+      this.lastBlockClicked = block;
+      // clear all other selections
+      this.squares.forEach((block) => (block.selected = false));
+      block.selected = true;
+    }
   }
 
   /**
@@ -132,20 +161,11 @@ export default class UiTrackedDay extends Component<UiTrackedTaskArgs> {
     return blocks;
   }
 
-  *transition({ keptSprites, removedSprites, insertedSprites }) {
-    keptSprites.forEach(move);
-    insertedSprites.forEach((sprite) => {
-      sprite.startAtPixel({ x: window.innerWidth });
-      move(sprite, { easing: easeOut });
-      fadeIn(sprite);
-    });
-  }
-
-  *transitionChecked({ keptSprites, removedSprites, insertedSprites }) {
+  *transitionChecked({ removedSprites, insertedSprites }: any) {
     insertedSprites.forEach((sprite: any) => {
       fadeIn(sprite, { easing: easeOut, duration: 200 });
     });
-    removedSprites.forEach((sprite) => {
+    removedSprites.forEach((sprite: any) => {
       sprite.endAtPixel({ y: 0 });
       move(sprite, { easing: easeIn });
       fadeOut(sprite);
