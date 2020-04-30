@@ -6,7 +6,15 @@
   <div id="tracked-days" local-class="tracked-days">
     {{#each this.sortedDays as |day|}}
       {{!-- {{moment-format day.date "YYYY/MM/DD ddd"}} {{day.mode}} --}}
-      <Ui::Tracker::TrackedDay @day={{day}} />
+
+      <AnimatedValue
+        day
+        @use={{this.transition}}
+        @initialInsertion={{true}}
+        {{! @duration="1000" }}
+      >
+        <Ui::Tracker::TrackedDay @day={{day}} />
+      </AnimatedValue>
     {{/each}}
   </div>
   {{yield}}

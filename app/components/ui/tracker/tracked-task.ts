@@ -9,6 +9,7 @@ import move from "ember-animated/motions/move";
 // @ts-ignore
 import { fadeOut, fadeIn } from "ember-animated/motions/opacity";
 import { easeOut, easeIn } from "ember-animated/easings/cosine";
+import { toLeft, toRight } from "ember-animated/transitions/move-over";
 
 interface UiTrackedTaskArgs {
   day: TrackedDay;

@@ -16,6 +16,13 @@ import queryTrackedDays from "jikan-ga-nai/gql/queries/trackedDays.graphql";
 import { GetTrackedDays } from "jikan-ga-nai/interfaces/get-tracked-days";
 import { TrackedDay } from "jikan-ga-nai/interfaces/tracked-day";
 
+// @ts-ignore
+import move from "ember-animated/motions/move";
+// @ts-ignore
+import { fadeOut, fadeIn } from "ember-animated/motions/opacity";
+import { easeOut, easeIn } from "ember-animated/easings/cosine";
+import { toLeft, toRight } from "ember-animated/transitions/move-over";
+
 interface PagesTrackerArgs {}
 
 export default class PagesTracker extends Component<PagesTrackerArgs> {
@@ -31,6 +38,14 @@ export default class PagesTracker extends Component<PagesTrackerArgs> {
   constructor(owner: unknown, args: PagesTrackerArgs) {
     super(owner, args);
     this.fetchTrackedDays.perform();
+  }
+  *transition({ insertedSprites }) {
+    console.log("tracker", arguments);
+    insertedSprites.forEach((sprite) => {
+      sprite.startAtPixel({ x: -250 });
+      move(sprite);
+      fadeIn(sprite);
+    });
   }
 
   willDestroy() {

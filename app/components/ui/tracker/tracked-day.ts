@@ -37,4 +37,8 @@ export default class UiTrackedDay extends Component<UiTrackedDayArgs> {
 
     return result;
   }
+
+  *transition() {
+    console.log("tracked-day", arguments);
+  }
 }

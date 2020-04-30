@@ -15,6 +15,7 @@ import moment, { Moment } from "moment";
 
 interface PagesTrackerArgs {
   dayId: number;
+  day: any;
 }
 
 const TRACKED_TASKS_WIDTH = 300;
