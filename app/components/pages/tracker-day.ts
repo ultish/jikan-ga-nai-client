@@ -13,6 +13,8 @@ import jQuery from "jquery";
 import { tracked } from "@glimmer/tracking";
 import moment, { Moment } from "moment";
 
+import { toUp, toDown } from "ember-animated/transitions/move-over";
+
 interface PagesTrackerArgs {
   dayId: number;
   day: any;
@@ -74,5 +76,26 @@ export default class PagesTracker extends Component<PagesTrackerArgs> {
     return this.ticks?.map((date) =>
       this.tickFormat ? this.tickFormat(date) : date
     );
+  }
+
+  @tracked
+  counter = 1;
+
+  @action
+  increment() {
+    this.counter++;
+  }
+
+  @action
+  decrement() {
+    this.counter--;
+  }
+
+  rules({ oldItems, newItems }) {
+    if (oldItems[0] < newItems[0]) {
+      return toDown;
+    } else {
+      return toUp;
+    }
   }
 }

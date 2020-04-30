@@ -1,5 +1,7 @@
 Welcome
-<AnimatedValue @value="test" @use={{this.transition}} @duration="2000">
-  <img src="/images/spacex-1.jpg" alt="tmep" width="200px" />
-</AnimatedValue>
+<AnimatedContainer>
+  <AnimatedValue @value="test" @use={{this.transition}} @duration="2000">
+    <img src="/images/spacex-1.jpg" alt="tmep" width="200px" height="133px" />
+  </AnimatedValue>
+</AnimatedContainer>
 {{outlet}}

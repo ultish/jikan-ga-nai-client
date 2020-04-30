@@ -1,6 +1,11 @@
 <Pages::Tracker>
   <AnimatedContainer>
-    <AnimatedValue @value="test" @use={{this.transition}} @duration="2000">
+    <AnimatedValue
+      @value="test"
+      @duration="2000"
+      @use={{this.transition}}
+      {{!-- @rules={{this.rules}} --}}
+    >
       <img src="/images/spacex-1.jpg" alt="tmep" width="500px" height="333px" />
     </AnimatedValue>
   </AnimatedContainer>
