@@ -13,4 +13,11 @@
     color: white;
     border-color: red;
   }
+
+  &.active {
+    background-color: hotpink;
+  }
+  &:global(.active) {
+    background-color: hotpink;
+  }
 }

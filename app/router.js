@@ -12,6 +12,6 @@ Router.map(function () {
   this.route("messages");
   this.route("home", { path: "/" });
   this.route("tracker", function () {
-    this.route("day", { path: ":id" });
+    this.route("day", { path: "/day/:id" });
   });
 });

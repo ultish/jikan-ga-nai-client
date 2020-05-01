@@ -1,7 +1,11 @@
-import Route from '@ember/routing/route';
+import Route from "@ember/routing/route";
 
-export default class Tracker extends Route.extend({
-  // anything which *must* be merged to prototype here
-}) {
-  // normal class body definition here
+import TrackerController from "./controller";
+export default class Tracker extends Route {
+  async setupController(controller: TrackerController): Promise<void> {
+    super.setupController(controller, {});
+
+    // notify controller for any setup on activate
+    controller.onRouteActivate();
+  }
 }

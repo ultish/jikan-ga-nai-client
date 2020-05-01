@@ -1,0 +1,24 @@
+query trackedTasks($trackedDayId: ID!, $cursor: String, $limit: Int) {
+  trackedTasks(trackedDayId: $trackedDayId, cursor: $cursor, limit: $limit) {
+    edges {
+      id
+      notes
+      chargeCodes {
+        id
+        name
+        expired
+        description
+        code
+      }
+      timeBlocks {
+        id
+        startTime
+        minutes
+      }
+    }
+    pageInfo {
+      endCursor
+      hasNextPage
+    }
+  }
+}

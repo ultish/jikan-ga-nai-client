@@ -4,6 +4,7 @@ import moment from "moment";
 import { action } from "@ember/object";
 import RouterService from "@ember/routing/router-service";
 import { inject as service } from "@ember/service";
+import { alias } from "@ember/object/computed";
 
 interface UiTrackedDayArgs {
   day: TrackedDay;
@@ -19,7 +20,7 @@ export default class UiTrackedDay extends Component<UiTrackedDayArgs> {
   @action
   click() {
     console.log("hello", arguments);
-    this.router.transitionTo("tracker.day", this.args.day);
+    this.router.transitionTo("tracker.day", this.args.day.id);
   }
 
   get weekOfYearDisplay() {
@@ -35,7 +36,20 @@ export default class UiTrackedDay extends Component<UiTrackedDayArgs> {
       result.push("odd-week");
     }
 
-    return result;
+    if (this.active) {
+      result.push("active");
+    }
+
+    return result.join(" ");
+  }
+
+  @alias("router.currentURL")
+  currentURL!: string;
+
+  get active() {
+    // track it
+    this.currentURL;
+    return this.router.isActive("tracker.day", this.args.day);
   }
 
   *transition() {

@@ -1,4 +1,4 @@
-import Component from "@glimmer/component";
+import Controller from "@ember/controller";
 import { queryManager, getObservable, unsubscribe } from "ember-apollo-client";
 
 import ApolloService from "ember-apollo-client/services/apollo";
@@ -15,28 +15,23 @@ import moment, { Moment } from "moment";
 
 import { toUp, toDown } from "ember-animated/transitions/move-over";
 
-interface PagesTrackerArgs {
-  dayId: number;
-  day: any;
-}
-
 const TRACKED_TASKS_WIDTH = 300;
 
-export default class PagesTracker extends Component<PagesTrackerArgs> {
+export default class TrackerDay extends Controller {
   @queryManager() apollo!: ApolloService;
 
   @tracked containerWidth = 0;
-  @tracked startTime: Moment;
-  @tracked stopTime: Moment;
+  @tracked startTime = moment().startOf("day");
+  @tracked stopTime = moment().startOf("day");
   @tracked scale?: ScaleTime<Number, Number>;
   @tracked ticks?: Date[];
   tickFormat?: Function;
 
-  constructor(owner: unknown, args: PagesTrackerArgs) {
-    super(owner, args);
+  onRouteActivate = () => {
     this.startTime = moment().startOf("day").add(6, "hours");
     this.stopTime = this.startTime.clone().add(8, "hours");
-  }
+    console.log("tracker day", this.model);
+  };
 
   @action
   didResize() {
@@ -97,5 +92,12 @@ export default class PagesTracker extends Component<PagesTrackerArgs> {
     } else {
       return toUp;
     }
+  }
+}
+
+// DO NOT DELETE: this is how TypeScript knows how to look up your controllers.
+declare module "@ember/controller" {
+  interface Registry {
+    "tracker/day": TrackerDay;
   }
 }

@@ -1,21 +1,22 @@
 $tasksWidth: 300px;
 $checkedBorder: #093bdf;
 
+.container {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-end;
+  padding-bottom: 15px;
+}
 .tracked-tasks {
-  color: white;
-  background-color: rgb(13, 107, 230);
-  position: absolute;
-  top: 0;
-  left: 0;
   width: $tasksWidth;
+  flex-shrink: 0;
+  border-bottom: 1px solid rgb(129, 129, 129);
 }
 .tracked-time {
-  position: absolute;
-  top: 0;
-  left: $tasksWidth;
   width: 100%;
   display: flex;
   flex-direction: row;
+  border-bottom: 1px solid rgb(129, 129, 129);
 }
 
 .square {

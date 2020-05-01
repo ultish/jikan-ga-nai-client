@@ -1,4 +1,15 @@
-import Component from "@glimmer/component";
+import Controller from "@ember/controller";
+import { alias } from "@ember/object/computed";
+import { inject as service } from "@ember/service";
+import RouterService from "@ember/routing/router-service";
+
+import { toLeft, toRight } from "ember-animated/transitions/move-over";
+import move from "ember-animated/motions/move";
+import { parallel } from "ember-animated";
+import resize from "ember-animated/motions/resize";
+import { fadeOut, fadeIn } from "ember-animated/motions/opacity";
+import { easeOut, easeIn } from "ember-animated/easings/cosine";
+
 import { queryManager, getObservable, unsubscribe } from "ember-apollo-client";
 
 import ApolloService from "ember-apollo-client/services/apollo";
@@ -6,26 +17,14 @@ import { ObservableQuery } from "apollo-client/core/ObservableQuery";
 
 import { task } from "ember-concurrency-decorators";
 import { sort } from "@ember/object/computed";
-import { computed, action, get } from "@ember/object";
-import { inject as service } from "@ember/service";
-import Authentication from "jikan-ga-nai/services/authentication";
-import RouterService from "@ember/routing/router-service";
 import { tracked } from "@glimmer/tracking";
 
 import queryTrackedDays from "jikan-ga-nai/gql/queries/trackedDays.graphql";
 import { GetTrackedDays } from "jikan-ga-nai/interfaces/get-tracked-days";
 import { TrackedDay } from "jikan-ga-nai/interfaces/tracked-day";
 
-// @ts-ignore
-import move from "ember-animated/motions/move";
-// @ts-ignore
-import { fadeOut, fadeIn } from "ember-animated/motions/opacity";
-import { easeOut, easeIn } from "ember-animated/easings/cosine";
-import { toLeft, toRight } from "ember-animated/transitions/move-over";
-
-interface PagesTrackerArgs {}
-
-export default class PagesTracker extends Component<PagesTrackerArgs> {
+export default class Tracker extends Controller {
+  @service router!: RouterService;
   @queryManager() apollo!: ApolloService;
 
   @tracked
@@ -35,31 +34,15 @@ export default class PagesTracker extends Component<PagesTrackerArgs> {
   observer: ObservableQuery | null = null;
   fetchTrackedDaysQuery: null | GetTrackedDays = null;
 
-  constructor(owner: unknown, args: PagesTrackerArgs) {
-    super(owner, args);
+  onRouteActivate = () => {
     this.fetchTrackedDays.perform();
-  }
-  *transition({ insertedSprites }) {
-    console.log("tracker", arguments);
-    insertedSprites.forEach((sprite) => {
-      sprite.startAtPixel({ x: -250 });
-      move(sprite);
-      fadeIn(sprite);
-    });
-  }
+  };
 
-  willDestroy() {
-    if (this.fetchTrackedDaysQuery) {
-      // remove our subscription to the watchQuery
-      unsubscribe(this.fetchTrackedDaysQuery);
-    }
-    // if (this.messagesCreatedSub) {
-    //   this.messagesCreatedSub.apolloUnsubscribe();
-    // }
-  }
+  @alias("router.currentRouteName")
+  currentRouteName!: string;
 
   @task({ drop: true })
-  fetchTrackedDays: any = function* (this: PagesTracker) {
+  fetchTrackedDays: any = function* (this: Tracker) {
     const trackedDays: GetTrackedDays = yield this.apollo.watchQuery(
       {
         query: queryTrackedDays,
@@ -111,4 +94,30 @@ export default class PagesTracker extends Component<PagesTrackerArgs> {
     }
   )
   sortedDays!: [any];
+
+  *transition({ insertedSprites }) {
+    console.log("tracker2", arguments);
+    insertedSprites.forEach((sprite) => {
+      sprite.startAtPixel({ x: -200 });
+      // parallel(move(sprite(sprite)));
+      move(sprite);
+      // resize(sprite);
+    });
+  }
+
+  // *transition({ insertedSprites }) {
+  //   console.log("tracker", arguments);
+  //   insertedSprites.forEach((sprite) => {
+  //     sprite.startAtPixel({ x: -250 });
+  //     move(sprite);
+  //     fadeIn(sprite);
+  //   });
+  // }
+}
+
+// DO NOT DELETE: this is how TypeScript knows how to look up your controllers.
+declare module "@ember/controller" {
+  interface Registry {
+    tracker: Tracker;
+  }
 }

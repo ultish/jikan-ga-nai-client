@@ -1,13 +1,19 @@
-<Pages::Tracker>
-  <AnimatedContainer>
-    <AnimatedValue
-      @value="test"
-      @duration="2000"
-      @use={{this.transition}}
-      {{!-- @rules={{this.rules}} --}}
-    >
+<div
+  id="pages-tracker"
+  class="uk-container uk-container-xlarge"
+  local-class="pages-tracker"
+>
+  <div id="tracked-days" local-class="tracked-days">
+    {{#each this.sortedDays as |day|}}
+      {{!-- <AnimatedValue day @use={{this.transition}} @initialInsertion={{true}}> --}}
+      <Ui::Tracker::TrackedDay @day={{day}} />
+      {{! </AnimatedValue> }}
+    {{/each}}
+  </div>
+  {{!-- <AnimatedContainer>
+    <AnimatedValue @value="test" @duration="2000" @use={{this.transition}}>
       <img src="/images/spacex-1.jpg" alt="tmep" width="500px" height="333px" />
     </AnimatedValue>
-  </AnimatedContainer>
+  </AnimatedContainer> --}}
   {{outlet}}
-</Pages::Tracker>
+</div>

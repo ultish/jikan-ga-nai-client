@@ -9,10 +9,11 @@ import move from "ember-animated/motions/move";
 // @ts-ignore
 import { fadeOut, fadeIn } from "ember-animated/motions/opacity";
 import { easeOut, easeIn } from "ember-animated/easings/cosine";
-import { toLeft, toRight } from "ember-animated/transitions/move-over";
+import { TrackedTask } from "jikan-ga-nai/interfaces/tracked-task";
 
 interface UiTrackedTaskArgs {
   day: TrackedDay;
+  trackedTask: TrackedTask;
   scale: ScaleTime<Number, Number>;
   ticks: Date[];
 }
