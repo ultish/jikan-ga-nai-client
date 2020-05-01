@@ -90,21 +90,21 @@ export default class TrackerDay extends Controller {
   }
 
   @tracked
-  counter = 1;
+  counter = 0;
 
   @action
   increment() {
-    this.counter++;
+    this.counter = parseFloat((this.counter + 0.1).toFixed(3));
   }
 
   @action
   decrement() {
-    this.counter--;
+    this.counter = parseFloat((this.counter - 0.1).toFixed(3));
   }
 
   // @ts-ignore
   rules({ oldItems, newItems }) {
-    if (oldItems[0] < newItems[0]) {
+    if (oldItems[0] > newItems[0]) {
       return toDown;
     } else {
       return toUp;
