@@ -1,5 +1,5 @@
 export interface TimeBlock {
   id: String;
-  startTime: Date;
-  minutes?: Number;
+  startTime: number;
+  minutes?: number;
 }

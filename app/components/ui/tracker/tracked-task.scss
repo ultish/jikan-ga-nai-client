@@ -19,6 +19,15 @@ $checkedBorder: #093bdf;
   border-bottom: 1px solid rgb(129, 129, 129);
 }
 
+.time-blocks-container {
+  position: relative;
+  margin-left: $tasksWidth;
+
+  .time-blocks {
+    position: absolute;
+  }
+}
+
 .square {
   width: 15px;
   min-width: 15px;

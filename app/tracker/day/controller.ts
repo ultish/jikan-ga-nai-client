@@ -13,6 +13,9 @@ import jQuery from "jquery";
 import { tracked } from "@glimmer/tracking";
 import moment, { Moment } from "moment";
 
+import { A } from "@ember/array";
+
+// @ts-ignore
 import { toUp, toDown } from "ember-animated/transitions/move-over";
 
 const TRACKED_TASKS_WIDTH = 300;
@@ -24,13 +27,19 @@ export default class TrackerDay extends Controller {
   @tracked startTime = moment().startOf("day");
   @tracked stopTime = moment().startOf("day");
   @tracked scale?: ScaleTime<Number, Number>;
-  @tracked ticks?: Date[];
+  @tracked ticks = A<Date>();
   tickFormat?: Function;
 
   onRouteActivate = () => {
-    this.startTime = moment().startOf("day").add(6, "hours");
+    const baseDate = this.model.trackedDay.date;
+
+    // baseDate is stored as UTC in the DB, but was initially local-time, converted into UTC for storage
+
+    this.startTime = moment(baseDate).add(6, "hours");
     this.stopTime = this.startTime.clone().add(8, "hours");
     console.log("tracker day", this.model);
+
+    this.calculateScale();
   };
 
   @action
@@ -61,13 +70,20 @@ export default class TrackerDay extends Controller {
     const ticks = scale.ticks(numBlocks);
 
     this.scale = scale;
-    this.ticks = ticks;
+    // this.ticks = ticks;
+    this.ticks.clear();
+    this.ticks.pushObjects(ticks);
     this.tickFormat = scale.tickFormat();
 
+    console.log("calc scale");
+
     // console.log(scale);
+
+    return this.scale;
   }
 
   get formattedTicks() {
+    console.log("get formatted ticks");
     return this.ticks?.map((date) =>
       this.tickFormat ? this.tickFormat(date) : date
     );
@@ -86,6 +102,7 @@ export default class TrackerDay extends Controller {
     this.counter--;
   }
 
+  // @ts-ignore
   rules({ oldItems, newItems }) {
     if (oldItems[0] < newItems[0]) {
       return toDown;

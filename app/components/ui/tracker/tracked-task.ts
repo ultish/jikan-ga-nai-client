@@ -11,6 +11,10 @@ import { fadeOut, fadeIn } from "ember-animated/motions/opacity";
 import { easeOut, easeIn } from "ember-animated/easings/cosine";
 import { TrackedTask } from "jikan-ga-nai/interfaces/tracked-task";
 
+import { htmlSafe } from "@ember/string";
+
+const TIME_BLOCK_WIDTH = 15;
+
 interface UiTrackedTaskArgs {
   day: TrackedDay;
   trackedTask: TrackedTask;
@@ -18,7 +22,7 @@ interface UiTrackedTaskArgs {
   ticks: Date[];
 }
 
-class TimeBlock {
+class DateBlock {
   @tracked selected = false;
   @tracked checked = false;
   date: Date;
@@ -32,8 +36,8 @@ class TimeBlock {
 }
 
 export default class UiTrackedDay extends Component<UiTrackedTaskArgs> {
-  lastBlockClicked: TimeBlock | null = null;
-  selectedBlocks: TimeBlock[] = [];
+  lastBlockClicked: DateBlock | null = null;
+  selectedBlocks: DateBlock[] = [];
 
   constructor(owner: unknown, args: UiTrackedTaskArgs) {
     super(owner, args);
@@ -42,6 +46,74 @@ export default class UiTrackedDay extends Component<UiTrackedTaskArgs> {
   @action
   didResize() {
     console.log("resized!");
+  }
+
+  get chargedTime() {
+    const timeBlocks = this.args.trackedTask.timeBlocks;
+
+    const scale = this.args.scale;
+
+    if (!scale) {
+      return [];
+    }
+
+    const results = timeBlocks.map((block) => {
+      let startTime = new Date(block.startTime);
+
+      let startY = scale(startTime);
+
+      let endY = startY.toPrecision() + TIME_BLOCK_WIDTH;
+      if (block.minutes) {
+        endY = scale(
+          moment(startTime).add(block.minutes, "minutes").toDate()
+        ).toPrecision(0);
+      }
+
+      return {
+        timeBlock: block,
+        y: startY,
+        width: endY,
+        style: htmlSafe(`width: ${endY}; left: ${startY};`),
+      };
+    });
+
+    return results;
+  }
+
+  /**
+   * Using @computed here as I want to keep the same instances of TimeBlock
+   */
+  @computed("args.ticks.[]")
+  get squares() {
+    if (!this.args.ticks) {
+      return [];
+    }
+    const blocks: DateBlock[] = [];
+    this.args.ticks.forEach((tick) => {
+      // each tick is at the hour border, we want 3 blocks per hour
+      const date = moment(tick);
+
+      for (let i = 0; i < 4; i++) {
+        if (i > 0) {
+          date.add(15, "minutes");
+        }
+        blocks.push(new DateBlock(date.toDate()));
+      }
+    });
+    return blocks;
+  }
+
+  timeBlockStateChange(block: DateBlock, state: boolean) {}
+
+  *transitionChecked({ removedSprites, insertedSprites }: any) {
+    insertedSprites.forEach((sprite: any) => {
+      fadeIn(sprite, { easing: easeOut, duration: 200 });
+    });
+    removedSprites.forEach((sprite: any) => {
+      sprite.endAtPixel({ y: 0 });
+      move(sprite, { easing: easeIn });
+      fadeOut(sprite);
+    });
   }
 
   @action
@@ -53,7 +125,7 @@ export default class UiTrackedDay extends Component<UiTrackedTaskArgs> {
   }
 
   @action
-  mouseDown(block: TimeBlock, e: MouseEvent) {
+  mouseDown(block: DateBlock, e: MouseEvent) {
     // record if they've left-clicked down
     if (e.buttons === 1) {
       block.mouseDown = true;
@@ -61,7 +133,7 @@ export default class UiTrackedDay extends Component<UiTrackedTaskArgs> {
   }
 
   @action
-  mouseLeave(block: TimeBlock, e: MouseEvent) {
+  mouseLeave(block: DateBlock, e: MouseEvent) {
     // if they're leaving and still clicking down, flag box checked
     // and reset mouseDown, mouseOver
     if (block.mouseDown && e.buttons === 1) {
@@ -72,7 +144,7 @@ export default class UiTrackedDay extends Component<UiTrackedTaskArgs> {
   }
 
   @action
-  mouseOver(block: TimeBlock, e: MouseEvent) {
+  mouseOver(block: DateBlock, e: MouseEvent) {
     // if we'ver mouse-over and still left-clicking, flag box checked
     if (!block.mouseOver && e.buttons === 1) {
       block.mouseOver = true;
@@ -81,7 +153,7 @@ export default class UiTrackedDay extends Component<UiTrackedTaskArgs> {
   }
 
   @action
-  mouseClick(block: TimeBlock, e: MouseEvent) {
+  mouseClick(block: DateBlock, e: MouseEvent) {
     block.mouseDown = false;
     if (e.shiftKey) {
       // take the last clicked date, up to current clicked date, and select everything in b/w
@@ -117,7 +189,7 @@ export default class UiTrackedDay extends Component<UiTrackedTaskArgs> {
   }
 
   @action
-  keyUp(block: TimeBlock, e: KeyboardEvent) {
+  keyUp(block: DateBlock, e: KeyboardEvent) {
     e.preventDefault;
     if (e.code === "Space") {
       // made a selection
@@ -138,39 +210,5 @@ export default class UiTrackedDay extends Component<UiTrackedTaskArgs> {
       this.squares.forEach((block) => (block.selected = false));
       block.selected = true;
     }
-  }
-
-  /**
-   * Using @computed here as I want to keep the same instances of TimeBlock
-   */
-  @computed("args.ticks.[]")
-  get squares() {
-    if (!this.args.ticks) {
-      return [];
-    }
-    const blocks: TimeBlock[] = [];
-    this.args.ticks.forEach((tick) => {
-      // each tick is at the hour border, we want 3 blocks per hour
-      const date = moment(tick);
-
-      for (let i = 0; i < 4; i++) {
-        if (i > 0) {
-          date.add(15, "minutes");
-        }
-        blocks.push(new TimeBlock(date.toDate()));
-      }
-    });
-    return blocks;
-  }
-
-  *transitionChecked({ removedSprites, insertedSprites }: any) {
-    insertedSprites.forEach((sprite: any) => {
-      fadeIn(sprite, { easing: easeOut, duration: 200 });
-    });
-    removedSprites.forEach((sprite: any) => {
-      sprite.endAtPixel({ y: 0 });
-      move(sprite, { easing: easeIn });
-      fadeOut(sprite);
-    });
   }
 }

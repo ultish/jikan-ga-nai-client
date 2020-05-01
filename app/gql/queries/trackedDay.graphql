@@ -1,0 +1,7 @@
+query trackedDay($trackedDayId: ID!) {
+  trackedDay(trackedDayId: $trackedDayId) {
+    id
+    date
+    mode
+  }
+}

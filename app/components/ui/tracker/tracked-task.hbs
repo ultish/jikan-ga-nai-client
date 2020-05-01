@@ -5,6 +5,10 @@
 >
   <div local-class="tracked-tasks">
     asd
+    {{@trackedTask.notes}}:
+    {{#each @trackedTask.chargeCodes as |cc|}}
+      {{cc.name}}
+    {{/each}}
   </div>
   <AnimatedContainer local-class="tracked-time">
     {{#each this.squares as |square|}}
@@ -26,4 +30,12 @@
       </div>
     {{/each}}
   </AnimatedContainer>
+  <div local-class="time-blocks-container">
+    <AnimatedContainer local-class="time-blocks">
+      {{#each this.chargedTime as |timeBlock|}}
+        <div style={{timeBlock.style}}>
+        </div>
+      {{/each}}
+    </AnimatedContainer>
+  </div>
 </div>

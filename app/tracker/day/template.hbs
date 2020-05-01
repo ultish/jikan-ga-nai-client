@@ -13,21 +13,21 @@
       {{/each}}
     </div>
     <div local-class="time-container">
-      {{#each this.model.edges as |task|}}
+      {{#each this.model.trackedTasks.edges as |task|}}
         {{!-- {{task.id}} {{task.notes}}
         <br /> --}}
         <Ui::Tracker::TrackedTask
           @trackedTask={{task}}
           @ticks={{this.ticks}}
           @scale={{this.scale}}
-          @day={{this.model.day}}
+          @day={{this.model.trackedDay}}
         />
       {{/each}}
     </div>
   </div>
   <div id="timesheet" local-class="timesheet">
     timesheet
-    <div class="scenario-rules clearfix">
+    <div local-class="test-counter-container">
       <button type="button" {{on "click" this.increment}}>
         +
       </button>
@@ -36,7 +36,7 @@
       </button>
 
       <AnimatedContainer>
-        {{#animated-value this.counter rules=this.rules duration=1000 as |v|}}
+        {{#animated-value this.counter rules=this.rules as |v|}}
           <span class="count">
             {{v}}
           </span>

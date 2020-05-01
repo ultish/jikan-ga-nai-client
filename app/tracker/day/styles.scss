@@ -50,3 +50,11 @@ $sideWidth: 200px;
   background-color: rgb(160, 160, 160);
   overflow-y: auto;
 }
+
+.test-counter-container {
+  // overflow: hidden;
+
+  :global(.animated-container) {
+    overflow: hidden;
+  }
+}
