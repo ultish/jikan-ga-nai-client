@@ -1,11 +1,13 @@
 $tasksWidth: 300px;
 $checkedBorder: #093bdf;
 
+$containerBottomPadding: 15px;
+
 .container {
   display: flex;
   flex-direction: row;
   align-items: flex-end;
-  padding-bottom: 15px;
+  padding-bottom: $containerBottomPadding;
 }
 .tracked-tasks {
   width: $tasksWidth;
@@ -22,9 +24,16 @@ $checkedBorder: #093bdf;
 .time-blocks-container {
   position: relative;
   margin-left: $tasksWidth;
+}
+.time-blocks {
+  position: absolute;
+  left: $tasksWidth;
+  bottom: $containerBottomPadding + 1;
+  width: 100%;
 
-  .time-blocks {
-    position: absolute;
+  .time-block {
+    height: 20px;
+    background-color: red;
   }
 }
 

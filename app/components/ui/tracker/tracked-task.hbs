@@ -30,12 +30,12 @@
       </div>
     {{/each}}
   </AnimatedContainer>
-  <div local-class="time-blocks-container">
-    <AnimatedContainer local-class="time-blocks">
-      {{#each this.chargedTime as |timeBlock|}}
-        <div style={{timeBlock.style}}>
-        </div>
-      {{/each}}
-    </AnimatedContainer>
-  </div>
+  {{! <div local-class="time-blocks-container"> }}
+  <AnimatedContainer local-class="time-blocks">
+    {{#each this.chargedTime as |timeBlock|}}
+      <div style={{timeBlock.style}} local-class="time-block">
+      </div>
+    {{/each}}
+  </AnimatedContainer>
+  {{! </div> }}
 </div>

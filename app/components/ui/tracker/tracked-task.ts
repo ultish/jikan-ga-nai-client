@@ -13,7 +13,7 @@ import { TrackedTask } from "jikan-ga-nai/interfaces/tracked-task";
 
 import { htmlSafe } from "@ember/string";
 
-const TIME_BLOCK_WIDTH = 15;
+const TIME_BLOCK_WIDTH = 15 - 1; // minus border
 
 interface UiTrackedTaskArgs {
   day: TrackedDay;
@@ -60,20 +60,26 @@ export default class UiTrackedDay extends Component<UiTrackedTaskArgs> {
     const results = timeBlocks.map((block) => {
       let startTime = new Date(block.startTime);
 
-      let startY = scale(startTime);
+      let startY = Math.round(parseInt(scale(startTime).toFixed(1)));
 
-      let endY = startY.toPrecision() + TIME_BLOCK_WIDTH;
+      let width = TIME_BLOCK_WIDTH;
+
       if (block.minutes) {
-        endY = scale(
-          moment(startTime).add(block.minutes, "minutes").toDate()
-        ).toPrecision(0);
+        width =
+          Math.round(
+            parseInt(
+              scale(
+                moment(startTime).add(block.minutes, "minutes").toDate()
+              ).toFixed(1)
+            )
+          ) - startY;
       }
 
       return {
         timeBlock: block,
         y: startY,
-        width: endY,
-        style: htmlSafe(`width: ${endY}; left: ${startY};`),
+        width: width,
+        style: htmlSafe(`width: ${width}px; left: ${startY}px;`),
       };
     });
 
