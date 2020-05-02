@@ -27,7 +27,6 @@ export default class TrackerDay extends Route {
   ): Promise<void> {
     super.setupController(controller, model);
 
-    console.log("setup cont");
     // notify controller for any setup on activate
     controller.onRouteActivate();
   }

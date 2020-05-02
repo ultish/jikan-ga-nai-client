@@ -53,7 +53,6 @@ export default class Messages extends AuthRoute {
     // in the handleEvent function
     // TODO: need to read more on watchQuery and how to make it update
     // from a subscription pov.
-    console.log("setup contorller", model);
 
     model?.edges.forEach((msg) => controller.addToCache(msg));
   }

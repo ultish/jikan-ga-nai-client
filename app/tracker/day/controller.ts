@@ -37,7 +37,6 @@ export default class TrackerDay extends Controller {
 
     this.startTime = moment(baseDate).add(6, "hours");
     this.stopTime = this.startTime.clone().add(8, "hours");
-    console.log("tracker day", this.model);
 
     this.calculateScale();
   };
@@ -75,15 +74,12 @@ export default class TrackerDay extends Controller {
     this.ticks.pushObjects(ticks);
     this.tickFormat = scale.tickFormat();
 
-    console.log("calc scale");
-
     // console.log(scale);
 
     return this.scale;
   }
 
   get formattedTicks() {
-    console.log("get formatted ticks");
     return this.ticks?.map((date) =>
       this.tickFormat ? this.tickFormat(date) : date
     );

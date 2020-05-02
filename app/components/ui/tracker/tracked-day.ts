@@ -19,7 +19,6 @@ export default class UiTrackedDay extends Component<UiTrackedDayArgs> {
 
   @action
   click() {
-    console.log("hello", arguments);
     this.router.transitionTo("tracker.day", this.args.day.id);
   }
 

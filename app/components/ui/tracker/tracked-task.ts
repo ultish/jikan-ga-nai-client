@@ -190,7 +190,7 @@ export default class UiTrackedDay extends Component<UiTrackedTaskArgs> {
 
     const x = squares.filter((sq) => sq.getTimeBlock()).length;
     if (timeBlocks?.length != x) {
-      debugger;
+      // debugger;
     }
 
     // console.log("TimeBlocks: " + timeBlocks?.length + " vs Squares W: " + x);

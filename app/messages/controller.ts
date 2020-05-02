@@ -16,7 +16,6 @@ export default class Messages extends Controller {
 
   onRouteActivate = () => {
     this.msgCache.clear();
-    console.log("route activated ", this.msgCache);
 
     this.msgObserver = getObservable(this.model);
   };
@@ -27,8 +26,6 @@ export default class Messages extends Controller {
   }
 
   @sort("msgCache", (a, b) => {
-    console.log("sorting now...");
-
     const aId = Number.parseInt(a.id);
     const bId = Number.parseInt(b.id);
 
@@ -45,7 +42,6 @@ export default class Messages extends Controller {
   // the intial model load.
   addToCache = function (this: Messages, msg: Message) {
     this.msgCache.pushObject(msg);
-    console.log("add to msg cache", msg, this.msgCache);
   };
 }
 
