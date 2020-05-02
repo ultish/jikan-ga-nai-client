@@ -5,5 +5,7 @@ export interface GetTrackedTasks {
   pageInfo: {
     endCursor: string;
     hasNextPage: boolean;
+    __typename: string;
   };
+  __typename: string;
 }

@@ -2,6 +2,7 @@ $tasksWidth: 300px;
 $checkedBorder: #093bdf;
 
 $containerBottomPadding: 15px;
+$blockHeight: 30px;
 
 .container {
   display: flex;
@@ -22,25 +23,28 @@ $containerBottomPadding: 15px;
 }
 
 .time-blocks-container {
-  position: relative;
-  margin-left: $tasksWidth;
-}
-.time-blocks {
   position: absolute;
+
   left: $tasksWidth;
   bottom: $containerBottomPadding + 1;
   width: 100%;
+}
+.time-blocks {
+  position: relative;
+  width: 100%;
+  height: $blockHeight;
 
   .time-block {
-    height: 20px;
+    height: $blockHeight;
     background-color: red;
+    position: absolute;
   }
 }
 
 .square {
   width: 15px;
   min-width: 15px;
-  height: 20px;
+  height: $blockHeight;
   cursor: pointer;
 
   outline: 1px solid rgb(129, 129, 129);
@@ -95,7 +99,7 @@ $containerBottomPadding: 15px;
 .block-checked {
   width: 15px;
   min-width: 15px;
-  height: 20px;
+  height: $blockHeight;
   background-color: #096ddf;
   outline: 1px solid $checkedBorder;
 }

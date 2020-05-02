@@ -49,6 +49,7 @@ export default class TrackerDay extends Route {
           variables: {
             trackedDayId: id,
           },
+          // fetchPolicy: "cache-and-network",
         },
         "trackedTasks"
       ),

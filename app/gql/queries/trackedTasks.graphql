@@ -10,11 +10,6 @@ query trackedTasks($trackedDayId: ID!, $cursor: String, $limit: Int) {
         description
         code
       }
-      timeBlocks {
-        id
-        startTime
-        minutes
-      }
     }
     pageInfo {
       endCursor

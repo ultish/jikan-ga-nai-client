@@ -2,6 +2,7 @@
   local-class="container"
   {{did-resize this.didResize}}
   {{on-click-outside this.clearSelections}}
+  {{did-insert this.didInsert}}
 >
   <div local-class="tracked-tasks">
     asd
@@ -11,9 +12,10 @@
     {{/each}}
   </div>
   <AnimatedContainer local-class="tracked-time">
-    {{#each this.squares as |square|}}
+    {{#each this.squaresWithTimeBlocks as |square|}}
       <div
         local-class={{concat "square" (if square.selected " block-selected")}}
+        class={{if square.timeBlock " time-block-found"}}
         role="button"
         tabindex="0"
         {{on "keyup" (fn this.keyUp square)}}
@@ -21,8 +23,6 @@
         {{on "mousedown" (fn this.mouseDown square)}}
         {{on "mouseover" (fn this.mouseOver square)}}
         {{on "mouseleave" (fn this.mouseLeave square)}}
-        {{!-- {{css-transition blockSelected=square.selected}}
-        {{css-transition checked=square.checked}} --}}
       >
         {{#animated-if square.checked use=this.transitionChecked}}
           <div local-class="block-checked"></div>
@@ -30,12 +30,4 @@
       </div>
     {{/each}}
   </AnimatedContainer>
-  {{! <div local-class="time-blocks-container"> }}
-  <AnimatedContainer local-class="time-blocks">
-    {{#each this.chargedTime as |timeBlock|}}
-      <div style={{timeBlock.style}} local-class="time-block">
-      </div>
-    {{/each}}
-  </AnimatedContainer>
-  {{! </div> }}
 </div>
