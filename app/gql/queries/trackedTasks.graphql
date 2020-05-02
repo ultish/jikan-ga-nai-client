@@ -3,6 +3,7 @@ query trackedTasks($trackedDayId: ID!, $cursor: String, $limit: Int) {
     edges {
       id
       notes
+      createdAt
       chargeCodes {
         id
         name

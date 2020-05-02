@@ -1,0 +1,3 @@
+mutation deleteTimeBlock($id: ID!) {
+  deleteTimeBlock(id: $id)
+}

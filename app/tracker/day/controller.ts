@@ -1,22 +1,20 @@
 import Controller from "@ember/controller";
-import { queryManager, getObservable, unsubscribe } from "ember-apollo-client";
+import { queryManager } from "ember-apollo-client";
 
 import ApolloService from "ember-apollo-client/services/apollo";
-import { ObservableQuery } from "apollo-client/core/ObservableQuery";
-
-import { task } from "ember-concurrency-decorators";
 import { sort } from "@ember/object/computed";
-import { computed, action, get } from "@ember/object";
+import { action } from "@ember/object";
 
 import { scaleTime, ScaleTime } from "d3-scale";
 import jQuery from "jquery";
 import { tracked } from "@glimmer/tracking";
-import moment, { Moment } from "moment";
+import moment from "moment";
 
 import { A } from "@ember/array";
 
 // @ts-ignore
 import { toUp, toDown } from "ember-animated/transitions/move-over";
+import { TrackedTask } from "jikan-ga-nai/interfaces/tracked-task";
 
 const TRACKED_TASKS_WIDTH = 300;
 
@@ -84,6 +82,17 @@ export default class TrackerDay extends Controller {
       this.tickFormat ? this.tickFormat(date) : date
     );
   }
+
+  @sort("model.trackedTasks.edges", (a, b) => {
+    if (a.createdAt > b.createdAt) {
+      return 1;
+    } else if (a.createdAt < b.createdAt) {
+      return -1;
+    } else {
+      return 0;
+    }
+  })
+  sortedTasks!: [TrackedTask];
 
   @tracked
   counter = 0;

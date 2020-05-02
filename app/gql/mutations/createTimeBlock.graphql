@@ -1,0 +1,15 @@
+mutation createTimeBlock(
+  $trackedTaskId: ID!
+  $startTime: Float!
+  $minutes: Int
+) {
+  createTimeBlock(
+    trackedTaskId: $trackedTaskId
+    startTime: $startTime
+    minutes: $minutes
+  ) {
+    id
+    startTime
+    minutes
+  }
+}

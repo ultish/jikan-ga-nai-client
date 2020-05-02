@@ -283,6 +283,7 @@ export default class UiTrackedDay extends Component<UiTrackedTaskArgs> {
 
   @action
   clearSelections() {
+    console.log("clearrr!");
     this.squares.forEach((block) => {
       block.selected = false;
     });

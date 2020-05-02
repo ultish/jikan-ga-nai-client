@@ -1,7 +1,6 @@
 <div
   local-class="container"
   {{did-resize this.didResize}}
-  {{on-click-outside this.clearSelections}}
   {{did-insert this.didInsert}}
 >
   <div local-class="tracked-tasks">
@@ -11,7 +10,10 @@
       {{cc.name}}
     {{/each}}
   </div>
-  <AnimatedContainer local-class="tracked-time">
+  <AnimatedContainer
+    local-class="tracked-time"
+    {{on-click-outside (fn this.clearSelections)}}
+  >
     {{#each this.squaresWithTimeBlocks as |square|}}
       <div
         local-class={{concat "square" (if square.selected " block-selected")}}

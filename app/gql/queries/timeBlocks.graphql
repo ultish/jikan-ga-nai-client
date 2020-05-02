@@ -1,0 +1,7 @@
+query timeBlocks($trackedTaskId: ID!) {
+  timeBlocks(trackedTaskId: $trackedTaskId) {
+    id
+    startTime
+    minutes
+  }
+}

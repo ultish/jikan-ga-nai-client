@@ -13,9 +13,7 @@
       {{/each}}
     </div>
     <div local-class="time-container">
-      {{#each this.model.trackedTasks.edges as |task|}}
-        {{!-- {{task.id}} {{task.notes}}
-        <br /> --}}
+      {{#each this.sortedTasks as |task|}}
         <Ui::Tracker::TrackedTask
           @trackedTask={{task}}
           @ticks={{this.ticks}}
