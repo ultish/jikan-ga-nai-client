@@ -4,16 +4,15 @@
   color: white;
   cursor: pointer;
 
+  &:global(.odd-week) {
+    background-color: #25335c;
+    color: white;
+    border-color: #3759be;
+  }
+
   &:hover {
     background-color: rgb(228, 17, 122);
   }
-
-  &.odd-week {
-    background-color: indianred;
-    color: white;
-    border-color: red;
-  }
-
   &.active {
     background-color: hotpink;
   }
