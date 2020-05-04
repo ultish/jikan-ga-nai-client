@@ -1,0 +1,9 @@
+query chargeCodes {
+  chargeCodes @connection(key: "fetchChargeCodes") {
+    id
+    name
+    expired
+    description
+    code
+  }
+}

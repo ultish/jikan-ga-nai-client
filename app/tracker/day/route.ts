@@ -7,6 +7,8 @@ import { ObservableQuery } from "apollo-client/core/ObservableQuery";
 
 import queryGetTrackedTasks from "jikan-ga-nai/gql/queries/trackedTasks.graphql";
 import queryGetTrackedDay from "jikan-ga-nai/gql/queries/trackedDay.graphql";
+import queryGetChargeCodes from "jikan-ga-nai/gql/queries/chargeCodes.graphql";
+
 import { GetTrackedTasks } from "jikan-ga-nai/interfaces/get-tracked-tasks";
 
 import { hash } from "rsvp";
@@ -51,6 +53,13 @@ export default class TrackerDay extends Route {
           // fetchPolicy: "cache-and-network",
         },
         "trackedTasks"
+      ),
+      chargeCodes: this.apollo.watchQuery(
+        {
+          query: queryGetChargeCodes,
+          // TODO add subscription here
+        },
+        "chargeCodes"
       ),
     });
   }

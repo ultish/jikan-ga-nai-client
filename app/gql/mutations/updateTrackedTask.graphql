@@ -1,0 +1,14 @@
+mutation updateTrackedTask($id: ID!, $notes: String, $chargeCodeIds: [ID!]) {
+  updateTrackedTask(id: $id, notes: $notes, chargeCodeIds: $chargeCodeIds) {
+    id
+    notes
+    createdAt
+    chargeCodes {
+      id
+      name
+      expired
+      description
+      code
+    }
+  }
+}

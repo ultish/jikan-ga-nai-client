@@ -10,8 +10,9 @@ import move from "ember-animated/motions/move";
 import { fadeOut, fadeIn } from "ember-animated/motions/opacity";
 import { easeOut, easeIn } from "ember-animated/easings/cosine";
 import { TrackedTask } from "jikan-ga-nai/interfaces/tracked-task";
+import { ChargeCode } from "jikan-ga-nai/interfaces/charge-code";
 
-import { htmlSafe } from "@ember/string";
+// import { htmlSafe } from "@ember/string";
 import { TimeBlock } from "jikan-ga-nai/interfaces/time-block";
 
 import { queryManager, unsubscribe } from "ember-apollo-client";
@@ -20,18 +21,19 @@ import ApolloService from "ember-apollo-client/services/apollo";
 
 import mutationDeleteTimeBlock from "jikan-ga-nai/gql/mutations/deleteTimeBlock.graphql";
 import mutationCreateTimeBlock from "jikan-ga-nai/gql/mutations/createTimeBlock.graphql";
+import mutationUpdateTrackedTask from "jikan-ga-nai/gql/mutations/updateTrackedTask.graphql";
 import queryTimeBlocks from "jikan-ga-nai/gql/queries/timeBlocks.graphql";
 
 import { task } from "ember-concurrency-decorators";
 
-const TIME_BLOCK_WIDTH = 15 - 1; // minus border
+// const TIME_BLOCK_WIDTH = 15 - 1; // minus border
 
 interface UiTrackedTaskArgs {
   day: TrackedDay;
   trackedTask: TrackedTask;
   scale: ScaleTime<Number, Number>;
   ticks: Date[];
-  test: any;
+  chargeCodes: [ChargeCode];
 }
 
 class DateBlock {
@@ -97,42 +99,37 @@ export default class UiTrackedDay extends Component<UiTrackedTaskArgs> {
     console.log("resized!");
   }
 
-  get chargedTime() {
-    const timeBlocks = this.timeBlocks;
+  @action
+  updateChargeCodes(selection: ChargeCode[]) {
+    const chargeCodeIds: String[] = [];
+    selection.forEach((cc) => chargeCodeIds.push(cc.id));
 
-    const scale = this.args.scale;
-
-    if (!scale || !timeBlocks) {
-      return [];
-    }
-
-    const results = timeBlocks.map((block) => {
-      let startTime = new Date(block.startTime);
-
-      let startY = Math.round(parseInt(scale(startTime).toFixed(1)));
-
-      let width = TIME_BLOCK_WIDTH;
-
-      if (block.minutes) {
-        width =
-          Math.round(
-            parseInt(
-              scale(
-                moment(startTime).add(block.minutes, "minutes").toDate()
-              ).toFixed(1)
-            )
-          ) - startY;
-      }
-
-      return {
-        timeBlock: block,
-        y: startY,
-        width: width,
-        style: htmlSafe(`width: ${width}px; left: ${startY}px;`),
-      };
+    this.apollo.mutate({
+      mutation: mutationUpdateTrackedTask,
+      variables: {
+        id: this.args.trackedTask.id,
+        chargeCodeIds: chargeCodeIds,
+      },
     });
+  }
 
-    return results;
+  @action
+  updateNotes(e: KeyboardEvent) {
+    const target = e.target;
+
+    if (target instanceof HTMLInputElement) {
+      const notes = target.value;
+
+      if (notes !== this.args.trackedTask.notes) {
+        this.apollo.mutate({
+          mutation: mutationUpdateTrackedTask,
+          variables: {
+            id: this.args.trackedTask.id,
+            notes: notes,
+          },
+        });
+      }
+    }
   }
 
   /**
@@ -198,8 +195,8 @@ export default class UiTrackedDay extends Component<UiTrackedTaskArgs> {
     return squares;
   }
 
-  @task({ enqueue: true })
-  updateCache: any = function* () {};
+  // @task({ enqueue: true })
+  // updateCache: any = function* () {};
 
   @task({ enqueue: true, maxConcurrency: 5 })
   timeBlockStateChange: any = function* (
@@ -211,6 +208,12 @@ export default class UiTrackedDay extends Component<UiTrackedTaskArgs> {
       // optimistically setting this before graphql results for speed
       // block.checked = true;
 
+      /*
+      Note: If this mutation was actually updateTrackedTask and passed in 
+      all the timeblocks instead (inefficient), then we wouldn't need to 
+      run updateQueries to update the cache as it will auto-update, like
+      how updateChargeCodes function works.
+      */
       // create a TimeBlock
       yield this.apollo.mutate({
         mutation: mutationCreateTimeBlock,
@@ -283,7 +286,6 @@ export default class UiTrackedDay extends Component<UiTrackedTaskArgs> {
 
   @action
   clearSelections() {
-    console.log("clearrr!");
     this.squares.forEach((block) => {
       block.selected = false;
     });

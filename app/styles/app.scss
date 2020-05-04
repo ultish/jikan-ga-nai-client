@@ -1,3 +1,9 @@
 @import "ember-uikit";
 
+$ember-power-select-default-border-radius: 0;
+$ember-power-select-default-border: 0;
+$ember-power-select-trigger-border-top: 0;
+$ember-power-select-trigger-border-bottom: 0;
+$ember-power-select-active-trigger-border: 0;
+
 @import "ember-power-select";

@@ -4,11 +4,20 @@
   {{did-insert this.didInsert}}
 >
   <div local-class="tracked-tasks">
-    asd
-    {{@trackedTask.notes}}:
-    {{#each @trackedTask.chargeCodes as |cc|}}
-      {{cc.name}}
-    {{/each}}
+    <input
+      value={{@trackedTask.notes}}
+      class="uk-input uk-form-small"
+      {{on "focusout" (fn this.updateNotes)}}
+    />
+    <PowerSelectMultiple
+      @searchEnabled={{true}}
+      @options={{@chargeCodes}}
+      @selected={{@trackedTask.chargeCodes}}
+      @placeholder="Select chargecodes..."
+      @onChange={{fn this.updateChargeCodes}} as |chargeCode|
+    >
+      {{chargeCode.name}}
+    </PowerSelectMultiple>
   </div>
   <AnimatedContainer
     local-class="tracked-time"
