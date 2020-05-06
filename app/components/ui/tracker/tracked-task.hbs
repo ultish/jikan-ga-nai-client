@@ -7,6 +7,7 @@
     <input
       value={{@trackedTask.notes}}
       class="uk-input uk-form-small"
+      placeholder="Notes..."
       {{on "focusout" (fn this.updateNotes)}}
     />
     <PowerSelectMultiple

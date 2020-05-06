@@ -116,6 +116,8 @@ export default class UiChatMessageContainer extends Component<
       "messages"
     );
 
+    debugger;
+
     this.getMessagesQuery = messages;
     this.observer = getObservable(messages);
 

@@ -1,5 +1,5 @@
 import Controller from "@ember/controller";
-import { queryManager } from "ember-apollo-client";
+import { queryManager, getObservable, unsubscribe } from "ember-apollo-client";
 
 import ApolloService from "ember-apollo-client/services/apollo";
 import { sort } from "@ember/object/computed";
@@ -16,6 +16,8 @@ import { A } from "@ember/array";
 import { toUp, toDown } from "ember-animated/transitions/move-over";
 import { TrackedTask } from "jikan-ga-nai/interfaces/tracked-task";
 
+import subTimesheetUpdated from "jikan-ga-nai/gql/subscriptions/timesheet-updated.graphql";
+
 const TRACKED_TASKS_WIDTH = 300;
 
 export default class TrackerDay extends Controller {
@@ -27,6 +29,7 @@ export default class TrackerDay extends Controller {
   @tracked scale?: ScaleTime<Number, Number>;
   @tracked ticks = A<Date>();
   tickFormat?: Function;
+  timesheetUpdatedSub: any;
 
   onRouteActivate = () => {
     const baseDate = this.model.trackedDay.date;
@@ -37,6 +40,24 @@ export default class TrackerDay extends Controller {
     this.stopTime = this.startTime.clone().add(8, "hours");
 
     this.calculateScale();
+
+    const observerable = getObservable(this.model.timesheet);
+
+    if (observerable) {
+      observerable.subscribeToMore({
+        document: subTimesheetUpdated,
+        // updateQuery: (prev, { subscriptionData }) => {
+        //   debugger;
+        //   return prev;
+        // },
+      });
+    }
+  };
+
+  onLeaving = () => {
+    // if (this.timesheetUpdatedSub) {
+    //   this.timesheetUpdatedSub.apolloUnsubscribe();
+    // }
   };
 
   @action

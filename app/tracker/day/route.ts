@@ -8,7 +8,7 @@ import { ObservableQuery } from "apollo-client/core/ObservableQuery";
 import queryGetTrackedTasks from "jikan-ga-nai/gql/queries/trackedTasks.graphql";
 import queryGetTrackedDay from "jikan-ga-nai/gql/queries/trackedDay.graphql";
 import queryGetChargeCodes from "jikan-ga-nai/gql/queries/chargeCodes.graphql";
-
+import queryTimesheet from "jikan-ga-nai/gql/queries/timesheet.graphql";
 import { GetTrackedTasks } from "jikan-ga-nai/interfaces/get-tracked-tasks";
 
 import { hash } from "rsvp";
@@ -33,6 +33,19 @@ export default class TrackerDay extends Route {
     controller.onRouteActivate();
   }
 
+  // resetController(
+  //   controller: TrackerDayController,
+  //   isExiting: boolean,
+  //   transition: { targetName: string }
+  // ) {
+  //   super.resetController(controller, isExiting, transition);
+
+  //   if (isExiting) {
+  //     controller.onLeaving();
+  //     //   removeListener(this.messagesCreatedSub, "event", this.handleEvent);
+  //   }
+  // }
+
   model({ id }: { id: String }) {
     return hash({
       trackedDay: this.apollo.query(
@@ -43,6 +56,15 @@ export default class TrackerDay extends Route {
           },
         },
         "trackedDay"
+      ),
+      timesheet: this.apollo.watchQuery(
+        {
+          query: queryTimesheet,
+          variables: {
+            trackedDayId: id,
+          },
+        },
+        "timesheet"
       ),
       trackedTasks: this.apollo.watchQuery(
         {

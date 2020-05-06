@@ -1,0 +1,19 @@
+{{@timesheet.weekEndingDate}}
+<br />
+{{#each @timesheet.timeCharged as |timeCharged|}}
+  {{timeCharged.date}} : {{timeCharged.chargeCode.name}} :
+  {{timesheet-hours value=timeCharged.value}}
+
+  {{!-- <div local-class="test-counter-container">
+    <AnimatedContainer>
+      {{#animated-value timeCharged.value rules=this.rules duration=1000 as |v|
+      }}
+        <span class="count">
+          {{v}}
+        </span>
+      {{/animated-value}}
+    </AnimatedContainer>
+  </div> --}}
+
+  <br />
+{{/each}}

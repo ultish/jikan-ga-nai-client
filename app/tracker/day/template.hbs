@@ -18,14 +18,16 @@
           @trackedTask={{task}}
           @ticks={{this.ticks}}
           @scale={{this.scale}}
-          @day={{this.model.trackedDay}}
-          @chargeCodes={{this.model.chargeCodes}}
+          @day={{@model.trackedDay}}
+          @chargeCodes={{@model.chargeCodes}}
         />
       {{/each}}
     </div>
   </div>
   <div id="timesheet" local-class="timesheet">
+    <Ui::Tracker::Timesheet @timesheet={{@model.timesheet}} />
     timesheet
+
     <div local-class="test-counter-container">
       <button type="button" {{on "click" this.increment}}>
         +

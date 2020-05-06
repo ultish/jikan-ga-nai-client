@@ -1,0 +1,10 @@
+.test-counter-container {
+  // overflow: hidden;
+  background-color: red;
+  display: inline;
+
+  :global(.animated-container) {
+    overflow: hidden;
+    display: inline-block;
+  }
+}
