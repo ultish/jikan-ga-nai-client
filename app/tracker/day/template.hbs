@@ -33,24 +33,6 @@
   </div>
   <div id="timesheet" local-class="timesheet">
     <Ui::Tracker::Timesheet @timesheet={{@model.timesheet}} />
-    timesheet
-
-    <div local-class="test-counter-container">
-      <button type="button" {{on "click" this.increment}}>
-        +
-      </button>
-      <button type="button" {{on "click" this.decrement}}>
-        -
-      </button>
-
-      <AnimatedContainer>
-        {{#animated-value this.counter rules=this.rules as |v|}}
-          <span class="count">
-            {{v}}
-          </span>
-        {{/animated-value}}
-      </AnimatedContainer>
-    </div>
   </div>
 </div>
 {{outlet}}

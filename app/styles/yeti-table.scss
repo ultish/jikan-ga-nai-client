@@ -6,7 +6,7 @@ table.yeti-table {
   position: relative;
 
   thead {
-    font-size: 13px;
+    font-size: 12px;
     color: rgba(0, 0, 0, 0.6);
 
     th {
@@ -16,11 +16,12 @@ table.yeti-table {
         // the sorting icons require the material icons font to be included
         &:before {
           vertical-align: middle;
+          padding-right: 8px;
 
           font-family: "Material Icons";
           font-weight: normal;
           font-style: normal;
-          font-size: 18px;
+          font-size: 12px;
           line-height: 1;
           letter-spacing: normal;
           text-transform: none;
@@ -55,10 +56,10 @@ table.yeti-table {
     tr {
       th,
       td {
-        height: 20px;
+        //height: 48px;
         text-align: left;
         white-space: nowrap;
-        padding: 2px;
+        //padding: 12px;
         border-bottom: 1px solid rgba(0, 0, 0, 0.12);
         box-sizing: border-box;
 

@@ -3,7 +3,7 @@ import { queryManager, getObservable } from "ember-apollo-client";
 
 import ApolloService from "ember-apollo-client/services/apollo";
 import { sort } from "@ember/object/computed";
-import { action } from "@ember/object";
+import { action, set } from "@ember/object";
 
 import { scaleTime, ScaleTime } from "d3-scale";
 import jQuery from "jquery";
@@ -50,6 +50,11 @@ export default class TrackerDay extends Controller {
         document: subTimesheetUpdated,
         // updateQuery: (prev, { subscriptionData }) => {
         //   debugger;
+        //   set(
+        //     prev,
+        //     "timesheet.timeCharged",
+        //     subscriptionData.data.timesheetUpdated.timeCharged
+        //   );
         //   return prev;
         // },
       });

@@ -1,7 +1,7 @@
 export interface ChargeCode {
-  id: String;
-  name: String;
+  id: string;
+  name: string;
   expired: boolean;
-  description?: String;
-  code: String;
+  description?: string;
+  code: string;
 }

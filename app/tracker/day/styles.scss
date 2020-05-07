@@ -12,7 +12,7 @@ $timesheetHeight: 200px;
 }
 
 .tracked-tasks-container {
-  height: calc(100% - #{$timesheetHeight});
+  height: calc(100vh - #{$timesheetHeight} - 100px);
   width: calc(100vw - #{$sideWidth});
   overflow-y: auto;
   position: relative;
@@ -21,6 +21,8 @@ $timesheetHeight: 200px;
 .tick-container {
   position: absolute;
   top: 0;
+  bottom: 0;
+  right: 0;
   left: 300px;
   display: flex;
   flex-direction: row;

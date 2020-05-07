@@ -7,4 +7,13 @@ $ember-power-select-trigger-border-bottom: 0;
 $ember-power-select-active-trigger-border: 0;
 
 @import "ember-power-select";
+
+@font-face {
+  font-family: "Material Icons";
+  font-style: normal;
+  font-weight: 400;
+  src: local("Material Icons"), local("MaterialIcons-Regular"),
+    url(/fonts/MaterialIcons-Regular.woff2) format("woff2");
+}
+
 @import "yeti-table";

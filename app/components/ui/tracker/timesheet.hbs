@@ -1,35 +1,9 @@
 Week Ending: {{moment-format @timesheet.weekEndingDate 'YYYY-MM-DD ddd'}}
-<br />
-{{#each @timesheet.timeCharged as |timeCharged|}}
-  {{moment-format timeCharged.date 'ddd'}} : {{timeCharged.chargeCode.name}} :
-  {{timesheet-hours value=timeCharged.value}} ({{timeCharged.value}}m)
 
-  {{!-- <div local-class="test-counter-container">
-    <AnimatedContainer>
-      {{#animated-value timeCharged.value rules=this.rules duration=1000 as |v|
-      }}
-        <span class="count">
-          {{v}}
-        </span>
-      {{/animated-value}}
-    </AnimatedContainer>
-  </div> --}}
-
-
-<!--    <table.foot as |foot|>-->
-<!--      <foot.row as |row|>-->
-<!--        <row.cell @visible={{true}} colspan={{table.visibleColumns.length}}>-->
-<!--          <table.pagination />-->
-<!--        </row.cell>-->
-<!--      </foot.row>-->
-<!--    </table.foot>-->
-
-  <br />
-{{/each}}
 
 <YetiTable @data={{this.calculatedTimesheet}} as |table|>
   <table.header as |header|>
-    <header.column @prop="chargecode">
+    <header.column @prop="chargecode.name">
       Charge Code
     </header.column>
     <header.column @prop="monday">
@@ -53,22 +27,55 @@ Week Ending: {{moment-format @timesheet.weekEndingDate 'YYYY-MM-DD ddd'}}
     <header.column @prop="sunday">
       Sunday
     </header.column>
+    <header.column @prop="total">
+      Total
+    </header.column>
   </table.header>
-  <table.body  />
+  <table.body as |body timesheetRow|>
+    <body.row as |row|>
+      <row.cell>
+        {{#if timesheetRow.chargecode.name}}
+          {{timesheetRow.chargecode.name}}
+        {{else}}
+          <b>{{timesheetRow.chargecode}}</b>
+        {{/if}}
+      </row.cell>
+      <row.cell>
+        {{timesheet-hours value=timesheetRow.monday}}
+      </row.cell>
+      <row.cell>
+        {{timesheet-hours value=timesheetRow.tuesday}}
+      </row.cell>
+      <row.cell>
+        {{timesheet-hours value=timesheetRow.wednesday}}
+      </row.cell>
+      <row.cell>
+        {{timesheet-hours value=timesheetRow.thursday}}
+      </row.cell>
+      <row.cell>
+        {{timesheet-hours value=timesheetRow.friday}}
+      </row.cell>
+      <row.cell>
+        {{timesheet-hours value=timesheetRow.saturday}}
+      </row.cell>
+      <row.cell>
+        {{timesheet-hours value=timesheetRow.sunday}}
+      </row.cell>
+      <row.cell>
+        {{timesheet-hours value=timesheetRow.total}}
+      </row.cell>
+    </body.row>
+
+  </table.body>
   <table.tfoot as |foot|>
     <foot.row as |row|>
-      <row.cell>
-        Footer content
-      </row.cell>
-      <row.cell>
-        Footer content
-      </row.cell>
-      <row.cell>
-        Footer content
-      </row.cell>
-      <row.cell>
-        Footer content
-      </row.cell>
+
+      {{#each this.dayTotals as |total|}}
+        <row.cell>
+          {{timesheet-hours value=total}}
+        </row.cell>
+      {{/each}}
+
     </foot.row>
   </table.tfoot>
 </YetiTable>

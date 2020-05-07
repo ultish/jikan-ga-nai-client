@@ -31,7 +31,7 @@ export default class TrackerDay extends Route {
     controller.onRouteActivate();
   }
 
-  model({ id }: { id: String }) {
+  model({ id }: { id: string }) {
     return hash({
       trackedDay: this.apollo.query(
         {

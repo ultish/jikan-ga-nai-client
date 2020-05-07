@@ -1,7 +1,7 @@
 import { TimeCharged } from "./time-charged";
 
 export interface Timesheet {
-  id: String;
+  id: string;
   weekEndingDate: number;
   timeCharged?: TimeCharged[];
 }

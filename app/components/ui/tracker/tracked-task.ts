@@ -134,7 +134,7 @@ export default class UiTrackedDay extends Component<UiTrackedTaskArgs> {
   @action
   updateChargeCodes(selection: ChargeCode[]) {
     debugger;
-    const chargeCodeIds: String[] = [];
+    const chargeCodeIds: string[] = [];
     selection.forEach((cc) => chargeCodeIds.push(cc.id));
 
     this.apollo.mutate({
