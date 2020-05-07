@@ -1,8 +1,14 @@
 import { helper } from "@ember/component/helper";
 
-export function timesheetHours(params: any, { value }: any) {
+export function timesheetHours(params: any, { value, fixed }: any) {
   if (value) {
-    return value / 6 / 10;
+    let result = value / 6 / 10;
+
+    if (fixed !== undefined) {
+      result = parseFloat(result.toFixed(fixed));
+    }
+
+    return result;
   } else {
     return 0;
   }

@@ -33,36 +33,40 @@ Week Ending: {{moment-format @timesheet.weekEndingDate 'YYYY-MM-DD ddd'}}
   </table.header>
   <table.body as |body timesheetRow|>
     <body.row as |row|>
-      <row.cell>
+      <row.cell local-class={{if (eq timesheetRow.chargecode 'Total') 'total'}}>
         {{#if timesheetRow.chargecode.name}}
           {{timesheetRow.chargecode.name}}
         {{else}}
           <b>{{timesheetRow.chargecode}}</b>
         {{/if}}
       </row.cell>
-      <row.cell>
+      <row.cell local-class={{if (eq timesheetRow.chargecode 'Total') 'total'}}>
         {{timesheet-hours value=timesheetRow.monday}}
       </row.cell>
-      <row.cell>
+      <row.cell local-class={{if (eq timesheetRow.chargecode 'Total') 'total'}}>
         {{timesheet-hours value=timesheetRow.tuesday}}
       </row.cell>
-      <row.cell>
+      <row.cell local-class={{if (eq timesheetRow.chargecode 'Total') 'total'}}>
         {{timesheet-hours value=timesheetRow.wednesday}}
       </row.cell>
-      <row.cell>
+      <row.cell local-class={{if (eq timesheetRow.chargecode 'Total') 'total'}}>
         {{timesheet-hours value=timesheetRow.thursday}}
       </row.cell>
-      <row.cell>
+      <row.cell local-class={{if (eq timesheetRow.chargecode 'Total') 'total'}}>
         {{timesheet-hours value=timesheetRow.friday}}
       </row.cell>
-      <row.cell>
+      <row.cell local-class={{if (eq timesheetRow.chargecode 'Total') 'total'}}>
         {{timesheet-hours value=timesheetRow.saturday}}
       </row.cell>
-      <row.cell>
+      <row.cell local-class={{if (eq timesheetRow.chargecode 'Total') 'total'}}>
         {{timesheet-hours value=timesheetRow.sunday}}
       </row.cell>
-      <row.cell>
-        {{timesheet-hours value=timesheetRow.total}}
+      <row.cell local-class={{if (eq timesheetRow.chargecode 'Total') 'total'}}>
+        {{#if timesheetRow.chargecode.name}}
+          {{timesheet-hours value=timesheetRow.total}}
+        {{else}}
+          {{timesheet-hours value=timesheetRow.total fixed=1}}
+        {{/if}}
       </row.cell>
     </body.row>
 
