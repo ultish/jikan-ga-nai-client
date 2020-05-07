@@ -1,10 +1,11 @@
 $sideWidth: 200px;
-$timesheetHeight: 200px;
+$timesheetHeight: 170px;
+$headerHeight: 80px;
 
-$containerHeight: calc(100vh - #{$timesheetHeight} - 100px);
+$containerHeight: calc(100vh - #{$timesheetHeight} - #{$headerHeight});
 
 .track-container {
-  height: calc(100vh - 100px);
+  height: calc(100vh - #{$headerHeight});
   position: absolute;
 
   top: 0;

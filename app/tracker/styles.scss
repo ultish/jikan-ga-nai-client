@@ -1,11 +1,12 @@
+$headerHeight: 80px;
+
 .pages-tracker {
   position: relative;
 }
 .tracked-days {
   background-color: rgb(19, 18, 18);
-  // border-right: 2px solid rgb(212, 212, 212);
   width: 200px;
-  height: calc(100vh - 100px);
+  height: calc(100vh - #{$headerHeight});
   position: absolute;
   top: 0;
   left: 0;
