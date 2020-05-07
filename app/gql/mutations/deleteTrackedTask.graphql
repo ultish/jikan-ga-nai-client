@@ -1,0 +1,3 @@
+mutation deleteTrackedTask($id: ID!) {
+  deleteTrackedTask(id: $id)
+}

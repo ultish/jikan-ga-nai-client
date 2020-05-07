@@ -14,6 +14,10 @@ $blockHeight: 30px;
   width: $tasksWidth;
   flex-shrink: 0;
   border-bottom: 1px solid rgb(129, 129, 129);
+
+  :global(.ember-power-select-trigger) {
+    flex-grow: 1;
+  }
 }
 .tracked-time {
   width: 100%;

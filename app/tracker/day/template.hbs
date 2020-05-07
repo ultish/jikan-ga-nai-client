@@ -1,7 +1,7 @@
 <div id="track-container" local-class="track-container">
   <div
-    id="tracked-tasks-container"
-    local-class="tracked-tasks-container"
+      id="tracked-tasks-container"
+      local-class="tracked-tasks-container"
     {{did-resize this.didResize}}
     {{did-insert this.didResize}}
   >
@@ -15,13 +15,20 @@
     <div local-class="time-container">
       {{#each this.sortedTasks as |task|}}
         <Ui::Tracker::TrackedTask
-          @trackedTask={{task}}
-          @ticks={{this.ticks}}
-          @scale={{this.scale}}
-          @day={{@model.trackedDay}}
-          @chargeCodes={{@model.chargeCodes}}
+            @trackedTask={{task}}
+            @ticks={{this.ticks}}
+            @scale={{this.scale}}
+            @day={{@model.trackedDay}}
+            @chargeCodes={{@model.chargeCodes}}
+            @trackedDay={{@model.trackedDay}}
         />
       {{/each}}
+      <button
+          type="button" {{on 'click' (fn this.addTrackedTask)}}
+          local-class="add-tracked-task"
+          class="uk-button uk-button-primary uk-button-small">
+        Add new Task
+      </button>
     </div>
   </div>
   <div id="timesheet" local-class="timesheet">

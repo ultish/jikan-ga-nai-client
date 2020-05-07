@@ -7,10 +7,23 @@ enum CacheControlScope {
   PRIVATE
 }
 
-# A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the
-# `date-time` format outlined in section 5.6 of the RFC 3339 profile of the ISO
-# 8601 standard for representation of dates and times using the Gregorian calendar.
+type ChargeCode {
+  id: ID!
+  name: String!
+  code: String!
+  description: String
+  expired: Boolean!
+}
+
 scalar DateTime
+
+enum DayMode {
+  NORMAL
+  HOL_PUBLIC
+  HOL_PERSONAL
+  HOL_RDO
+  HOL_ANNUAL
+}
 
 type Message {
   id: ID!
@@ -30,12 +43,42 @@ type MessageCreated {
 
 type Mutation {
   _: Boolean
-  signUp(username: String!, email: String!, password: String!): Token!
-  signIn(login: String!, password: String!): Token!
+  signUp(username: String!, password: String!, email: String!): UserToken!
+  signIn(login: String!, password: String!): UserToken!
   deleteUser(id: ID!): Boolean!
   createMessage(text: String!): Message!
   deleteMessage(id: ID!): Boolean!
   updateMessage(id: ID!, text: String!): Boolean!
+  createTrackedDay(date: Float!, mode: DayMode): TrackedDay!
+  createTrackedTask(
+    trackedDayId: ID!
+    notes: String
+    chargeCodeIds: [ID]
+  ): TrackedTask!
+  createChargeCode(
+    name: String!
+    code: String!
+    expired: Boolean!
+    description: String
+  ): ChargeCode!
+  createTimeBlock(
+    trackedTaskId: ID!
+    startTime: Float!
+    minutes: Int
+  ): TimeBlock!
+  updateTrackedDay(id: ID!, date: Float, mode: DayMode): TrackedDay!
+  updateTrackedTask(id: ID!, notes: String, chargeCodeIds: [ID]): TrackedTask!
+  updateChargeCode(
+    id: ID!
+    name: String
+    code: String
+    expired: Boolean
+    description: String
+  ): ChargeCode!
+  updateTimeBlock(id: ID!, minutes: Int!): TimeBlock!
+  deleteTrackedDay(id: ID!): ID
+  deleteTrackedTask(id: ID!): ID
+  deleteTimeBlock(id: ID!): ID
 }
 
 type PageInfo {
@@ -50,19 +93,72 @@ type Query {
   me: User
   messages(cursor: String, limit: Int): MessageConnection!
   message(id: ID!): Message!
+  trackedDays(cursor: String, limit: Int): TrackedDayPaginated!
+  trackedDay(trackedDayId: ID!): TrackedDay!
+  trackedTasks(
+    trackedDayId: ID!
+    cursor: String
+    limit: Int
+  ): TrackedTasksPaginated!
+  timeBlocks(trackedTaskId: ID!): [TimeBlock!]!
+  chargeCodes: [ChargeCode!]!
+  timesheet(trackedDayId: ID!): Timesheet
 }
 
 type Subscription {
   _: Boolean
-  messageCreated: MessageCreated!
+  messageCreated: MessageCreated
+  timesheetUpdated: Timesheet
 }
 
-type Token {
-  token: String!
+type TimeBlock {
+  id: ID!
+  startTime: Float!
+  minutes: Int
 }
 
-# The `Upload` scalar type
- represents a file upload.
+type TimeCharge {
+  id: ID!
+  date: Float!
+  chargeCode: ChargeCode!
+  value: Float!
+}
+
+type Timesheet {
+  id: ID!
+  weekEndingDate: Float!
+  timeCharged: [TimeCharge!]!
+  user: User!
+  trackedDays: [TrackedDay!]!
+}
+
+type TrackedDay {
+  id: ID!
+  date: Float!
+  mode: DayMode!
+  tasks: [TrackedTask!]
+  user: User!
+  timeCharges: [TimeCharge!]
+}
+
+type TrackedDayPaginated {
+  edges: [TrackedDay!]!
+  pageInfo: PageInfo!
+}
+
+type TrackedTask {
+  id: ID!
+  notes: String
+  chargeCodes: [ChargeCode!]
+  timeBlocks: [TimeBlock!]
+  createdAt: Float!
+}
+
+type TrackedTasksPaginated {
+  edges: [TrackedTask!]!
+  pageInfo: PageInfo!
+}
+
 scalar Upload
 
 type User {
@@ -71,5 +167,12 @@ type User {
   email: String!
   role: String
   messages: [Message!]
+  trackedDays: [TrackedDay!]
+  timesheets: [Timesheet!]
+}
+
+type UserToken {
+  token: String!
+  user: User!
 }
 

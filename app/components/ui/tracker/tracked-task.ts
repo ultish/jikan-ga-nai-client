@@ -22,6 +22,7 @@ import ApolloService from "ember-apollo-client/services/apollo";
 import mutationDeleteTimeBlock from "jikan-ga-nai/gql/mutations/deleteTimeBlock.graphql";
 import mutationCreateTimeBlock from "jikan-ga-nai/gql/mutations/createTimeBlock.graphql";
 import mutationUpdateTrackedTask from "jikan-ga-nai/gql/mutations/updateTrackedTask.graphql";
+import mutationDeleteTrackedTask from "jikan-ga-nai/gql/mutations/deleteTrackedTask.graphql";
 import queryTimeBlocks from "jikan-ga-nai/gql/queries/timeBlocks.graphql";
 
 import { task } from "ember-concurrency-decorators";
@@ -34,6 +35,7 @@ interface UiTrackedTaskArgs {
   scale: ScaleTime<Number, Number>;
   ticks: Date[];
   chargeCodes: [ChargeCode];
+  trackedDay: TrackedDay;
 }
 
 class DateBlock {
@@ -95,12 +97,43 @@ export default class UiTrackedDay extends Component<UiTrackedTaskArgs> {
   }
 
   @action
+  deleteTrackedTask() {
+    console.log("deleting task");
+    this.apollo.mutate({
+      mutation: mutationDeleteTrackedTask,
+      variables: {
+        id: this.args.trackedTask.id,
+      },
+      updateQueries: {
+        trackedTasks: (prev, { mutationResult, queryVariables }) => {
+          console.log("update query");
+          debugger;
+          this.args.trackedTask;
+          if (this.args.trackedDay.id === queryVariables.trackedDayId) {
+            let deletedId = mutationResult?.data?.deleteTrackedTask;
+            if (deletedId) {
+              const toRemove = prev.trackedTasks.edges.find(
+                (task: TrackedTask) => task.id === deletedId
+              );
+              if (toRemove) {
+                prev.trackedTasks.edges.removeObject(toRemove);
+              }
+            }
+          }
+          return prev;
+        },
+      },
+    });
+  }
+
+  @action
   didResize() {
     console.log("resized!");
   }
 
   @action
   updateChargeCodes(selection: ChargeCode[]) {
+    debugger;
     const chargeCodeIds: String[] = [];
     selection.forEach((cc) => chargeCodeIds.push(cc.id));
 
@@ -209,8 +242,8 @@ export default class UiTrackedDay extends Component<UiTrackedTaskArgs> {
       // block.checked = true;
 
       /*
-      Note: If this mutation was actually updateTrackedTask and passed in 
-      all the timeblocks instead (inefficient), then we wouldn't need to 
+      Note: If this mutation was actually updateTrackedTask and passed in
+      all the timeblocks instead (inefficient), then we wouldn't need to
       run updateQueries to update the cache as it will auto-update, like
       how updateChargeCodes function works.
       */

@@ -1,5 +1,5 @@
 import Controller from "@ember/controller";
-import { queryManager, getObservable, unsubscribe } from "ember-apollo-client";
+import { queryManager, getObservable } from "ember-apollo-client";
 
 import ApolloService from "ember-apollo-client/services/apollo";
 import { sort } from "@ember/object/computed";
@@ -17,6 +17,8 @@ import { toUp, toDown } from "ember-animated/transitions/move-over";
 import { TrackedTask } from "jikan-ga-nai/interfaces/tracked-task";
 
 import subTimesheetUpdated from "jikan-ga-nai/gql/subscriptions/timesheet-updated.graphql";
+import mutationCreateTrackedTask from "jikan-ga-nai/gql/mutations/createTrackedTask.graphql";
+import queryGetTrackedTasks from "jikan-ga-nai/gql/queries/trackedTasks.graphql";
 
 const TRACKED_TASKS_WIDTH = 300;
 
@@ -59,6 +61,33 @@ export default class TrackerDay extends Controller {
     //   this.timesheetUpdatedSub.apolloUnsubscribe();
     // }
   };
+
+  @action
+  addTrackedTask() {
+    // add here
+    const trackedDayId = this.model.trackedDay.id;
+    debugger;
+    this.apollo.mutate({
+      mutation: mutationCreateTrackedTask,
+      variables: {
+        trackedDayId: trackedDayId,
+      },
+      updateQueries: {
+        trackedTasks: (prev, { mutationResult, queryVariables }) => {
+          debugger;
+          if (queryVariables.trackedDayId === this.model.trackedDay.id) {
+            if (mutationResult?.data?.createTrackedTask) {
+              // prev.timeBlocks.pushObject(mutationResult.data.createTimeBlock);
+              prev.trackedTasks.edges.pushObject(
+                mutationResult.data.createTrackedTask
+              );
+            }
+          }
+          return prev;
+        },
+      },
+    });
+  }
 
   @action
   didResize() {

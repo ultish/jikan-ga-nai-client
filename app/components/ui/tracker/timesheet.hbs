@@ -1,8 +1,8 @@
-{{@timesheet.weekEndingDate}}
+Week Ending: {{moment-format @timesheet.weekEndingDate 'YYYY-MM-DD ddd'}}
 <br />
 {{#each @timesheet.timeCharged as |timeCharged|}}
-  {{timeCharged.date}} : {{timeCharged.chargeCode.name}} :
-  {{timesheet-hours value=timeCharged.value}}
+  {{moment-format timeCharged.date 'ddd'}} : {{timeCharged.chargeCode.name}} :
+  {{timesheet-hours value=timeCharged.value}} ({{timeCharged.value}}m)
 
   {{!-- <div local-class="test-counter-container">
     <AnimatedContainer>
@@ -15,5 +15,60 @@
     </AnimatedContainer>
   </div> --}}
 
+
+<!--    <table.foot as |foot|>-->
+<!--      <foot.row as |row|>-->
+<!--        <row.cell @visible={{true}} colspan={{table.visibleColumns.length}}>-->
+<!--          <table.pagination />-->
+<!--        </row.cell>-->
+<!--      </foot.row>-->
+<!--    </table.foot>-->
+
   <br />
 {{/each}}
+
+<YetiTable @data={{this.calculatedTimesheet}} as |table|>
+  <table.header as |header|>
+    <header.column @prop="chargecode">
+      Charge Code
+    </header.column>
+    <header.column @prop="monday">
+      Monday
+    </header.column>
+    <header.column @prop="tuesday">
+      Tuesday
+    </header.column>
+    <header.column @prop="wednesday">
+      Wednesday
+    </header.column>
+    <header.column @prop="thursday">
+      Thursday
+    </header.column>
+    <header.column @prop="friday">
+      Friday
+    </header.column>
+    <header.column @prop="saturday">
+      Saturday
+    </header.column>
+    <header.column @prop="sunday">
+      Sunday
+    </header.column>
+  </table.header>
+  <table.body  />
+  <table.tfoot as |foot|>
+    <foot.row as |row|>
+      <row.cell>
+        Footer content
+      </row.cell>
+      <row.cell>
+        Footer content
+      </row.cell>
+      <row.cell>
+        Footer content
+      </row.cell>
+      <row.cell>
+        Footer content
+      </row.cell>
+    </foot.row>
+  </table.tfoot>
+</YetiTable>

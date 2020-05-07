@@ -1,15 +1,13 @@
 import Route from "@ember/routing/route";
 import TrackerDayController from "./controller";
 
-import { queryManager, getObservable, unsubscribe } from "ember-apollo-client";
+import { queryManager } from "ember-apollo-client";
 import ApolloService from "ember-apollo-client/services/apollo";
-import { ObservableQuery } from "apollo-client/core/ObservableQuery";
 
 import queryGetTrackedTasks from "jikan-ga-nai/gql/queries/trackedTasks.graphql";
 import queryGetTrackedDay from "jikan-ga-nai/gql/queries/trackedDay.graphql";
 import queryGetChargeCodes from "jikan-ga-nai/gql/queries/chargeCodes.graphql";
 import queryTimesheet from "jikan-ga-nai/gql/queries/timesheet.graphql";
-import { GetTrackedTasks } from "jikan-ga-nai/interfaces/get-tracked-tasks";
 
 import { hash } from "rsvp";
 import { TrackedTask } from "jikan-ga-nai/interfaces/tracked-task";
@@ -33,19 +31,6 @@ export default class TrackerDay extends Route {
     controller.onRouteActivate();
   }
 
-  // resetController(
-  //   controller: TrackerDayController,
-  //   isExiting: boolean,
-  //   transition: { targetName: string }
-  // ) {
-  //   super.resetController(controller, isExiting, transition);
-
-  //   if (isExiting) {
-  //     controller.onLeaving();
-  //     //   removeListener(this.messagesCreatedSub, "event", this.handleEvent);
-  //   }
-  // }
-
   model({ id }: { id: String }) {
     return hash({
       trackedDay: this.apollo.query(
@@ -57,6 +42,7 @@ export default class TrackerDay extends Route {
         },
         "trackedDay"
       ),
+      // TODO move this out into the timesheet component
       timesheet: this.apollo.watchQuery(
         {
           query: queryTimesheet,

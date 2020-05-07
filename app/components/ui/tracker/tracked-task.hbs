@@ -1,35 +1,45 @@
 <div
-  local-class="container"
+    local-class="container"
   {{did-resize this.didResize}}
   {{did-insert this.didInsert}}
 >
   <div local-class="tracked-tasks">
     <input
-      value={{@trackedTask.notes}}
-      class="uk-input uk-form-small"
-      placeholder="Notes..."
+        value={{@trackedTask.notes}}
+        class="uk-input uk-form-small"
+        placeholder="Notes..."
       {{on "focusout" (fn this.updateNotes)}}
     />
-    <PowerSelectMultiple
-      @searchEnabled={{true}}
-      @options={{@chargeCodes}}
-      @selected={{@trackedTask.chargeCodes}}
-      @placeholder="Select chargecodes..."
-      @onChange={{fn this.updateChargeCodes}} as |chargeCode|
-    >
-      {{chargeCode.name}}
-    </PowerSelectMultiple>
+    <div class="uk-flex uk-flex-row">
+      <PowerSelectMultiple
+          @searchEnabled={{true}}
+          @options={{@chargeCodes}}
+          @selected={{@trackedTask.chargeCodes}}
+          @placeholder="Select chargecodes..."
+          @onChange={{fn this.updateChargeCodes}} as |chargeCode|
+      >
+        {{chargeCode.name}}
+      </PowerSelectMultiple>
+      <button
+          type="button"
+          class="uk-button uk-button-danger uk-button-small"
+          uk-icon="icon: trash" {{on 'dblclick' (fn this.deleteTrackedTask)}}>
+
+        <EmberTooltip @event="click" @text="Double-click to delete" />
+
+      </button>
+    </div>
   </div>
   <AnimatedContainer
-    local-class="tracked-time"
+      local-class="tracked-time"
     {{on-click-outside (fn this.clearSelections)}}
   >
     {{#each this.squaresWithTimeBlocks as |square|}}
       <div
-        local-class={{concat "square" (if square.selected " block-selected")}}
-        class={{if square.timeBlock " time-block-found"}}
-        role="button"
-        tabindex="0"
+          local-class={{concat "square" (if square.selected " block-selected")}}
+          class={{if square.timeBlock " time-block-found"}}
+          role="button"
+          tabindex="0"
         {{on "keyup" (fn this.keyUp square)}}
         {{on "click" (fn this.mouseClick square)}}
         {{on "mousedown" (fn this.mouseDown square)}}
