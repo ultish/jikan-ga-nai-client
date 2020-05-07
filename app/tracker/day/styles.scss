@@ -1,6 +1,8 @@
 $sideWidth: 200px;
 $timesheetHeight: 200px;
 
+$containerHeight: calc(100vh - #{$timesheetHeight} - 100px);
+
 .track-container {
   height: calc(100vh - 100px);
   position: absolute;
@@ -12,7 +14,7 @@ $timesheetHeight: 200px;
 }
 
 .tracked-tasks-container {
-  height: calc(100vh - #{$timesheetHeight} - 100px);
+  height: $containerHeight;
   width: calc(100vw - #{$sideWidth});
   overflow-y: auto;
   position: relative;
@@ -30,7 +32,7 @@ $timesheetHeight: 200px;
   .tick-hour {
     width: 60px;
     min-width: 60px;
-    height: calc(100vh - 100px - 100px);
+    height: $containerHeight;
     display: inline-block;
     user-select: none;
     text-align: center;
