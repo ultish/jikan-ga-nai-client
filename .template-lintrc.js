@@ -1,5 +1,6 @@
-'use strict';
+"use strict";
 
 module.exports = {
-  extends: 'octane'
+  extends: "octane",
+  "no-curly-component-invocation": { allow: ["timesheet-hours"] },
 };
