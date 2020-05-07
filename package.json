@@ -74,7 +74,6 @@
     "ember-sticky-element": "^0.2.3",
     "ember-template-lint": "^2.4.0",
     "ember-tooltips": "^3.4.2",
-    "ember-truth-helpers": "^2.1.0",
     "ember-uikit": "^2.1.2",
     "ember-yeti-table": "^1.4.1",
     "eslint": "^6.8.0",

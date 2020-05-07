@@ -26,6 +26,10 @@ class TimesheetRow {
   constructor(chargecode: ChargeCode | string) {
     this.chargecode = chargecode;
   }
+
+  get isTotal() {
+    return this.chargecode === "Total";
+  }
 }
 
 export default class UiTrackedTimesheet extends Component<
