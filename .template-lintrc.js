@@ -2,5 +2,9 @@
 
 module.exports = {
   extends: "octane",
-  "no-curly-component-invocation": { allow: ["timesheet-hours"] },
+  rules: {
+    "no-curly-component-invocation": {
+      allow: ["timesheet-hours"],
+    },
+  },
 };
