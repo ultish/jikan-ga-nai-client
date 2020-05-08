@@ -61,11 +61,12 @@ Week Ending: {{moment-format @timesheet.weekEndingDate 'YYYY-MM-DD ddd'}}
       <row.cell local-class={{if timesheetRow.isTotal 'total'}}>
         {{timesheet-hours value=timesheetRow.sunday}}
       </row.cell>
-      <row.cell local-class={{if timesheetRow.isTotal 'total'}}>
+      <row.cell local-class={{if timesheetRow.isTotal 'total' 'total-chargecode'}}>
         {{#if timesheetRow.chargecode.name}}
-          {{timesheet-hours value=timesheetRow.total}}
+          {{timesheetRow.realTotal}}
+          ({{timesheet-hours value=timesheetRow.total}})
         {{else}}
-          {{timesheet-hours value=timesheetRow.total fixed=1}}
+          {{timesheet-hours value=timesheetRow.total fixed=1}} ({{timesheet-hours value=timesheetRow.total}})
         {{/if}}
       </row.cell>
     </body.row>

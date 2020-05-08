@@ -23,12 +23,26 @@ class TimesheetRow {
   sunday: number = 0;
   total: number = 0;
 
+  realTotal: number = 0;
+
   constructor(chargecode: ChargeCode | string) {
     this.chargecode = chargecode;
   }
 
   get isTotal() {
     return this.chargecode === "Total";
+  }
+
+  get week() {
+    return [
+      this.monday,
+      this.tuesday,
+      this.wednesday,
+      this.thursday,
+      this.friday,
+      this.saturday,
+      this.sunday,
+    ];
   }
 }
 
@@ -63,7 +77,7 @@ export default class UiTrackedTimesheet extends Component<
     // add a totals row
     let result = Array.from(map.values());
     let totals = this.dayTotals(result);
-    debugger;
+
     result = [...result, totals];
 
     return result;
@@ -71,14 +85,6 @@ export default class UiTrackedTimesheet extends Component<
 
   dayTotals(values: TimesheetRow[]) {
     const totals = new TimesheetRow("Total");
-    // const dayMap: any = {};
-    // dayMap["monday"] = 0;
-    // dayMap["tuesday"] = 0;
-    // dayMap["wednesday"] = 0;
-    // dayMap["thursday"] = 0;
-    // dayMap["friday"] = 0;
-    // dayMap["saturday"] = 0;
-    // dayMap["sunday"] = 0;
 
     values.forEach((timesheetRow: TimesheetRow) => {
       totals.monday += timesheetRow.monday;
@@ -89,9 +95,38 @@ export default class UiTrackedTimesheet extends Component<
       totals.saturday += timesheetRow.saturday;
       totals.sunday += timesheetRow.sunday;
       totals.total += timesheetRow.total;
+
+      // we now have a total per chargecode, but its real total can't be known until all totals are calculated
+    });
+
+    // const accumilatedTotals = this.calcChargableTime( totals.week.reduce((total, result) => (result += total), 0));
+    const accumilatedTotals = this.calcChargableTime(
+      totals.week.reduce((total, result) => (result += total), 0),
+      null
+    );
+    const accumilatedTotalsFixed = parseFloat(accumilatedTotals.toFixed(1));
+
+    values.forEach((timesheetRow: TimesheetRow) => {
+      // work out the real total
+
+      timesheetRow.realTotal = parseFloat(
+        (
+          (this.calcChargableTime(timesheetRow.total, null) /
+            accumilatedTotals) *
+          accumilatedTotalsFixed
+        ).toFixed(1)
+      );
     });
 
     return totals;
+  }
+
+  calcChargableTime(time: number, fixed: number | null = 1) {
+    let result = time / 60;
+    if (fixed) {
+      result = parseFloat(result.toFixed(fixed));
+    }
+    return result;
   }
 
   // @ts-ignore
