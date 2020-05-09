@@ -1,16 +1,10 @@
 import Controller from "@ember/controller";
 import { alias } from "@ember/object/computed";
+import { action } from "@ember/object";
 import { inject as service } from "@ember/service";
 import RouterService from "@ember/routing/router-service";
 
-import { toLeft, toRight } from "ember-animated/transitions/move-over";
-import move from "ember-animated/motions/move";
-import { parallel } from "ember-animated";
-import resize from "ember-animated/motions/resize";
-import { fadeOut, fadeIn } from "ember-animated/motions/opacity";
-import { easeOut, easeIn } from "ember-animated/easings/cosine";
-
-import { queryManager, getObservable, unsubscribe } from "ember-apollo-client";
+import { queryManager, getObservable } from "ember-apollo-client";
 
 import ApolloService from "ember-apollo-client/services/apollo";
 import { ObservableQuery } from "apollo-client/core/ObservableQuery";
@@ -22,6 +16,7 @@ import { tracked } from "@glimmer/tracking";
 import queryTrackedDays from "jikan-ga-nai/gql/queries/trackedDays.graphql";
 import { GetTrackedDays } from "jikan-ga-nai/interfaces/get-tracked-days";
 import { TrackedDay } from "jikan-ga-nai/interfaces/tracked-day";
+import mutationCreateTrackedDay from "jikan-ga-nai/gql/mutations/createTrackedDay.graphql";
 
 export default class Tracker extends Controller {
   @service router!: RouterService;
@@ -40,6 +35,26 @@ export default class Tracker extends Controller {
 
   @alias("router.currentRouteName")
   currentRouteName!: string;
+
+  @action
+  dateAction(date: Date) {
+    console.log("date", date);
+    this.apollo.mutate({
+      mutation: mutationCreateTrackedDay,
+      variables: {
+        date: date.valueOf(),
+        mode: "NORMAL",
+      },
+      updateQueries: {
+        trackedDays: (prev, { mutationResult }) => {
+          prev.trackedDays.edges.pushObject(
+            mutationResult?.data?.createTrackedDay
+          );
+          return prev;
+        },
+      },
+    });
+  }
 
   @task({ drop: true })
   fetchTrackedDays: any = function* (this: Tracker) {
@@ -94,25 +109,6 @@ export default class Tracker extends Controller {
     }
   )
   sortedDays!: [any];
-
-  *transition({ insertedSprites }) {
-    console.log("tracker2", arguments);
-    insertedSprites.forEach((sprite) => {
-      sprite.startAtPixel({ x: -200 });
-      // parallel(move(sprite(sprite)));
-      move(sprite);
-      // resize(sprite);
-    });
-  }
-
-  // *transition({ insertedSprites }) {
-  //   console.log("tracker", arguments);
-  //   insertedSprites.forEach((sprite) => {
-  //     sprite.startAtPixel({ x: -250 });
-  //     move(sprite);
-  //     fadeIn(sprite);
-  //   });
-  // }
 }
 
 // DO NOT DELETE: this is how TypeScript knows how to look up your controllers.

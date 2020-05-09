@@ -3,13 +3,21 @@
   border-bottom: 1px solid #002280;
   color: white;
   cursor: pointer;
+  padding: 5px 5px;
+  align-items: center;
 
+  .date {
+    flex-grow: 1;
+  }
   &:global(.odd-week) {
     background-color: #25335c;
     color: white;
     border-color: #3759be;
   }
 
+  :global(.uk-button) {
+    padding: 0 5px;
+  }
   &:hover {
     background-color: rgb(228, 17, 122);
   }

@@ -1,6 +1,5 @@
 import Service from "@ember/service";
 import { tracked } from "@glimmer/tracking";
-import { IUser } from "jikan-ga-nai/interfaces/user";
 import { GetMe } from "jikan-ga-nai/interfaces/get-me";
 import { queryManager, getObservable } from "ember-apollo-client";
 import queryMe from "jikan-ga-nai/gql/queries/me.graphql";

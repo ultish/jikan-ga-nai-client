@@ -3,7 +3,7 @@ import { queryManager, getObservable } from "ember-apollo-client";
 
 import ApolloService from "ember-apollo-client/services/apollo";
 import { sort } from "@ember/object/computed";
-import { action, set } from "@ember/object";
+import { action } from "@ember/object";
 
 import { scaleTime, ScaleTime } from "d3-scale";
 import jQuery from "jquery";
@@ -18,7 +18,6 @@ import { TrackedTask } from "jikan-ga-nai/interfaces/tracked-task";
 
 import subTimesheetUpdated from "jikan-ga-nai/gql/subscriptions/timesheet-updated.graphql";
 import mutationCreateTrackedTask from "jikan-ga-nai/gql/mutations/createTrackedTask.graphql";
-import queryGetTrackedTasks from "jikan-ga-nai/gql/queries/trackedTasks.graphql";
 
 const TRACKED_TASKS_WIDTH = 300;
 
@@ -71,7 +70,6 @@ export default class TrackerDay extends Controller {
   addTrackedTask() {
     // add here
     const trackedDayId = this.model.trackedDay.id;
-    debugger;
     this.apollo.mutate({
       mutation: mutationCreateTrackedTask,
       variables: {
@@ -79,7 +77,6 @@ export default class TrackerDay extends Controller {
       },
       updateQueries: {
         trackedTasks: (prev, { mutationResult, queryVariables }) => {
-          debugger;
           if (queryVariables.trackedDayId === this.model.trackedDay.id) {
             if (mutationResult?.data?.createTrackedTask) {
               // prev.timeBlocks.pushObject(mutationResult.data.createTimeBlock);

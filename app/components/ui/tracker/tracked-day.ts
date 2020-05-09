@@ -22,8 +22,18 @@ export default class UiTrackedDay extends Component<UiTrackedDayArgs> {
     this.router.transitionTo("tracker.day", this.args.day.id);
   }
 
+  @action
+  deleteTrackedDay(e: MouseEvent) {
+    e.stopPropagation();
+  }
+
+  @action
+  deleteClick(e: MouseEvent) {
+    e.stopPropagation();
+  }
+
   get weekOfYearDisplay() {
-    const weekOfYear = Number.parseInt(moment(this.args.day.date).format("w"));
+    const weekOfYear = moment(this.args.day.date).isoWeek();
     return weekOfYear % 2 === 0;
   }
 

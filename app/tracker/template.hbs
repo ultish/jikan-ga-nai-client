@@ -1,19 +1,18 @@
 <div
-  id="pages-tracker"
-  class="uk-container uk-container-xlarge"
-  local-class="pages-tracker"
+    id="pages-tracker"
+    class="uk-container uk-container-xlarge"
+    local-class="pages-tracker"
 >
   <div id="tracked-days" local-class="tracked-days">
+    <button
+        type="button"
+        local-class="add-button"
+        class="uk-button uk-button-primary uk-button-small">
+      <PikadayInput @onSelection={{action 'dateAction'}} @placeholder="Add..." />
+    </button>
     {{#each this.sortedDays as |day|}}
-      {{!-- <AnimatedValue day @use={{this.transition}} @initialInsertion={{true}}> --}}
       <Ui::Tracker::TrackedDay @day={{day}} />
-      {{! </AnimatedValue> }}
     {{/each}}
   </div>
-  {{!-- <AnimatedContainer>
-    <AnimatedValue @value="test" @duration="2000" @use={{this.transition}}>
-      <img src="/images/spacex-1.jpg" alt="tmep" width="500px" height="333px" />
-    </AnimatedValue>
-  </AnimatedContainer> --}}
   {{outlet}}
 </div>

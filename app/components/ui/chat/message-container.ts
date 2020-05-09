@@ -116,8 +116,6 @@ export default class UiChatMessageContainer extends Component<
       "messages"
     );
 
-    debugger;
-
     this.getMessagesQuery = messages;
     this.observer = getObservable(messages);
 
@@ -133,15 +131,15 @@ export default class UiChatMessageContainer extends Component<
   };
 
   /*
-  This computed sort works because the template file refers to the 
-  key 'sortedMsgs', which in turn refers to 'edges'. 'edges' is a 
+  This computed sort works because the template file refers to the
+  key 'sortedMsgs', which in turn refers to 'edges'. 'edges' is a
   tracked property because of this, and it gets notified of changes
   by ember-apollo-client performing Ember.setProperties() against
   the apollo cached object when getting updates to the cache.
 
-  So no magic here, just Ember tracking properties as it said it 
+  So no magic here, just Ember tracking properties as it said it
   would with it's auto-tracking features, and ember-apollo-client
-  performing the correct 'set' functions that trigger Ember's 
+  performing the correct 'set' functions that trigger Ember's
   reactive code
   */
   @sort("fetchMessages.lastSuccessful.value.edges", (a, b) => {
@@ -222,11 +220,11 @@ export default class UiChatMessageContainer extends Component<
 
         /*
         we can read the query from the cache without providing any variables
-        here because we've set the messages.graphql with a @connection 
+        here because we've set the messages.graphql with a @connection
         directive that gives the query a stable key in the cache. Because
         the paramaters in the directive ignore all other fields, any read
-        request from the cache for queryMessages will result in the same 
-        object being returned. 
+        request from the cache for queryMessages will result in the same
+        object being returned.
 
         This means you can have multiple readQuery/writeQuery components all
         updating each other and returning the same result.

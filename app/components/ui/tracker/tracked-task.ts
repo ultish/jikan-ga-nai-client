@@ -106,8 +106,6 @@ export default class UiTrackedDay extends Component<UiTrackedTaskArgs> {
       },
       updateQueries: {
         trackedTasks: (prev, { mutationResult, queryVariables }) => {
-          console.log("update query");
-          debugger;
           this.args.trackedTask;
           if (this.args.trackedDay.id === queryVariables.trackedDayId) {
             let deletedId = mutationResult?.data?.deleteTrackedTask;
@@ -133,7 +131,6 @@ export default class UiTrackedDay extends Component<UiTrackedTaskArgs> {
 
   @action
   updateChargeCodes(selection: ChargeCode[]) {
-    debugger;
     const chargeCodeIds: string[] = [];
     selection.forEach((cc) => chargeCodeIds.push(cc.id));
 

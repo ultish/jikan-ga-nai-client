@@ -13,6 +13,7 @@
       {{/each}}
     </div>
     <div local-class="time-container">
+      Mode<br />
       {{#each this.sortedTasks as |task|}}
         <Ui::Tracker::TrackedTask
             @trackedTask={{task}}

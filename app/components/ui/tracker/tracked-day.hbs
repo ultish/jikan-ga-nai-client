@@ -1,9 +1,20 @@
 <div
-  local-class="tracked-day"
-  class={{concat "uk-padding-small " this.classes}}
-  role="button"
+    local-class="tracked-day"
+    class={{concat "uk-flex uk-flex-row " this.classes}}
+    role="button"
   {{on "click" (fn this.click @day)}}
 >
-  {{moment-format @day.date "YYYY-MM-DD ddd"}}
+  <span local-class="date">
+    {{moment-format @day.date "YYYY-MM-DD ddd"}}
+  </span>
+  <button
+      type="button"
+      class="uk-button uk-button-danger uk-button-small"
+      uk-icon="icon: trash"
+    {{on 'dblclick' (fn this.deleteTrackedDay)}}
+    {{on 'click' (fn this.deleteClick)}}
+  >
+    <EmberTooltip @event="click" @text="Double-click to delete" @popperContainer="body" @side="right"/>
+  </button>
   {{yield}}
 </div>
