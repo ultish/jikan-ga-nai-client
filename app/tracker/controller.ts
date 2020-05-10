@@ -24,7 +24,7 @@ export default class Tracker extends Controller {
 
   @tracked
   hasNextPage = false;
-  limit = 10;
+  limit = 30;
   cursor: null | string = null;
   observer: ObservableQuery | null = null;
   fetchTrackedDaysQuery: null | GetTrackedDays = null;
