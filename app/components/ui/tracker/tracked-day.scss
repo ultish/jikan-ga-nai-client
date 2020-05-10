@@ -1,14 +1,10 @@
-.tracked-day {
+.tracked-day-container {
+  align-items: center;
   background-color: rgb(15, 73, 233);
   border-bottom: 1px solid #002280;
   color: white;
   cursor: pointer;
-  padding: 5px 5px;
-  align-items: center;
 
-  .date {
-    flex-grow: 1;
-  }
   &:global(.odd-week) {
     background-color: #25335c;
     color: white;
@@ -27,4 +23,18 @@
   &:global(.active) {
     background-color: hotpink;
   }
+}
+
+.tracked-day {
+  //background-color: rgb(15, 73, 233);
+  //border-bottom: 1px solid #002280;
+  //color: white;
+  //cursor: pointer;
+  padding: 5px 5px;
+  //align-items: center;
+  flex-grow: 1;
+
+  //.d
+  //  //  flex-grow: 1;
+  //  //}ate {
 }

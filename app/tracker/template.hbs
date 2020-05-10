@@ -8,11 +8,18 @@
         type="button"
         local-class="add-button"
         class="uk-button uk-button-primary uk-button-small">
-      <PikadayInput @onSelection={{action 'dateAction'}} @placeholder="Add..." />
+      <PikadayInput @onSelection={{fn this.dateAction}} @placeholder="Add..."/>
     </button>
     {{#each this.sortedDays as |day|}}
       <Ui::Tracker::TrackedDay @day={{day}} />
     {{/each}}
+    <button
+        type="button"
+        class="uk-button uk-button-small uk-button-default"
+        disabled={{this.moarDisabled}}
+      {{on 'click' (fn this.fetchMoreDays)}}>
+      Load More
+    </button>
   </div>
   {{outlet}}
 </div>

@@ -56,6 +56,40 @@ export default class Tracker extends Controller {
     });
   }
 
+  @action
+  fetchMoreDays() {
+    this.observer?.fetchMore({
+      query: queryTrackedDays,
+      variables: {
+        limit: this.limit,
+        cursor: this.cursor,
+      },
+      updateQuery: (prev: any, { fetchMoreResult }: any) => {
+        debugger;
+        const prevTrackedDays = prev.trackedDays.edges;
+        const newTrackedDays = fetchMoreResult.trackedDays.edges;
+        const newCursor = fetchMoreResult.trackedDays.pageInfo.endCursor;
+
+        this.cursor = newCursor;
+        this.hasNextPage = fetchMoreResult.trackedDays.pageInfo.hasNextPage;
+        debugger;
+        return {
+          trackedDays: {
+            // By returning `cursor` here, we update the `fetchMore` function
+            // to the new cursor.
+            edges: [...prevTrackedDays, ...newTrackedDays],
+            pageInfo: {
+              endCursor: newCursor,
+              hasNextPage: fetchMoreResult.trackedDays.pageInfo.hasNextPage,
+              __typename: prev.trackedDays.pageInfo.__typename,
+            },
+            __typename: prev.trackedDays.__typename,
+          },
+        };
+      },
+    });
+  }
+
   @task({ drop: true })
   fetchTrackedDays: any = function* (this: Tracker) {
     const trackedDays: GetTrackedDays = yield this.apollo.watchQuery(
@@ -109,6 +143,11 @@ export default class Tracker extends Controller {
     }
   )
   sortedDays!: [any];
+
+  get moarDisabled() {
+    console.log("hasNextPage", this.hasNextPage);
+    return !this.hasNextPage;
+  }
 }
 
 // DO NOT DELETE: this is how TypeScript knows how to look up your controllers.
