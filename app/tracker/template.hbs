@@ -15,6 +15,7 @@
     {{/each}}
     <button
         type="button"
+        local-class="load-more"
         class="uk-button uk-button-small uk-button-default"
         disabled={{this.moarDisabled}}
       {{on 'click' (fn this.fetchMoreDays)}}>
