@@ -13,7 +13,13 @@
       {{/each}}
     </div>
     <div local-class="time-container">
-      Mode<br />
+      <PowerSelect
+          @onChange={{fn this.modeChange}}
+          @options={{this.modes}}
+          @selected={{this.model.trackedDay.mode}} as |mode|
+      >
+        {{mode}}
+      </PowerSelect>
       {{#each this.sortedTasks as |task|}}
         <Ui::Tracker::TrackedTask
             @trackedTask={{task}}

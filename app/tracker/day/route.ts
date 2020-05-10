@@ -31,7 +31,7 @@ export default class TrackerDay extends Route {
     controller.onRouteActivate();
   }
 
-  model({ id }: { id: string }) {
+  async model({ id }: { id: string }) {
     return hash({
       trackedDay: this.apollo.query(
         {
@@ -58,7 +58,6 @@ export default class TrackerDay extends Route {
           variables: {
             trackedDayId: id,
           },
-          // fetchPolicy: "cache-and-network",
         },
         "trackedTasks"
       ),

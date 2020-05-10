@@ -13,6 +13,7 @@ import { task } from "ember-concurrency-decorators";
 import { sort } from "@ember/object/computed";
 import { tracked } from "@glimmer/tracking";
 
+import { DayMode } from "jikan-ga-nai/interfaces/day-mode";
 import queryTrackedDays from "jikan-ga-nai/gql/queries/trackedDays.graphql";
 import { GetTrackedDays } from "jikan-ga-nai/interfaces/get-tracked-days";
 import { TrackedDay } from "jikan-ga-nai/interfaces/tracked-day";
@@ -43,7 +44,7 @@ export default class Tracker extends Controller {
       mutation: mutationCreateTrackedDay,
       variables: {
         date: date.valueOf(),
-        mode: "NORMAL",
+        mode: DayMode.NORMAL,
       },
       updateQueries: {
         trackedDays: (prev, { mutationResult }) => {

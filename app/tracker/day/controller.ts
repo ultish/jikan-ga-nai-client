@@ -12,12 +12,14 @@ import moment from "moment";
 
 import { A } from "@ember/array";
 
-// @ts-ignore
-import { toUp, toDown } from "ember-animated/transitions/move-over";
 import { TrackedTask } from "jikan-ga-nai/interfaces/tracked-task";
 
+import { DayMode } from "jikan-ga-nai/interfaces/day-mode";
 import subTimesheetUpdated from "jikan-ga-nai/gql/subscriptions/timesheet-updated.graphql";
 import mutationCreateTrackedTask from "jikan-ga-nai/gql/mutations/createTrackedTask.graphql";
+
+// @ts-ignore
+import { toUp, toDown } from "ember-animated/transitions/move-over";
 
 const TRACKED_TASKS_WIDTH = 300;
 
@@ -66,6 +68,18 @@ export default class TrackerDay extends Controller {
     // }
   };
 
+  get modes() {
+    return [
+      DayMode.NORMAL,
+      DayMode.HOL_ANNUAL,
+      DayMode.HOL_PERSONAL,
+      DayMode.HOL_PUBLIC,
+      DayMode.HOL_RDO,
+    ];
+  }
+
+  @action
+  modeChange(mode) {}
   @action
   addTrackedTask() {
     // add here

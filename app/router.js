@@ -14,4 +14,5 @@ Router.map(function () {
   this.route("tracker", function () {
     this.route("day", { path: "/day/:id" });
   });
+  this.route("not-found", { path: "/*path" });
 });

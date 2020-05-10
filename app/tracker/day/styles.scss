@@ -37,23 +37,25 @@ $containerHeight: calc(100vh - #{$timesheetHeight} - #{$headerHeight});
     display: inline-block;
     user-select: none;
     text-align: center;
+
     &:nth-child(odd) {
       background-color: rgb(240, 240, 240);
     }
   }
 }
+
 .time-container {
   position: absolute;
   top: 0;
   left: 0;
-  width: 100%;
+  width: 300px;
 
   > :global(.tracked-task-container) {
     padding-top: 20px;
   }
 }
+
 .add-tracked-task {
-  width: 300px;
 }
 
 .timesheet {
