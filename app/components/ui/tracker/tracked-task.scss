@@ -54,10 +54,10 @@ $blockHeight: 30px;
   outline: 1px solid rgb(129, 129, 129);
 
   &:nth-child(odd) {
-    background: rgb(207, 206, 206);
+    background: $base-4-colour;
   }
   &:nth-child(even) {
-    background: rgb(224, 224, 224);
+    background: $base-3-colour;
   }
 
   $focusScale: 1.2;
@@ -95,7 +95,7 @@ $blockHeight: 30px;
     opacity: 1;
   }
   &:hover {
-    background: white;
+    background: $secondary-2-colour;
     opacity: 1;
   }
 }
@@ -104,6 +104,6 @@ $blockHeight: 30px;
   width: 15px;
   min-width: 15px;
   height: $blockHeight;
-  background-color: #096ddf;
+  background-color: $primary-1-colour;
   outline: 1px solid $checkedBorder;
 }

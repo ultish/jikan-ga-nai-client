@@ -1,3 +1,5 @@
+@import "colours";
+
 @import "ember-uikit";
 
 $ember-power-select-default-border-radius: 0;
@@ -5,8 +7,14 @@ $ember-power-select-default-border: 0;
 $ember-power-select-trigger-border-top: 0;
 $ember-power-select-trigger-border-bottom: 0;
 $ember-power-select-active-trigger-border: 0;
-
 @import "ember-power-select";
+
+@import "overrides";
+
+html {
+  background-color: $base-1-colour;
+  color: $base-1-text-colour;
+}
 
 @font-face {
   font-family: "Material Icons";

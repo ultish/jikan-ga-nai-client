@@ -6,6 +6,10 @@ $headerHeight: 80px;
 
 .add-button {
   width: 100%;
+
+  input {
+    background-color: black;
+  }
 }
 .tracked-days {
   //background-color: rgb(19, 18, 18);

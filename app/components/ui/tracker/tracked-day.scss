@@ -1,14 +1,14 @@
 .tracked-day-container {
   align-items: center;
-  background-color: rgb(15, 73, 233);
-  border-bottom: 1px solid #002280;
+  background-color: #050b21;
+  border-bottom: 1px solid #152973;
   color: white;
   cursor: pointer;
 
   &:global(.odd-week) {
-    background-color: #25335c;
+    background-color: #141f46;
     color: white;
-    border-color: #3759be;
+    border-color: #29355a;
   }
 
   :global(.uk-button) {
@@ -18,10 +18,10 @@
     background-color: rgb(228, 17, 122);
   }
   &.active {
-    background-color: hotpink;
+    background-color: $secondary-2-colour;
   }
   &:global(.active) {
-    background-color: hotpink;
+    background-color: $secondary-2-colour;
   }
 }
 
