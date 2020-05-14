@@ -103,6 +103,7 @@ $blockHeight: 30px;
   min-width: 15px;
   height: $blockHeight;
   background-color: $primary-1-colour;
+  outline: 1px solid lighten($primary-1-colour, 20%);
   &:hover {
     background: $secondary-1-colour;
   }
