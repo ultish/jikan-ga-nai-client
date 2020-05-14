@@ -41,25 +41,25 @@ Week Ending: {{moment-format @timesheet.weekEndingDate 'YYYY-MM-DD ddd'}}
         {{/if}}
       </row.cell>
       <row.cell local-class={{if timesheetRow.isTotal 'total'}}>
-        {{timesheet-hours value=timesheetRow.monday}}
+        <Ui::Tracker::TimesheetHour @value={{timesheetRow.monday}} />
       </row.cell>
       <row.cell local-class={{if timesheetRow.isTotal 'total'}}>
-        {{timesheet-hours value=timesheetRow.tuesday}}
+        <Ui::Tracker::TimesheetHour @value={{timesheetRow.tuesday}} />
       </row.cell>
       <row.cell local-class={{if timesheetRow.isTotal 'total'}}>
-        {{timesheet-hours value=timesheetRow.wednesday}}
+        <Ui::Tracker::TimesheetHour @value={{timesheetRow.wednesday}} />
       </row.cell>
       <row.cell local-class={{if timesheetRow.isTotal 'total'}}>
-        {{timesheet-hours value=timesheetRow.thursday}}
+        <Ui::Tracker::TimesheetHour @value={{timesheetRow.thursday}} />
       </row.cell>
       <row.cell local-class={{if timesheetRow.isTotal 'total'}}>
-        {{timesheet-hours value=timesheetRow.friday}}
+        <Ui::Tracker::TimesheetHour @value={{timesheetRow.friday}} />
       </row.cell>
       <row.cell local-class={{if timesheetRow.isTotal 'total'}}>
-        {{timesheet-hours value=timesheetRow.saturday}}
+        <Ui::Tracker::TimesheetHour @value={{timesheetRow.saturday}} />
       </row.cell>
       <row.cell local-class={{if timesheetRow.isTotal 'total'}}>
-        {{timesheet-hours value=timesheetRow.sunday}}
+        <Ui::Tracker::TimesheetHour @value={{timesheetRow.sunday}} />
       </row.cell>
       <row.cell local-class={{if timesheetRow.isTotal 'total' 'total-chargecode'}}>
         {{#if timesheetRow.chargecode.name}}

@@ -23,6 +23,7 @@ $blockHeight: 30px;
   display: flex;
   flex-direction: row;
   border-bottom: 1px solid $secondary-1-colour;
+  border-top: 1px solid $secondary-1-colour;
 }
 
 .time-blocks-container {
@@ -49,8 +50,6 @@ $blockHeight: 30px;
   min-width: 15px;
   height: $blockHeight;
   cursor: pointer;
-
-  //outline: 1px solid rgb(129, 129, 129);
 
   &:nth-child(odd) {
     background: $base-4-colour;
@@ -93,8 +92,9 @@ $blockHeight: 30px;
     opacity: 1;
   }
   &:hover {
-    background: $primary-1-colour;
+    background: $secondary-1-colour;
     opacity: 1;
+    outline: 1px solid $secondary-1-colour;
   }
 }
 
@@ -103,5 +103,7 @@ $blockHeight: 30px;
   min-width: 15px;
   height: $blockHeight;
   background-color: $primary-1-colour;
-  //outline: 1px solid $secondary-1-colour;
+  &:hover {
+    background: $secondary-1-colour;
+  }
 }
