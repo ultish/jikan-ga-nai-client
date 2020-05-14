@@ -13,17 +13,16 @@ $blockHeight: 30px;
 .tracked-tasks {
   width: $tasksWidth;
   flex-shrink: 0;
-  border-bottom: 1px solid rgb(129, 129, 129);
+  border-bottom: 1px solid $secondary-1-colour;
 
   :global(.ember-power-select-trigger) {
     flex-grow: 1;
   }
 }
 .tracked-time {
-  width: 100%;
   display: flex;
   flex-direction: row;
-  border-bottom: 1px solid rgb(129, 129, 129);
+  border-bottom: 1px solid $secondary-1-colour;
 }
 
 .time-blocks-container {
@@ -51,7 +50,7 @@ $blockHeight: 30px;
   height: $blockHeight;
   cursor: pointer;
 
-  outline: 1px solid rgb(129, 129, 129);
+  //outline: 1px solid rgb(129, 129, 129);
 
   &:nth-child(odd) {
     background: $base-4-colour;
@@ -63,8 +62,7 @@ $blockHeight: 30px;
   $focusScale: 1.2;
 
   &:focus {
-    outline: 1px solid $checkedBorder;
-    // transform: scaleY($focusScale);
+    outline: 1px solid $secondary-1-colour;
   }
 
   // using the :global pseudoselector from ember-css-modules as this class is set by ember-css-transitions
@@ -74,7 +72,7 @@ $blockHeight: 30px;
   &:global(.block-selected-add-active) {
     transform: scaleY($focusScale);
     opacity: 1;
-    outline: 1px solid $checkedBorder;
+    outline: 1px solid $secondary-1-colour;
   }
   &:global(.block-selected-remove),
   &:global(.block-selected-remove-active) {
@@ -88,14 +86,14 @@ $blockHeight: 30px;
   }
 
   &:global(.checked) {
-    outline-color: $checkedBorder;
+    //outline-color: $secondary-1-colour;
   }
 
   &:global(.checked) {
     opacity: 1;
   }
   &:hover {
-    background: $secondary-2-colour;
+    background: $primary-1-colour;
     opacity: 1;
   }
 }
@@ -105,5 +103,5 @@ $blockHeight: 30px;
   min-width: 15px;
   height: $blockHeight;
   background-color: $primary-1-colour;
-  outline: 1px solid $checkedBorder;
+  //outline: 1px solid $secondary-1-colour;
 }
