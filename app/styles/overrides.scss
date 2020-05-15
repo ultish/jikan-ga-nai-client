@@ -1,0 +1,23 @@
+.uk-input {
+  background: initial;
+  border-color: $border-colour;
+}
+.uk-button {
+  color: $base-1-text-colour;
+}
+.uk-button-primary {
+  background-color: $primary-1-colour;
+}
+
+.uk-button-danger {
+  background-color: #111111;
+}
+
+.ember-power-select-trigger {
+  background-color: initial;
+}
+.ember-power-select-multiple-option {
+  border: 1px solid darken($primary-1-colour, 30%); // #5ba9ff;
+  color: #ffffff;
+  background-color: $primary-1-colour; //#076ddf;
+}

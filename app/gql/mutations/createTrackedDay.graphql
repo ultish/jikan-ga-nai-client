@@ -1,0 +1,8 @@
+mutation createTrackedDay($date: Float!, $mode: DayMode!) {
+  createTrackedDay(date: $date, mode: $mode) {
+    id
+    date
+    mode
+  }
+}
+

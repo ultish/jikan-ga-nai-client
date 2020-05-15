@@ -1,0 +1,7 @@
+export enum DayMode {
+  NORMAL = "NORMAL",
+  HOL_PUBLIC = "HOL_PUBLIC",
+  HOL_PERSONAL = "HOL_PERSONAL",
+  HOL_RDO = "HOL_RDO",
+  HOL_ANNUAL = "HOL_ANNUAL",
+}
