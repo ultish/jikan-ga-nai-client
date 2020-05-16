@@ -8,9 +8,12 @@
 .uk-button-primary {
   background-color: $primary-1-colour;
 }
-
 .uk-button-danger {
   background-color: #111111;
+}
+.uk-button-default:disabled {
+  color: darken($base-1-text-colour, 50%);
+  border-color: darken($border-colour, 50%);
 }
 
 .ember-power-select-trigger {
