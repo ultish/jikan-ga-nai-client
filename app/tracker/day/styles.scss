@@ -62,11 +62,16 @@ $containerHeight: calc(100vh - #{$timesheetHeight} - #{$headerHeight});
 .timesheet {
   height: $timesheetHeight;
   width: calc(100vw - #{$sideWidth});
-  background-color: $primary-1-colour;
+  padding-left: 10px;
+  padding-top: 10px;
+
   overflow-y: auto;
 
   > table:global(.yeti-table) {
     color: $primary-1-text-colour;
+    tr {
+      background-color: $primary-1-colour;
+    }
   }
 }
 

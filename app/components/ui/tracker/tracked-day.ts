@@ -5,6 +5,9 @@ import { action } from "@ember/object";
 import RouterService from "@ember/routing/router-service";
 import { inject as service } from "@ember/service";
 import { alias } from "@ember/object/computed";
+import mutationDeleteTrackedDay from "jikan-ga-nai/gql/mutations/deleteTrackedDay.graphql";
+import { queryManager } from "ember-apollo-client";
+import ApolloService from "ember-apollo-client/services/apollo";
 
 interface UiTrackedDayArgs {
   day: TrackedDay;
@@ -12,6 +15,7 @@ interface UiTrackedDayArgs {
 export default class UiTrackedDay extends Component<UiTrackedDayArgs> {
   @service
   router!: RouterService;
+  @queryManager() apollo!: ApolloService;
 
   constructor(owner: unknown, args: UiTrackedDayArgs) {
     super(owner, args);
@@ -24,8 +28,33 @@ export default class UiTrackedDay extends Component<UiTrackedDayArgs> {
   }
 
   @action
-  deleteTrackedDay(e: MouseEvent) {
+  async deleteTrackedDay(e: MouseEvent) {
     e.stopPropagation();
+
+    this.router.transitionTo("tracker");
+
+    this.apollo.mutate({
+      mutation: mutationDeleteTrackedDay,
+      variables: {
+        id: this.args.day.id,
+      },
+
+      updateQueries: {
+        trackedDays: (prev, { mutationResult }) => {
+          debugger;
+          const deletedId = mutationResult?.data?.deleteTrackedDay;
+          if (deletedId) {
+            const toRemove = prev.trackedDays.edges.find(
+              (td: TrackedDay) => td.id === deletedId
+            );
+            if (toRemove) {
+              prev.trackedDays.edges.removeObject(toRemove);
+            }
+          }
+          return prev;
+        },
+      },
+    });
   }
 
   @action

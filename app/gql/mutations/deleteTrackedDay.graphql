@@ -1,0 +1,3 @@
+mutation deleteTrackedDay($id: ID!) {
+  deleteTrackedDay(id: $id)
+}
