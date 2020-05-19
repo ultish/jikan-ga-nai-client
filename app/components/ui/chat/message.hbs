@@ -3,7 +3,7 @@
   {{did-insert this.setScrollPosition this}}
 >
   <div local-class="meta">
-    <div local-class="user">{{@message.user.username}}</div>
+    <div local-class="user" class={{if this.isMe 'me'}}>{{@message.user.username}}</div>
     <div local-class="date">
       {{this.date}}
     </div>

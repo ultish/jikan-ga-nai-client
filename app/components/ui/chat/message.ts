@@ -1,6 +1,8 @@
 import Component from "@glimmer/component";
 import { Message } from "jikan-ga-nai/interfaces/message";
 import moment from "moment";
+import { inject as service } from "@ember/service";
+import Authentication from "jikan-ga-nai/services/authentication";
 
 interface UiChatMessageArgs {
   message: Message;
@@ -11,6 +13,8 @@ interface UiChatMessageArgs {
  * the container will fetch messages and subscribe to message creation.
  */
 export default class UiChatMessage extends Component<UiChatMessageArgs> {
+  @service authentication!: Authentication;
+
   constructor(owner: unknown, args: UiChatMessageArgs) {
     super(owner, args);
   }
@@ -20,6 +24,10 @@ export default class UiChatMessage extends Component<UiChatMessageArgs> {
     if (action) {
       action(element);
     }
+  }
+
+  get isMe() {
+    return this.args.message.user.id === this.authentication.authedMe?.id;
   }
 
   get date() {
