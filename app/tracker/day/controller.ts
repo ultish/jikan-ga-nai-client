@@ -50,7 +50,6 @@ export default class TrackerDay extends Controller {
       observerable.subscribeToMore({
         document: subTimesheetUpdated,
         // updateQuery: (prev, { subscriptionData }) => {
-        //   debugger;
         //   set(
         //     prev,
         //     "timesheet.timeCharged",

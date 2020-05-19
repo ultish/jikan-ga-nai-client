@@ -41,7 +41,6 @@ export default class UiTrackedDay extends Component<UiTrackedDayArgs> {
 
       updateQueries: {
         trackedDays: (prev, { mutationResult }) => {
-          debugger;
           const deletedId = mutationResult?.data?.deleteTrackedDay;
           if (deletedId) {
             const toRemove = prev.trackedDays.edges.find(

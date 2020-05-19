@@ -70,14 +70,13 @@ export default class Tracker extends Controller {
         cursor: this.cursor,
       },
       updateQuery: (prev: any, { fetchMoreResult }: any) => {
-        debugger;
         const prevTrackedDays = prev.trackedDays.edges;
         const newTrackedDays = fetchMoreResult.trackedDays.edges;
         const newCursor = fetchMoreResult.trackedDays.pageInfo.endCursor;
 
         this.cursor = newCursor;
         this.hasNextPage = fetchMoreResult.trackedDays.pageInfo.hasNextPage;
-        debugger;
+
         return {
           trackedDays: {
             // By returning `cursor` here, we update the `fetchMore` function
@@ -121,8 +120,6 @@ export default class Tracker extends Controller {
 
     this.fetchTrackedDaysQuery = trackedDays;
     this.observer = getObservable(trackedDays);
-
-    debugger;
 
     this.cursor = trackedDays.pageInfo.endCursor;
 

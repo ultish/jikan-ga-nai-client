@@ -207,17 +207,9 @@ export default class UiTrackedDay extends Component<UiTrackedTaskArgs> {
       const datetime = square.date.getTime();
       const block = timeBlockMap.get(datetime);
       if (block) {
-        // square.timeBlock = block;
         square.setTimeBlock(block);
       }
     });
-
-    const x = squares.filter((sq) => sq.getTimeBlock()).length;
-    if (timeBlocks?.length != x) {
-      // debugger;
-    }
-
-    // console.log("TimeBlocks: " + timeBlocks?.length + " vs Squares W: " + x);
 
     return squares;
   }

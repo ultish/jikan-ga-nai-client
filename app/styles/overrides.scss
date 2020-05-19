@@ -1,7 +1,13 @@
 .uk-input {
   background: initial;
   border-color: $border-colour;
+
+  &:focus {
+    background-color: $base-2-colour;
+    color: $base-2-text-colour;
+  }
 }
+
 .uk-button {
   color: $base-1-text-colour;
 }

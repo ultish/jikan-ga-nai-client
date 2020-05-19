@@ -1,20 +1,19 @@
-<div class="uk-inline uk-flex">
-  <button
-      disabled={{this.moarDisabled}}
-      type="button"
-      class="uk-button uk-button-default uk-flex-1"
-    {{on "click" this.fetchMore}}
-  >
-    <span class="uk-form-icon" uk-icon="icon: world"></span>
-    Load Older...
-  </button>
-</div>
 <div
     id='chat-container'
     local-class="chat-container"
-    {{ref this 'chatContainer'}}
+  {{ref this 'chatContainer'}}
 >
   <div local-class="chat-contents" {{ref this 'chatContents'}}>
+    <div class="uk-inline uk-flex">
+      <button
+          disabled={{this.moarDisabled}}
+          type="button"
+          class="uk-button uk-button-default uk-flex-1"
+        {{on "click" this.fetchMore}}
+      >
+        Load Older...
+      </button>
+    </div>
     {{#each this.sortedMsgs as |msg|}}
       <Ui::Chat::Message @message={{msg}} @notifyAction={{fn this.notifyScroll}} />
     {{/each}}
