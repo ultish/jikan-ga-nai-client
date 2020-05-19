@@ -145,7 +145,6 @@ export default class Tracker extends Controller {
   sortedDays!: [any];
 
   get moarDisabled() {
-    console.log("hasNextPage", this.hasNextPage);
     return !this.hasNextPage;
   }
 }

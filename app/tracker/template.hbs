@@ -4,23 +4,25 @@
     local-class="pages-tracker"
 >
   <div id="tracked-days" local-class="tracked-days">
-{{!--    <button--}}
-{{!--        type="button"--}}
-{{!--        local-class="add-button"--}}
-{{!--        class="uk-button uk-button-primary uk-button-small">--}}
-      <PikadayInput @class="uk-input uk-form-small" @onSelection={{fn this.dateAction}} @placeholder="Add..." @theme="pikaday-theme"/>
-{{!--    </button>--}}
+    <PikadayInput
+        @class="uk-input uk-form-small"
+        @onSelection={{fn this.dateAction}}
+        @placeholder="Add..."
+        @theme="pikaday-theme"/>
+
     {{#each this.sortedDays as |day|}}
       <Ui::Tracker::TrackedDay @day={{day}} />
     {{/each}}
-    <button
-        type="button"
-        local-class="load-more"
-        class="uk-button uk-button-small uk-button-default"
-        disabled={{this.moarDisabled}}
-      {{on 'click' (fn this.fetchMoreDays)}}>
-      Load More...
-    </button>
+    {{#unless this.moarDisabled}}
+      <button
+          type="button"
+          local-class="load-more"
+          class="uk-button uk-button-small uk-button-default"
+          disabled={{this.moarDisabled}}
+        {{on 'click' (fn this.fetchMoreDays)}}>
+        Load More...
+      </button>
+    {{/unless}}
   </div>
   {{outlet}}
 </div>

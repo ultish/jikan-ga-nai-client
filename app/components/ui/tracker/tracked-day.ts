@@ -66,12 +66,23 @@ export default class UiTrackedDay extends Component<UiTrackedDayArgs> {
     return weekOfYear % 2 === 0;
   }
 
+  // TODO start a timer every hour and check it?
+  get isToday() {
+    return (
+      moment(this.args.day.date).valueOf() === moment().startOf("day").valueOf()
+    );
+  }
+
   get classes() {
     let result = [];
     if (this.weekOfYearDisplay) {
       result.push("even-week");
     } else {
       result.push("odd-week");
+    }
+
+    if (this.isToday) {
+      result.push("today");
     }
 
     if (this.active) {

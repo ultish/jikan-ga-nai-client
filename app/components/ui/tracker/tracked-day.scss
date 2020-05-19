@@ -15,10 +15,13 @@
     padding: 0 5px;
   }
   &:hover {
-    background-color: rgb(228, 17, 122);
+    background-color: $primary-1-colour;
   }
   &.active {
     background-color: $primary-1-colour;
+  }
+  &:global(.today) {
+    background-color: $secondary-1-colour;
   }
   &:global(.active) {
     background-color: $primary-1-colour;
