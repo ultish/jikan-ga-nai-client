@@ -1,4 +1,4 @@
-import Service from "@ember/service";
+import Service, { inject as service } from "@ember/service";
 import { tracked } from "@glimmer/tracking";
 import { GetMe } from "jikan-ga-nai/interfaces/get-me";
 import { queryManager, getObservable } from "ember-apollo-client";
@@ -7,9 +7,11 @@ import User from "jikan-ga-nai/models/user";
 
 import signIn from "jikan-ga-nai/gql/mutations/signIn.graphql";
 import { SignIn } from "jikan-ga-nai/interfaces/sign-in";
+import RouterService from "@ember/routing/router-service";
 
 export default class Authentication extends Service {
   @queryManager() apollo!: any;
+  @service router!: RouterService;
 
   @tracked
   authedMe: User | null = null;
@@ -33,10 +35,14 @@ export default class Authentication extends Service {
     localStorage.setItem("x-token", token);
   }
 
-  async logout() {
+  async logout(transition = false) {
     this.token = undefined;
     this.authedMe = null;
     localStorage.setItem("x-token", "");
+
+    if (transition) {
+      await this.router.transitionTo("login");
+    }
 
     await this.apollo.apolloClient.resetStore();
   }

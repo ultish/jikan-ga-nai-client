@@ -30,7 +30,7 @@ export default class UiNavbar extends Component<UiNavbarArgs> {
 
   @action
   async logout() {
-    await this.authentication.logout();
+    await this.authentication.logout(true);
 
     this.router.transitionTo("login");
   }

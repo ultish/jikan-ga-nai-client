@@ -48,7 +48,7 @@ export default class Apollo extends ApolloService {
       const error = networkError as ServerError;
       if (error && (error.statusCode === 400 || error.statusCode === 401)) {
         // remove cached token on 401 from the server
-        this.authentication.logout();
+        this.authentication.logout(true);
       }
 
       if (graphQLErrors) {

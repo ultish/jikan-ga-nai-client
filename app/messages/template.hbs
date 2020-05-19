@@ -1,38 +1,7 @@
 <div
   class="uk-container uk-container-xlarge"
-  uk-height-viewport="offset-top: true"
+
 >
   <Ui::Chat::MessageContainer />
-  {{!-- 
-  <table class="uk-table uk-table-divider">
-    <thead>
-      <tr>
-        <th>
-          Method #1
-        </th>
-        <th>
-          Method #2
-        </th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td>
-          {{#each this.sortedMsgs as |msg|}}
-            {{msg.user.username}}: {{msg.id}}: {{msg.text}}
-            <br />
-          {{/each}}
-        </td>
-        <td>
-          {{#each this.model.edges as |m|}}
-            {{m.user.username}}: {{m.id}}: {{m.text}}
-            <br />
-          {{/each}}
-        </td>
-      </tr>
-    </tbody>
-  </table> --}}
-
-  {{! <Input id="text" @value="" class="uk-input" /> }}
   {{outlet}}
 </div>

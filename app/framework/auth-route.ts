@@ -3,7 +3,6 @@ import { inject as service } from "@ember/service";
 
 // importing this for the type reference
 import Authentication from "jikan-ga-nai/services/authentication";
-import { IUser } from "jikan-ga-nai/interfaces/user";
 
 /**
  * This route checks you've logged in, otherwise re-routes you to the
@@ -11,8 +10,6 @@ import { IUser } from "jikan-ga-nai/interfaces/user";
  */
 export default class AuthRoute extends Route {
   @service authentication!: Authentication;
-
-  // testMe?: IUser;
 
   async beforeModel(transition: any) {
     if (transition.targetName === "signup") {

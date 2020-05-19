@@ -1,8 +1,5 @@
 import { queryManager } from "ember-apollo-client";
 import messages from "jikan-ga-nai/gql/queries/messages.graphql";
-import messageCreated from "jikan-ga-nai/gql/subscriptions/message-created.graphql";
-
-import { addListener, removeListener } from "@ember/object/events";
 
 // importing this for the type reference
 import ApolloService from "ember-apollo-client/services/apollo";
@@ -89,14 +86,14 @@ export default class Messages extends AuthRoute {
 
     /*
     setting the fetchPolicy to cache and network will cause this query to
-    return immediately with the cached values. It will then subsequently 
+    return immediately with the cached values. It will then subsequently
     get updated and contain any new values from the network.
     */
     const q = this.apollo.watchQuery(
       {
         query: messages,
         variables: {
-          limit: 4,
+          limit: 30,
         },
         notifyOnNetworkStatusChange: true,
         // fetchPolicy: "cache-and-network", //"network-only" //"cache-and-network"

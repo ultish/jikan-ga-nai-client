@@ -70,6 +70,7 @@
     "ember-pikaday": "^3.0.0",
     "ember-power-select": "^4.0.0",
     "ember-qunit": "^4.6.0",
+    "ember-ref-modifier": "^1.0.0",
     "ember-resolver": "^7.0.0",
     "ember-source": "~3.17.0",
     "ember-sticky-element": "^0.2.3",

@@ -9,6 +9,7 @@ import { action } from "@ember/object";
 import { sort } from "@ember/object/computed";
 import { isPresent } from "@ember/utils";
 import { tracked } from "@glimmer/tracking";
+import { debounce } from "@ember/runloop";
 
 import { Message } from "jikan-ga-nai/interfaces/message";
 
@@ -42,8 +43,10 @@ export default class UiChatMessageContainer extends Component<
   getMessagesQuery: null | GetMessages = null;
   observer: ObservableQuery | null = null;
   messagesCreatedSub: any;
+  chatContainer?: HTMLElement;
+  chatContents?: HTMLElement;
 
-  limit = 1;
+  limit = 30;
 
   willDestroy() {
     if (this.getMessagesQuery) {
@@ -55,7 +58,23 @@ export default class UiChatMessageContainer extends Component<
     }
   }
 
-  // TODO refactor common code
+  /**
+   * The debounce does 2 things, stop us from spamming the scroll from
+   * new messages being rendered, and actually allow the next runloop
+   * to ocurr as this.chatContents and this.chatContainer aren't set
+   * until then.
+   */
+  @action
+  notifyScroll() {
+    debounce(this, this.scrollToPosition, 200);
+  }
+
+  scrollToPosition() {
+    const chatHeight = this.chatContents?.clientHeight;
+    if (chatHeight) {
+      this.chatContainer?.scroll(0, chatHeight);
+    }
+  }
 
   async subscribe(observer: ObservableQuery) {
     observer.subscribeToMore({

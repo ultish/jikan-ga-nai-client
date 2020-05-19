@@ -1,7 +1,7 @@
-import Route from "@ember/routing/route";
-
+import AuthRoute from "jikan-ga-nai/framework/auth-route";
 import TrackerController from "./controller";
-export default class Tracker extends Route {
+
+export default class Tracker extends AuthRoute {
   async setupController(controller: TrackerController): Promise<void> {
     super.setupController(controller, {});
 

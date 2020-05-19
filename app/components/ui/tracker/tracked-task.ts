@@ -12,7 +12,6 @@ import { easeOut, easeIn } from "ember-animated/easings/cosine";
 import { TrackedTask } from "jikan-ga-nai/interfaces/tracked-task";
 import { ChargeCode } from "jikan-ga-nai/interfaces/charge-code";
 
-// import { htmlSafe } from "@ember/string";
 import { TimeBlock } from "jikan-ga-nai/interfaces/time-block";
 
 import { queryManager, unsubscribe } from "ember-apollo-client";
@@ -26,8 +25,6 @@ import mutationDeleteTrackedTask from "jikan-ga-nai/gql/mutations/deleteTrackedT
 import queryTimeBlocks from "jikan-ga-nai/gql/queries/timeBlocks.graphql";
 
 import { task } from "ember-concurrency-decorators";
-
-// const TIME_BLOCK_WIDTH = 15 - 1; // minus border
 
 interface UiTrackedTaskArgs {
   day: TrackedDay;

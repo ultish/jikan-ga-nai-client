@@ -31,6 +31,10 @@ export default class Tracker extends Controller {
   fetchTrackedDaysQuery: null | GetTrackedDays = null;
 
   onRouteActivate = () => {
+    this.cursor = null;
+    this.hasNextPage = false;
+    this.observer = null;
+    this.fetchTrackedDaysQuery = null;
     this.fetchTrackedDays.perform();
   };
 
@@ -118,9 +122,7 @@ export default class Tracker extends Controller {
     this.fetchTrackedDaysQuery = trackedDays;
     this.observer = getObservable(trackedDays);
 
-    // if (this.observer) {
-    //   this.subscribe(this.observer);
-    // }
+    debugger;
 
     this.cursor = trackedDays.pageInfo.endCursor;
 

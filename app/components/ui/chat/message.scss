@@ -1,0 +1,23 @@
+.message {
+  padding-top: 15px;
+  &:hover {
+    background-color: $base-2-colour;
+  }
+
+  line-height: initial;
+  .date {
+    color: $base-3-colour;
+    font-size: 11px;
+
+    display: inline-block;
+  }
+  .user {
+    display: inline-block;
+    font-weight: bold;
+    font-size: 13px;
+  }
+  .text {
+    display: inline-block;
+    font-size: 14px;
+  }
+}

@@ -1,0 +1,12 @@
+<div
+    local-class="message"
+  {{did-insert this.setScrollPosition this}}
+>
+  <div local-class="meta">
+    <div local-class="user">{{@message.user.username}}</div>
+    <div local-class="date">
+      {{this.date}}
+    </div>
+  </div>
+  <div local-class="text">{{@message.text}}</div>
+</div>
