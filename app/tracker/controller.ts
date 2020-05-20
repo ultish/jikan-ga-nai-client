@@ -43,7 +43,10 @@ export default class Tracker extends Controller {
 
   @action
   dateAction(date: Date) {
-    console.log("date", date);
+    if (!date) {
+      return;
+    }
+
     this.apollo.mutate({
       mutation: mutationCreateTrackedDay,
       variables: {
