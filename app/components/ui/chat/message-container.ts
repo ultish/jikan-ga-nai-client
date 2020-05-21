@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { queryManager, getObservable, unsubscribe } from "ember-apollo-client";
 
-import ApolloService from "ember-apollo-client/services/apollo";
+import CustomApolloService from "jikan-ga-nai/services/custom-apollo";
 import { ObservableQuery } from "apollo-client/core/ObservableQuery";
 
 import { task } from "ember-concurrency-decorators";
@@ -26,7 +26,7 @@ interface UiChatMessageContainerArgs {}
 export default class UiChatMessageContainer extends Component<
   UiChatMessageContainerArgs
 > {
-  @queryManager() apollo!: ApolloService;
+  @queryManager({ service: "custom-apollo" }) apollo!: CustomApolloService;
 
   constructor(owner: unknown, args: UiChatMessageContainerArgs) {
     super(owner, args);

@@ -8,9 +8,10 @@ import User from "jikan-ga-nai/models/user";
 import signIn from "jikan-ga-nai/gql/mutations/signIn.graphql";
 import { SignIn } from "jikan-ga-nai/interfaces/sign-in";
 import RouterService from "@ember/routing/router-service";
+import CustomApolloService from "jikan-ga-nai/services/custom-apollo";
 
 export default class Authentication extends Service {
-  @queryManager() apollo!: any;
+  @queryManager({ service: "custom-apollo" }) apollo!: CustomApolloService;
   @service router!: RouterService;
 
   @tracked
@@ -85,9 +86,9 @@ export default class Authentication extends Service {
       const observable = getObservable(result);
 
       let refetched = await observable?.refetch();
-      refetched = refetched.data;
+      const data: GetMe = refetched?.data;
 
-      const me = refetched.me;
+      const me = data?.me;
       if (me) {
         this.authedMe = new User(me.id, me.username, me.email, me.role);
       } else {

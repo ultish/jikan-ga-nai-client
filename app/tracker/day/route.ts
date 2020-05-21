@@ -2,7 +2,7 @@ import Route from "@ember/routing/route";
 import TrackerDayController from "./controller";
 
 import { queryManager } from "ember-apollo-client";
-import ApolloService from "ember-apollo-client/services/apollo";
+import CustomApolloService from "jikan-ga-nai/services/custom-apollo";
 
 import queryGetTrackedTasks from "jikan-ga-nai/gql/queries/trackedTasks.graphql";
 import queryGetTrackedDay from "jikan-ga-nai/gql/queries/trackedDay.graphql";
@@ -19,7 +19,7 @@ interface Model {
 }
 
 export default class TrackerDay extends Route {
-  @queryManager() apollo!: ApolloService;
+  @queryManager({ service: "custom-apollo" }) apollo!: CustomApolloService;
 
   async setupController(
     controller: TrackerDayController,

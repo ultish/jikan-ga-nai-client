@@ -1,4 +1,3 @@
-// import Service from "@ember/service";
 import ApolloService from "ember-apollo-client/services/apollo";
 import { split } from "apollo-link";
 import { getMainDefinition } from "apollo-utilities";
@@ -18,11 +17,11 @@ const wsLink = new WebSocketLink({
   },
 });
 
-export default class Apollo extends ApolloService {
+export default class CustomApollo extends ApolloService {
   @service router!: RouterService;
   @service authentication!: Authentication;
 
-  // token?: any;
+  apolloClient: any;
 
   link() {
     let httpLink: any = super.link();
@@ -78,6 +77,6 @@ export default class Apollo extends ApolloService {
 // DO NOT DELETE: this is how TypeScript knows how to look up your services.
 declare module "@ember/service" {
   interface Registry {
-    apollo: Apollo;
+    apollo: CustomApollo;
   }
 }

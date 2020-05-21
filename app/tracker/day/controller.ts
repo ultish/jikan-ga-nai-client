@@ -1,7 +1,7 @@
 import Controller from "@ember/controller";
 import { queryManager, getObservable } from "ember-apollo-client";
 
-import ApolloService from "ember-apollo-client/services/apollo";
+import CustomApolloService from "jikan-ga-nai/services/custom-apollo";
 import { sort } from "@ember/object/computed";
 import { action } from "@ember/object";
 
@@ -24,7 +24,7 @@ import { toUp, toDown } from "ember-animated/transitions/move-over";
 const TRACKED_TASKS_WIDTH = 300;
 
 export default class TrackerDay extends Controller {
-  @queryManager() apollo!: ApolloService;
+  @queryManager({ service: "custom-apollo" }) apollo!: CustomApolloService;
 
   @tracked containerWidth = 0;
   @tracked startTime = moment().startOf("day");
@@ -78,7 +78,9 @@ export default class TrackerDay extends Controller {
   }
 
   @action
-  modeChange(mode) {}
+  modeChange(mode: DayMode) {
+    // TBD
+  }
   @action
   addTrackedTask() {
     // add here

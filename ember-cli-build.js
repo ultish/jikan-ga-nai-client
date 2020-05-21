@@ -8,6 +8,15 @@ module.exports = function (defaults) {
     emberApolloClient: {
       keepGraphqlFileExtension: true,
     },
+    // fingerprint: {
+    //   enabled: false,
+    // },
+    // "ember-cli-uglify": {
+    //   enabled: true,
+    // },
+    // sourcemaps: {
+    //   enabled: true,
+    // },
     babel: {
       sourceMaps: "inline",
     },

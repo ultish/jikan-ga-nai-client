@@ -6,7 +6,7 @@ import RouterService from "@ember/routing/router-service";
 
 import { queryManager, getObservable } from "ember-apollo-client";
 
-import ApolloService from "ember-apollo-client/services/apollo";
+import CustomApolloService from "jikan-ga-nai/services/custom-apollo";
 import { ObservableQuery } from "apollo-client/core/ObservableQuery";
 
 import { task } from "ember-concurrency-decorators";
@@ -21,7 +21,7 @@ import mutationCreateTrackedDay from "jikan-ga-nai/gql/mutations/createTrackedDa
 
 export default class Tracker extends Controller {
   @service router!: RouterService;
-  @queryManager() apollo!: ApolloService;
+  @queryManager({ service: "custom-apollo" }) apollo!: CustomApolloService;
 
   @tracked
   hasNextPage = false;

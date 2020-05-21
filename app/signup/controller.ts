@@ -2,7 +2,7 @@ import Controller from "@ember/controller";
 import { action } from "@ember/object";
 import { tracked } from "@glimmer/tracking";
 
-import ApolloService from "ember-apollo-client/services/apollo";
+import CustomApolloService from "jikan-ga-nai/services/custom-apollo";
 import { queryManager } from "ember-apollo-client";
 import signUp from "jikan-ga-nai/gql/mutations/signUp.graphql";
 import { SignUp } from "jikan-ga-nai/interfaces/sign-up";
@@ -11,7 +11,7 @@ import Authentication from "jikan-ga-nai/services/authentication";
 import { inject as service } from "@ember/service";
 
 export default class Signup extends Controller {
-  @queryManager({ service: "apollo" }) apollo!: ApolloService;
+  @queryManager({ service: "custom-apollo" }) apollo!: CustomApolloService;
   @service authentication!: Authentication;
 
   @tracked

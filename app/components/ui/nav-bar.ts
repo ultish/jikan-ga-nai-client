@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { queryManager } from "ember-apollo-client";
-import ApolloService from "ember-apollo-client/services/apollo";
+import CustomApolloService from "jikan-ga-nai/services/custom-apollo";
 
 import { task } from "ember-concurrency-decorators";
 import { computed, action, get } from "@ember/object";
@@ -12,7 +12,7 @@ import { tracked } from "@glimmer/tracking";
 interface UiNavbarArgs {}
 
 export default class UiNavbar extends Component<UiNavbarArgs> {
-  @queryManager() apollo!: ApolloService;
+  @queryManager({ service: "custom-apollo" }) apollo!: CustomApolloService;
   @service authentication!: Authentication;
   @service router!: RouterService;
 

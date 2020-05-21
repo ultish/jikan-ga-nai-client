@@ -2,14 +2,14 @@ import Controller from "@ember/controller";
 import { action } from "@ember/object";
 import { tracked } from "@glimmer/tracking";
 
-import ApolloService from "ember-apollo-client/services/apollo";
+import CustomApolloService from "jikan-ga-nai/services/custom-apollo";
 import { queryManager } from "ember-apollo-client";
 import { htmlSafe } from "@ember/string";
 import { inject as service } from "@ember/service";
 import Authentication from "jikan-ga-nai/services/authentication";
 
 export default class Login extends Controller {
-  @queryManager({ service: "apollo" }) apollo!: ApolloService;
+  @queryManager({ service: "custom-apollo" }) apollo!: CustomApolloService;
   @service authentication!: Authentication;
 
   @tracked

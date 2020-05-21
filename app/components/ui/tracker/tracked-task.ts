@@ -16,7 +16,7 @@ import { TimeBlock } from "jikan-ga-nai/interfaces/time-block";
 
 import { queryManager, unsubscribe } from "ember-apollo-client";
 
-import ApolloService from "ember-apollo-client/services/apollo";
+import CustomApolloService from "jikan-ga-nai/services/custom-apollo";
 
 import mutationDeleteTimeBlock from "jikan-ga-nai/gql/mutations/deleteTimeBlock.graphql";
 import mutationCreateTimeBlock from "jikan-ga-nai/gql/mutations/createTimeBlock.graphql";
@@ -62,7 +62,7 @@ class DateBlock {
 }
 
 export default class UiTrackedDay extends Component<UiTrackedTaskArgs> {
-  @queryManager() apollo!: ApolloService;
+  @queryManager({ service: "custom-apollo" }) apollo!: CustomApolloService;
 
   lastBlockClicked: number | null = null;
   selectedBlocks: number[] = [];

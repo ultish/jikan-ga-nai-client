@@ -2,7 +2,7 @@ import { queryManager } from "ember-apollo-client";
 import messages from "jikan-ga-nai/gql/queries/messages.graphql";
 
 // importing this for the type reference
-import ApolloService from "ember-apollo-client/services/apollo";
+import CustomApolloService from "jikan-ga-nai/services/custom-apollo";
 
 import MessagesController from "./controller";
 import { GetMessages } from "jikan-ga-nai/interfaces/get-messages";
@@ -12,7 +12,7 @@ import AuthRoute from "jikan-ga-nai/framework/auth-route";
 export default class Messages extends AuthRoute {
   // ! tells typescrypt this this variable will definately be initialized.
   // otherwise it throws  a TS error as we haven't initialized this var
-  @queryManager() apollo!: ApolloService;
+  @queryManager({ service: "custom-apollo" }) apollo!: CustomApolloService;
 
   messagesCreatedSub: any;
 

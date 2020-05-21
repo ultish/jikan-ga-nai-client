@@ -7,7 +7,7 @@ import { inject as service } from "@ember/service";
 import { alias } from "@ember/object/computed";
 import mutationDeleteTrackedDay from "jikan-ga-nai/gql/mutations/deleteTrackedDay.graphql";
 import { queryManager } from "ember-apollo-client";
-import ApolloService from "ember-apollo-client/services/apollo";
+import CustomApolloService from "jikan-ga-nai/services/custom-apollo";
 
 interface UiTrackedDayArgs {
   day: TrackedDay;
@@ -15,7 +15,7 @@ interface UiTrackedDayArgs {
 export default class UiTrackedDay extends Component<UiTrackedDayArgs> {
   @service
   router!: RouterService;
-  @queryManager() apollo!: ApolloService;
+  @queryManager({ service: "custom-apollo" }) apollo!: CustomApolloService;
 
   constructor(owner: unknown, args: UiTrackedDayArgs) {
     super(owner, args);
