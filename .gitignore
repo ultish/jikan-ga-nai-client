@@ -3,8 +3,7 @@
 # compiled output
 /dist/
 /tmp/
-/output/
-
+/docker/output/
 # dependencies
 /bower_components/
 /node_modules/
