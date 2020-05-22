@@ -22,6 +22,7 @@ import mutationCreateTrackedTask from "jikan-ga-nai/gql/mutations/createTrackedT
 import { toUp, toDown } from "ember-animated/transitions/move-over";
 
 const TRACKED_TASKS_WIDTH = 300;
+const TIMEBLOCK_WIDTH = 60;
 
 export default class TrackerDay extends Controller {
   @queryManager({ service: "custom-apollo" }) apollo!: CustomApolloService;
@@ -114,10 +115,72 @@ export default class TrackerDay extends Controller {
     this.calculateScale();
   }
 
+  prevX = 0;
+
+  @action
+  dragStart(e: DragEvent) {
+    this.prevX = e.clientX;
+  }
+
+  @action
+  dragEnd(e: DragEvent) {
+    e.preventDefault();
+    this.hideDragError(e);
+  }
+  @action
+  drag(e: DragEvent) {
+    e.preventDefault();
+
+    const gapX = this.prevX - e.clientX;
+
+    if (e.clientX === 0) {
+      this.prevX = e.clientX;
+      return;
+    }
+    const blocks = Math.floor(gapX / TIMEBLOCK_WIDTH);
+    if (blocks !== 0) {
+      const hoursMoved = Math.floor(gapX / TIMEBLOCK_WIDTH);
+
+      const earliest = this.startTime.clone().startOf("day");
+      const latest = earliest.clone().add(24, "hours");
+
+      const availableWidth = this.containerWidth - TRACKED_TASKS_WIDTH;
+      const numBlocks = Math.floor(availableWidth / TIMEBLOCK_WIDTH) - 1;
+
+      const proposedDate = this.startTime.clone().add(hoursMoved, "hours");
+
+      const proposedStopDate = proposedDate
+        .clone()
+        .add(numBlocks * TIMEBLOCK_WIDTH, "minutes");
+
+      if (
+        earliest.isSameOrBefore(proposedDate) &&
+        latest.isAfter(proposedStopDate)
+      ) {
+        this.hideDragError(e);
+
+        this.startTime = proposedDate;
+        this.prevX -= blocks * TIMEBLOCK_WIDTH;
+        this.calculateScale();
+      } else {
+        this.showDragError(e);
+      }
+    }
+  }
+
+  showDragError(e: DragEvent) {
+    if (e.target instanceof Element) {
+      e.target.classList.add("error");
+    }
+  }
+  hideDragError(e: DragEvent) {
+    if (e.target instanceof Element) {
+      e.target.classList.remove("error");
+    }
+  }
+
   calculateScale() {
     const scale = scaleTime();
-
-    const TIMEBLOCK_WIDTH = 60;
 
     const availableWidth = this.containerWidth - TRACKED_TASKS_WIDTH;
     const numBlocks = Math.floor(availableWidth / TIMEBLOCK_WIDTH) - 1;
@@ -134,12 +197,9 @@ export default class TrackerDay extends Controller {
     const ticks = scale.ticks(numBlocks);
 
     this.scale = scale;
-    // this.ticks = ticks;
     this.ticks.clear();
     this.ticks.pushObjects(ticks);
     this.tickFormat = scale.tickFormat();
-
-    // console.log(scale);
 
     return this.scale;
   }

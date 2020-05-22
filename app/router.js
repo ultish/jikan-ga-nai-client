@@ -15,5 +15,5 @@ Router.map(function () {
     this.route("day", { path: "/day/:id" });
   });
   this.route("not-found", { path: "/*path" });
-  this.route('charge-codes');
+  this.route("charge-codes");
 });

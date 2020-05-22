@@ -1,45 +1,54 @@
 <div id="track-container" local-class="track-container">
-  <div
-      id="tracked-tasks-container"
-      local-class="tracked-tasks-container"
-    {{did-resize this.didResize}}
-    {{did-insert this.didResize}}
-  >
-    <div local-class="tick-container">
-      {{#each this.formattedTicks as |tick|}}
-        <div local-class="tick-hour">
-          {{tick}}
+    <div
+        id="tracked-tasks-container"
+        local-class="tracked-tasks-container"
+        {{did-resize this.didResize}}
+        {{did-insert this.didResize}}
+    >
+        <div
+            local-class="draggable-container"
+            {{on 'dragstart' (fn this.dragStart)}}
+            {{on 'dragend' (fn this.dragEnd)}}
+            {{on 'drag' (fn this.drag)}}
+            draggable="true">
         </div>
-      {{/each}}
+        <div
+            local-class="tick-container"
+        >
+            {{#each this.formattedTicks as |tick|}}
+                <div local-class="tick-hour">
+                    {{tick}}
+                </div>
+            {{/each}}
+        </div>
+        <div local-class="time-container">
+            <PowerSelect
+                @onChange={{fn this.modeChange}}
+                @options={{this.modes}}
+                @selected={{this.model.trackedDay.mode}} as |mode|
+            >
+                {{mode}}
+            </PowerSelect>
+            {{#each this.sortedTasks as |task|}}
+                <Ui::Tracker::TrackedTask
+                    @trackedTask={{task}}
+                    @ticks={{this.ticks}}
+                    @scale={{this.scale}}
+                    @day={{@model.trackedDay}}
+                    @chargeCodes={{@model.chargeCodes}}
+                    @trackedDay={{@model.trackedDay}}
+                />
+            {{/each}}
+            <button
+                type="button" {{on 'click' (fn this.addTrackedTask)}}
+                local-class="add-tracked-task"
+                class="uk-button uk-button-default uk-button-small">
+                Add new Task
+            </button>
+        </div>
     </div>
-    <div local-class="time-container">
-      <PowerSelect
-          @onChange={{fn this.modeChange}}
-          @options={{this.modes}}
-          @selected={{this.model.trackedDay.mode}} as |mode|
-      >
-        {{mode}}
-      </PowerSelect>
-      {{#each this.sortedTasks as |task|}}
-        <Ui::Tracker::TrackedTask
-            @trackedTask={{task}}
-            @ticks={{this.ticks}}
-            @scale={{this.scale}}
-            @day={{@model.trackedDay}}
-            @chargeCodes={{@model.chargeCodes}}
-            @trackedDay={{@model.trackedDay}}
-        />
-      {{/each}}
-      <button
-          type="button" {{on 'click' (fn this.addTrackedTask)}}
-          local-class="add-tracked-task"
-          class="uk-button uk-button-default uk-button-small">
-        Add new Task
-      </button>
+    <div id="timesheet" local-class="timesheet">
+        <Ui::Tracker::Timesheet @timesheet={{@model.timesheet}} />
     </div>
-  </div>
-  <div id="timesheet" local-class="timesheet">
-    <Ui::Tracker::Timesheet @timesheet={{@model.timesheet}} />
-  </div>
 </div>
 {{outlet}}
