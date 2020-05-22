@@ -6,11 +6,13 @@
         {{did-insert this.didResize}}
     >
         <div
+            draggable="true"
+            role="button"
             local-class="draggable-container"
             {{on 'dragstart' (fn this.dragStart)}}
             {{on 'dragend' (fn this.dragEnd)}}
             {{on 'drag' (fn this.drag)}}
-            draggable="true">
+        >
         </div>
         <div
             local-class="tick-container"
