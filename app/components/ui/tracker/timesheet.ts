@@ -164,8 +164,6 @@ export default class UiTrackedTimesheet extends Component<
   rules(ref) {
     const { oldItems, newItems } = ref;
 
-    // const a = oldItems[0]?.value;
-    // const b = newItems[0]?.value;
     const a = oldItems[0] ?? 0;
     const b = newItems[0] ?? 0;
 
@@ -177,14 +175,7 @@ export default class UiTrackedTimesheet extends Component<
   }
 
   get today() {
-    const today = moment().startOf("day");
     const currentTrackedDay = moment(this.args.currentDay.date);
-
-    if (today.isoWeek() === currentTrackedDay.isoWeek()) {
-      // same week
-      return currentTrackedDay.format("dddd").toLowerCase();
-    } else {
-      return null;
-    }
+    return currentTrackedDay.format("dddd").toLowerCase();
   }
 }
