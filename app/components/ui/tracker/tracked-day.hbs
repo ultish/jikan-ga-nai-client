@@ -1,23 +1,24 @@
 <div
     local-class="tracked-day-container"
     class={{concat "uk-flex uk-flex-row " this.classes}}>
-  <div
-      local-class="tracked-day"
-      role="button"
-    {{on "click" (fn this.click @day)}}
-  >
+    <div
+        local-class="tracked-day"
+        role="button"
+        {{on "click" (fn this.click @day)}}
+    >
   <span local-class="date">
-    {{moment-format @day.date "YYYY-MM-DD ddd"}}
+      <span local-class="week-number">{{moment-format @day.date "W"}}</span>
+      {{moment-format @day.date "YYYY-MM-DD ddd"}}
   </span>
-    {{yield}}
-  </div>
-  <button
-      type="button"
-      class="uk-button uk-button-danger uk-button-small"
-      uk-icon="icon: trash"
-    {{on 'dblclick' (fn this.deleteTrackedDay)}}
-    {{on 'click' (fn this.deleteClick)}}
-  >
-    <EmberTooltip @event="click" @text="Double-click to delete" @popperContainer="body" @side="right"/>
-  </button>
+        {{yield}}
+    </div>
+    <button
+        type="button"
+        class="uk-button uk-button-danger uk-button-small"
+        uk-icon="icon: trash"
+        {{on 'dblclick' (fn this.deleteTrackedDay)}}
+        {{on 'click' (fn this.deleteClick)}}
+    >
+        <EmberTooltip @event="click" @text="Double-click to delete" @popperContainer="body" @side="right"/>
+    </button>
 </div>
