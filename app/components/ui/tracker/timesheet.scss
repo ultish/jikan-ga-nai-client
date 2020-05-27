@@ -21,10 +21,27 @@
 }
 
 .yeti-table {
+  &:global(.yeti-table) {
+    color: $primary-1-text-colour;
+  }
   th {
     &:global(.active) {
       font-weight: bold;
       color: white;
+    }
+  }
+  thead {
+    tr {
+      background-color: $primary-1-colour;
+    }
+  }
+  tbody {
+    tr {
+      background-color: $primary-1-colour;
+
+      &:nth-child(odd) {
+        background-color: darken($primary-1-colour, 3%);
+      }
     }
   }
 }

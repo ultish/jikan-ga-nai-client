@@ -86,13 +86,13 @@ $containerHeight: calc(100vh - #{$timesheetHeight} - #{$headerHeight});
 
   overflow-y: auto;
 
-  > table:global(.yeti-table) {
-    color: $primary-1-text-colour;
-
-    tr {
-      background-color: $primary-1-colour;
-    }
-  }
+  //> table:global(.yeti-table) {
+  //  color: $primary-1-text-colour;
+  //
+  //  tr {
+  //    background-color: $primary-1-colour;
+  //  }
+  //}
 }
 
 .test-counter-container {
