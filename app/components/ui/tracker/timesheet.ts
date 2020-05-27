@@ -9,7 +9,6 @@ import { ChargeCode } from "jikan-ga-nai/interfaces/charge-code";
 import { computed } from "@ember/object";
 import { DayMode } from "jikan-ga-nai/interfaces/day-mode";
 import { TrackedDay } from "jikan-ga-nai/interfaces/tracked-day";
-import { current } from "ember-animated";
 
 // TODO move this to DB
 const HOURS_IN_DAY = 7.6 * 60;
