@@ -34,8 +34,8 @@ Week Ending: {{moment-format @timesheet.weekEndingDate 'YYYY-MM-DD ddd'}}
   <table.body as |body timesheetRow|>
     <body.row as |row|>
       <row.cell local-class={{if timesheetRow.isTotal 'total'}}>
-        {{#if timesheetRow.chargecode.name}}
-          {{timesheetRow.chargecode.name}}
+        {{#if timesheetRow.chargecode.code}}
+          {{timesheetRow.chargecode.code}}
         {{else}}
           <b>{{timesheetRow.chargecode}}</b>
         {{/if}}

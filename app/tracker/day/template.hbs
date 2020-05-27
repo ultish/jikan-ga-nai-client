@@ -29,7 +29,7 @@
                 @options={{this.modes}}
                 @selected={{this.model.trackedDay.mode}} as |mode|
             >
-                {{mode}}
+                <Ui::Tracker::DayMode @mode={{mode}} />
             </PowerSelect>
             {{#each this.sortedTasks as |task|}}
                 <Ui::Tracker::TrackedTask
