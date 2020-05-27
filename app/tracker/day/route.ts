@@ -33,7 +33,7 @@ export default class TrackerDay extends Route {
 
   async model({ id }: { id: string }) {
     return hash({
-      trackedDay: this.apollo.query(
+      trackedDay: this.apollo.watchQuery(
         {
           query: queryGetTrackedDay,
           variables: {

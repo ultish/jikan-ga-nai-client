@@ -1,16 +1,21 @@
 query timesheet($trackedDayId: ID!) {
-  timesheet(trackedDayId: $trackedDayId) {
-    id
-    weekEndingDate
-    timeCharged {
-      id
-      date
-      value
-      chargeCode {
+    timesheet(trackedDayId: $trackedDayId) {
         id
-        name
-        code
-      }
+        weekEndingDate
+        timeCharged {
+            id
+            date
+            value
+            chargeCode {
+                id
+                name
+                code
+            }
+        }
+        trackedDays {
+            id
+            date
+            mode
+        }
     }
-  }
 }

@@ -7,9 +7,17 @@ import { toUp, toDown } from "ember-animated/transitions/move-over";
 
 import { ChargeCode } from "jikan-ga-nai/interfaces/charge-code";
 import { computed } from "@ember/object";
+import { DayMode } from "jikan-ga-nai/interfaces/day-mode";
+import { TrackedDay } from "jikan-ga-nai/interfaces/tracked-day";
+import { current } from "ember-animated";
+
+// TODO move this to DB
+const HOURS_IN_DAY = 7.6 * 60;
 
 interface UiTrackedTimesheetArgs {
   timesheet: Timesheet;
+  chargeCodes: ChargeCode[];
+  currentDay: TrackedDay;
 }
 
 class TimesheetRow {
@@ -53,25 +61,29 @@ export default class UiTrackedTimesheet extends Component<
     super(owner, args);
   }
 
-  @computed("args.timesheet.timeCharged.@each.value")
+  @computed(
+    "args.timesheet.timeCharged.@each.value",
+    "args.timesheet.trackedDays.@each.mode"
+  )
   get calculatedTimesheet() {
     const map = new Map();
 
+    this.args.timesheet.trackedDays.forEach((trackedDay) => {
+      if (trackedDay.mode !== DayMode.NORMAL) {
+        // hello..
+        const chargeCode = this.args.chargeCodes.find(
+          (cc) => cc.code === trackedDay.mode
+        );
+        if (chargeCode) {
+          const day = moment(trackedDay.date).format("dddd").toLowerCase();
+          this.addTimesheetRow(map, chargeCode, day, HOURS_IN_DAY);
+        }
+      }
+    });
+
     this.args.timesheet?.timeCharged?.map((timeCharged) => {
       const day = moment(timeCharged.date).format("dddd").toLowerCase();
-
-      // group by chargecodes, then by day
-
-      let timesheetRow;
-      if (map.has(timeCharged.chargeCode.id)) {
-        timesheetRow = map.get(timeCharged.chargeCode.id);
-      } else {
-        timesheetRow = new TimesheetRow(timeCharged.chargeCode);
-        map.set(timeCharged.chargeCode.id, timesheetRow);
-      }
-
-      timesheetRow[day] += timeCharged.value;
-      timesheetRow["total"] += timeCharged.value;
+      this.addTimesheetRow(map, timeCharged.chargeCode, day, timeCharged.value);
     });
 
     // add a totals row
@@ -81,6 +93,26 @@ export default class UiTrackedTimesheet extends Component<
     result = [...result, totals];
 
     return result;
+  }
+
+  addTimesheetRow(
+    map: Map<String, TimesheetRow>,
+    chargeCode: ChargeCode,
+    day: string,
+    value: number
+  ) {
+    let timesheetRow: TimesheetRow;
+
+    if (map.has(chargeCode.id)) {
+      timesheetRow = <TimesheetRow>map.get(chargeCode.id);
+    } else {
+      timesheetRow = new TimesheetRow(chargeCode);
+      map.set(chargeCode.id, timesheetRow);
+    }
+
+    // TODO feels wrong to cast to any
+    (timesheetRow as any)[day] += value;
+    timesheetRow["total"] += value;
   }
 
   dayTotals(values: TimesheetRow[]) {
@@ -142,6 +174,18 @@ export default class UiTrackedTimesheet extends Component<
       return toDown;
     } else {
       return toUp;
+    }
+  }
+
+  get today() {
+    const today = moment().startOf("day");
+    const currentTrackedDay = moment(this.args.currentDay.date);
+
+    if (today.isoWeek() === currentTrackedDay.isoWeek()) {
+      // same week
+      return currentTrackedDay.format("dddd").toLowerCase();
+    } else {
+      return null;
     }
   }
 }

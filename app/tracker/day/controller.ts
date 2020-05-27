@@ -3,7 +3,7 @@ import { queryManager, getObservable } from "ember-apollo-client";
 
 import CustomApolloService from "jikan-ga-nai/services/custom-apollo";
 import { sort } from "@ember/object/computed";
-import { action } from "@ember/object";
+import { action, set } from "@ember/object";
 
 import { scaleTime, ScaleTime } from "d3-scale";
 import jQuery from "jquery";
@@ -17,6 +17,7 @@ import { TrackedTask } from "jikan-ga-nai/interfaces/tracked-task";
 import { DayMode } from "jikan-ga-nai/interfaces/day-mode";
 import subTimesheetUpdated from "jikan-ga-nai/gql/subscriptions/timesheet-updated.graphql";
 import mutationCreateTrackedTask from "jikan-ga-nai/gql/mutations/createTrackedTask.graphql";
+import mutationUpdateTrackedDay from "jikan-ga-nai/gql/mutations/updateTrackedDay.graphql";
 
 // @ts-ignore
 import { toUp, toDown } from "ember-animated/transitions/move-over";
@@ -80,7 +81,25 @@ export default class TrackerDay extends Controller {
 
   @action
   modeChange(mode: DayMode) {
-    // TBD
+    this.apollo.mutate({
+      mutation: mutationUpdateTrackedDay,
+      variables: {
+        id: this.model.trackedDay.id,
+        mode: mode,
+      },
+      updateQueries: {
+        trackedDay: (prev, { mutationResult, queryVariables }) => {
+          if (prev.trackedDay.id === queryVariables.trackedDayId) {
+            set(
+              prev.trackedDay,
+              "mode",
+              mutationResult?.data?.updateTrackedDay.mode
+            );
+          }
+          return prev;
+        },
+      },
+    });
   }
   @action
   addTrackedTask() {

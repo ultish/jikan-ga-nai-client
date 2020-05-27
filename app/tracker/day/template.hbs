@@ -50,7 +50,11 @@
         </div>
     </div>
     <div id="timesheet" local-class="timesheet">
-        <Ui::Tracker::Timesheet @timesheet={{@model.timesheet}} />
+        <Ui::Tracker::Timesheet
+            @timesheet={{@model.timesheet}}
+            @chargeCodes={{@model.chargeCodes}}
+            @currentDay={{@model.trackedDay}}
+        />
     </div>
 </div>
 {{outlet}}

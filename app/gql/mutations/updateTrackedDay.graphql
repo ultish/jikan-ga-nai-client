@@ -1,0 +1,7 @@
+mutation updateTrackedDay($id: ID!, $date: Float, $mode: DayMode) {
+    updateTrackedDay(id: $id, date: $date, mode: $mode) {
+        id
+        date
+        mode
+    }
+}

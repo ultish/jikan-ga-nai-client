@@ -1,30 +1,30 @@
 Week Ending: {{moment-format @timesheet.weekEndingDate 'YYYY-MM-DD ddd'}}
 
 
-<YetiTable @data={{this.calculatedTimesheet}} as |table|>
+<YetiTable @data={{this.calculatedTimesheet}} local-class="yeti-table" as |table|>
   <table.header as |header|>
-    <header.column @prop="chargecode.name">
+    <header.column @prop="chargecode.code">
       Charge Code
     </header.column>
-    <header.column @prop="monday">
+    <header.column @prop="monday" class={{if (eq this.today 'monday') 'active'}}>
       Monday
     </header.column>
-    <header.column @prop="tuesday">
+    <header.column @prop="tuesday" class={{if (eq this.today 'tuesday') 'active'}}>
       Tuesday
     </header.column>
-    <header.column @prop="wednesday">
+    <header.column @prop="wednesday" class={{if (eq this.today 'wednesday') 'active'}}>
       Wednesday
     </header.column>
-    <header.column @prop="thursday">
+    <header.column @prop="thursday" class={{if (eq this.today 'thursday') 'active'}}>
       Thursday
     </header.column>
-    <header.column @prop="friday">
+    <header.column @prop="friday" class={{if (eq this.today 'friday') 'active'}}>
       Friday
     </header.column>
-    <header.column @prop="saturday">
+    <header.column @prop="saturday" class={{if (eq this.today 'saturday') 'active'}}>
       Saturday
     </header.column>
-    <header.column @prop="sunday">
+    <header.column @prop="sunday" class={{if (eq this.today 'sunday') 'active'}}>
       Sunday
     </header.column>
     <header.column @prop="total">
