@@ -5,7 +5,6 @@ import resize from "ember-animated/motions/resize";
 
 export default class Home extends Controller {
   *transition({ receivedSprites }: any) {
-    console.log("tracker2", arguments);
     receivedSprites.forEach((sprite: any) => {
       move(sprite);
       resize(sprite);

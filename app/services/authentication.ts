@@ -117,7 +117,7 @@ export default class Authentication extends Service {
     if (reset) {
       this.apollo.apolloClient.resetStore();
     }
-    console.log("loginWithToken", result);
+
     return result;
   }
 }

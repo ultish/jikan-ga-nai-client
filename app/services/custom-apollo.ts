@@ -41,7 +41,7 @@ export default class CustomApollo extends ApolloService {
 
     // Afterware
     const resetToken = onError((err) => {
-      console.log(err);
+      console.warn(err);
       const { graphQLErrors, networkError } = err;
 
       const error = networkError as ServerError;
@@ -51,10 +51,8 @@ export default class CustomApollo extends ApolloService {
       }
 
       if (graphQLErrors) {
-        console.log("i detect error 🤖");
+        console.error("i detect error 🤖", graphQLErrors);
       }
-
-      console.log("hello", ...arguments);
     });
 
     const authLink = authMiddleware.concat(resetToken);

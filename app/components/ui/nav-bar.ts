@@ -44,11 +44,6 @@ export default class UiNavbar extends Component<UiNavbarArgs> {
 
   @computed("fetchMe.last.value.me.{username,id}")
   get me() {
-    console.log(
-      "test",
-      this.fetchMe.last?.value?.me?.username,
-      this.fetchMe.last?.value
-    );
     return this.fetchMe.last.value;
   }
 

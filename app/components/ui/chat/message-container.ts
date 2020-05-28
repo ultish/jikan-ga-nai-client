@@ -235,8 +235,6 @@ export default class UiChatMessageContainer extends Component<
         text: this.text,
       },
       update: (cache, result) => {
-        console.log(queryMessages);
-
         /*
         we can read the query from the cache without providing any variables
         here because we've set the messages.graphql with a @connection
@@ -283,8 +281,6 @@ export default class UiChatMessageContainer extends Component<
           query: queryMessages,
           data: newCache,
         });
-
-        console.log("data updated in cache", newCache);
       },
     });
 

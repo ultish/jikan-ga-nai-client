@@ -23,7 +23,6 @@ export default class UiTrackedDay extends Component<UiTrackedDayArgs> {
 
   @action
   click() {
-    console.log("click");
     this.router.transitionTo("tracker.day", this.args.day.id);
   }
 
@@ -101,7 +100,5 @@ export default class UiTrackedDay extends Component<UiTrackedDayArgs> {
     return this.router.isActive("tracker.day", this.args.day);
   }
 
-  *transition() {
-    console.log("tracked-day", arguments);
-  }
+  *transition() {}
 }

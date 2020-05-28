@@ -95,7 +95,6 @@ export default class UiTrackedDay extends Component<UiTrackedTaskArgs> {
 
   @action
   deleteTrackedTask() {
-    console.log("deleting task");
     this.apollo.mutate({
       mutation: mutationDeleteTrackedTask,
       variables: {
@@ -122,9 +121,7 @@ export default class UiTrackedDay extends Component<UiTrackedTaskArgs> {
   }
 
   @action
-  didResize() {
-    console.log("resized!");
-  }
+  didResize() {}
 
   @action
   updateChargeCodes(selection: ChargeCode[]) {
