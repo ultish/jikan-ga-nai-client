@@ -1,5 +1,9 @@
 {{#if @value}}
-    {{this.display}} ({{@value}}m)
+    {{#if @isTotal}}
+        {{@value}}
+    {{else}}
+        {{this.display}} <sup>({{this.displayDetailed}})</sup>
+    {{/if}}
 {{else}}
     0
 {{/if}}

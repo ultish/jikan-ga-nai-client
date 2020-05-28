@@ -13,8 +13,13 @@ export default class UiTrackedTimesheet extends Component<
 
   get display() {
     let result = this.args.value / 60;
-    result = parseFloat(result.toFixed(3));
+    result = parseFloat(result.toFixed(1));
 
     return result;
+  }
+
+  get displayDetailed() {
+    let result = this.args.value / 60;
+    return parseFloat(result.toFixed(3));
   }
 }

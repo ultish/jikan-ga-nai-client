@@ -111,42 +111,22 @@ export default class UiTrackedTimesheet extends Component<
 
     // TODO feels wrong to cast to any
     (timesheetRow as any)[day] += value;
-    timesheetRow["total"] += value;
+    timesheetRow["total"] += this.calcChargableTime(value);
   }
 
   dayTotals(values: TimesheetRow[]) {
     const totals = new TimesheetRow("Total");
 
     values.forEach((timesheetRow: TimesheetRow) => {
-      totals.monday += timesheetRow.monday;
-      totals.tuesday += timesheetRow.tuesday;
-      totals.wednesday += timesheetRow.wednesday;
-      totals.thursday += timesheetRow.thursday;
-      totals.friday += timesheetRow.friday;
-      totals.saturday += timesheetRow.saturday;
-      totals.sunday += timesheetRow.sunday;
+      totals.monday += this.calcChargableTime(timesheetRow.monday);
+      totals.tuesday += this.calcChargableTime(timesheetRow.tuesday);
+      totals.wednesday += this.calcChargableTime(timesheetRow.wednesday);
+      totals.thursday += this.calcChargableTime(timesheetRow.thursday);
+      totals.friday += this.calcChargableTime(timesheetRow.friday);
+      totals.saturday += this.calcChargableTime(timesheetRow.saturday);
+      totals.sunday += this.calcChargableTime(timesheetRow.sunday);
+      // totals are based on rounded values
       totals.total += timesheetRow.total;
-
-      // we now have a total per chargecode, but its real total can't be known until all totals are calculated
-    });
-
-    // const accumilatedTotals = this.calcChargableTime( totals.week.reduce((total, result) => (result += total), 0));
-    const accumilatedTotals = this.calcChargableTime(
-      totals.week.reduce((total, result) => (result += total), 0),
-      null
-    );
-    const accumilatedTotalsFixed = parseFloat(accumilatedTotals.toFixed(1));
-
-    values.forEach((timesheetRow: TimesheetRow) => {
-      // work out the real total
-
-      timesheetRow.realTotal = parseFloat(
-        (
-          (this.calcChargableTime(timesheetRow.total, null) /
-            accumilatedTotals) *
-          accumilatedTotalsFixed
-        ).toFixed(1)
-      );
     });
 
     return totals;
