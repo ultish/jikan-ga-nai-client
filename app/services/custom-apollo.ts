@@ -11,7 +11,7 @@ import Authentication from "./authentication";
 
 // Create a WebSocket link:
 const wsLink = new WebSocketLink({
-  uri: `ws://localhost:8000/graphql`,
+  uri: `ws://localhost:9998/graphql`,
   options: {
     reconnect: true,
   },
