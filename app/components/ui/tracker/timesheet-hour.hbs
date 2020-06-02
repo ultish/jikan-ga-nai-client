@@ -1,9 +1,8 @@
 {{#if @value}}
-    {{#if @isTotal}}
-        {{@value}}
-    {{else}}
-        {{this.display}} <sup>({{this.displayDetailed}})</sup>
-    {{/if}}
+    {{this.display}}
+    {{#unless @isTotal}}
+        <sup>({{this.displayDetailed}})</sup>
+    {{/unless}}
 {{else}}
     0
 {{/if}}
