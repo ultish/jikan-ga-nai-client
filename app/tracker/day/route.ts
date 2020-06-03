@@ -31,6 +31,12 @@ export default class TrackerDay extends Route {
     controller.onRouteActivate();
   }
 
+  deactivate() {
+    super.deactivate();
+
+    (this.controller as TrackerDayController).onLeaving();
+  }
+
   async model({ id }: { id: string }) {
     return hash({
       trackedDay: this.apollo.watchQuery(

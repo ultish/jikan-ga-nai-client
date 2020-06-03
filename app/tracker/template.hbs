@@ -10,7 +10,7 @@
         @placeholder="Add..."
         @theme="pikaday-theme"/>
 
-    {{#each this.sortedDays as |day|}}
+    {{#each this.uniqSortedDays as |day|}}
       <Ui::Tracker::TrackedDay @day={{day}} />
     {{/each}}
     {{#unless this.moarDisabled}}

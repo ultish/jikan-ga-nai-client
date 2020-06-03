@@ -1,5 +1,6 @@
 import Controller from "@ember/controller";
 import { queryManager, getObservable } from "ember-apollo-client";
+import { ObservableQuery } from "apollo-client/core/ObservableQuery";
 
 import CustomApolloService from "jikan-ga-nai/services/custom-apollo";
 import { sort } from "@ember/object/computed";
@@ -19,6 +20,8 @@ import subTimesheetUpdated from "jikan-ga-nai/gql/subscriptions/timesheet-update
 import mutationCreateTrackedTask from "jikan-ga-nai/gql/mutations/createTrackedTask.graphql";
 import mutationUpdateTrackedDay from "jikan-ga-nai/gql/mutations/updateTrackedDay.graphql";
 
+import config from "jikan-ga-nai/config/environment";
+
 // @ts-ignore
 import { toUp, toDown } from "ember-animated/transitions/move-over";
 
@@ -34,7 +37,24 @@ export default class TrackerDay extends Controller {
   @tracked scale?: ScaleTime<Number, Number>;
   @tracked ticks = A<Date>();
   tickFormat?: Function;
-  timesheetUpdatedSub: any;
+  timesheetUpdatedSub?: ObservableQuery;
+  observable: any;
+
+  calcStopTime(
+    startTime: moment.Moment,
+    value: number,
+    unit: moment.unitOfTime.Base = "hour"
+  ) {
+    const earliest = startTime.clone().startOf("day");
+    const latest = earliest.clone().add(23, "hours");
+
+    const proposedStopTime = startTime.clone().add(value, unit);
+    if (latest.isBefore(proposedStopTime)) {
+      return latest;
+    } else {
+      return proposedStopTime;
+    }
+  }
 
   onRouteActivate = () => {
     const baseDate = this.model.trackedDay.date;
@@ -42,15 +62,17 @@ export default class TrackerDay extends Controller {
     // baseDate is stored as UTC in the DB, but was initially local-time, converted into UTC for storage
 
     // TODO Make this ENV controlled
-    this.startTime = moment(baseDate).add(0, "hours");
-    this.stopTime = this.startTime.clone().add(8, "hours");
+    // @ts-ignore
+    const startOffset = config.startHourOffset || 0;
+    this.startTime = moment(baseDate).add(startOffset, "hours");
+    // this.stopTime = this.startTime.clone().add(8, "hours");
+    this.stopTime = this.calcStopTime(this.startTime, 8);
 
     this.calculateScale();
 
-    const observerable = getObservable(this.model.timesheet);
-
-    if (observerable) {
-      observerable.subscribeToMore({
+    this.observable = getObservable(this.model.timesheet);
+    if (this.observable) {
+      this.observable.subscribeToMore({
         document: subTimesheetUpdated,
         // updateQuery: (prev, { subscriptionData }) => {
         //   set(
@@ -64,11 +86,7 @@ export default class TrackerDay extends Controller {
     }
   };
 
-  onLeaving = () => {
-    // if (this.timesheetUpdatedSub) {
-    //   this.timesheetUpdatedSub.apolloUnsubscribe();
-    // }
-  };
+  onLeaving = () => {};
 
   get modes() {
     return [
@@ -206,9 +224,15 @@ export default class TrackerDay extends Controller {
     const numBlocks = Math.floor(availableWidth / TIMEBLOCK_WIDTH) - 1;
     const usedWidth = numBlocks * TIMEBLOCK_WIDTH;
 
-    this.stopTime = this.startTime
-      .clone()
-      .add(numBlocks * TIMEBLOCK_WIDTH, "minutes");
+    // this.stopTime = this.startTime
+    //   .clone()
+    //   .add(numBlocks * TIMEBLOCK_WIDTH, "minutes");
+
+    this.stopTime = this.calcStopTime(
+      this.startTime,
+      numBlocks * TIMEBLOCK_WIDTH,
+      "minutes"
+    );
 
     scale
       .domain([this.startTime.toDate(), this.stopTime.toDate()])

@@ -22,6 +22,10 @@
   border-color: darken($border-colour, 50%);
 }
 
+.uk-form-label {
+  color: $base-1-text-colour;
+}
+
 .ember-power-select-trigger {
   background-color: initial;
 }

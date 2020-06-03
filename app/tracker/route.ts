@@ -8,4 +8,10 @@ export default class Tracker extends AuthRoute {
     // notify controller for any setup on activate
     controller.onRouteActivate();
   }
+
+  deactivate() {
+    super.deactivate();
+
+    (this.controller as TrackerController).onLeaving();
+  }
 }

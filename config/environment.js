@@ -29,6 +29,7 @@ module.exports = function (environment) {
 
   ENV.graphqlHost = process.env.GRAPHQL_HOST;
   ENV.graphqlPort = process.env.GRAPHQL_PORT;
+  ENV.startHourOffset = process.env.START_HOUR_OFFSET;
 
   if (environment === "development") {
     // ENV.APP.LOG_RESOLVER = true;
