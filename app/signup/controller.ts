@@ -23,7 +23,7 @@ export default class Signup extends Controller {
   @tracked
   errors = [];
 
-  numBgImages = 10;
+  numBgImages = 11;
   @tracked
   backgroundImage = "images/spacex-1.jpg";
   @tracked

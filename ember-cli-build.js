@@ -14,6 +14,9 @@ module.exports = function (defaults) {
     cssModules: {
       headerModules: ["jikan-ga-nai/styles/colours"],
     },
+    fingerprint: {
+      exclude: ["images/spacex*"],
+    },
   });
 
   // Use `app.import` to add additional libraries to the generated

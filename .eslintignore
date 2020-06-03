@@ -5,6 +5,7 @@
 # compiled output
 /dist/
 /tmp/
+/docker/output/
 
 # dependencies
 /bower_components/

@@ -8,10 +8,12 @@ import { ServerError } from "apollo-link-http-common";
 import { inject as service } from "@ember/service";
 import RouterService from "@ember/routing/router-service";
 import Authentication from "./authentication";
+import config from "../config/environment";
 
 // Create a WebSocket link:
 const wsLink = new WebSocketLink({
-  uri: `ws://localhost:9998/graphql`,
+  // @ts-ignore
+  uri: `ws://${config.graphqlHost}:${config.graphqlPort}/graphql`,
   options: {
     reconnect: true,
   },

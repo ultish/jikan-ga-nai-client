@@ -18,7 +18,7 @@ module.exports = function (environment) {
     },
 
     apollo: {
-      apiURL: "http://localhost:9998/graphql",
+      apiURL: `http://${process.env.GRAPHQL_HOST}:${process.env.GRAPHQL_PORT}/graphql`,
     },
 
     APP: {
@@ -26,6 +26,9 @@ module.exports = function (environment) {
       // when it is created
     },
   };
+
+  ENV.graphqlHost = process.env.GRAPHQL_HOST;
+  ENV.graphqlPort = process.env.GRAPHQL_PORT;
 
   if (environment === "development") {
     // ENV.APP.LOG_RESOLVER = true;

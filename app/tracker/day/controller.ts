@@ -41,7 +41,8 @@ export default class TrackerDay extends Controller {
 
     // baseDate is stored as UTC in the DB, but was initially local-time, converted into UTC for storage
 
-    this.startTime = moment(baseDate).add(6, "hours");
+    // TODO Make this ENV controlled
+    this.startTime = moment(baseDate).add(0, "hours");
     this.stopTime = this.startTime.clone().add(8, "hours");
 
     this.calculateScale();
