@@ -66,6 +66,12 @@ export default class Messages extends AuthRoute {
     // }
   }
 
+  deactivate() {
+    super.deactivate();
+
+    (this.controller as MessagesController).onLeaving();
+  }
+
   // handleEvent = (event: any) => {
   //   console.log("created", event);
 
@@ -96,7 +102,7 @@ export default class Messages extends AuthRoute {
           limit: 30,
         },
         notifyOnNetworkStatusChange: true,
-        // fetchPolicy: "cache-and-network", //"network-only" //"cache-and-network"
+        fetchPolicy: "cache-and-network", //"network-only" //"cache-and-network"
       },
       /**
        * this is the resultsKey param.

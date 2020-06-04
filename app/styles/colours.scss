@@ -4,13 +4,13 @@ $base-3-colour: #46464a; // even #1f2335;
 $base-4-colour: #616367; //#56575a; // odd #323642; //
 $base-5-colour: #8d9299;
 
-$primary-1-colour: #cc266b; //#096ddf; // selected
-$secondary-1-colour: #2f5194; // timesheet
+$primary-1-colour: #07c784; //#096ddf; // selected
+$secondary-1-colour: #08a8a2; // timesheet
 
 $base-1-text-colour: #c4c4c4;
 $base-2-text-colour: #afafaf;
 $base-5-text-colour: #474444;
-$primary-1-text-colour: #f7c5da;
-$secondary-2-text-colour: #f779ae;
+$primary-1-text-colour: darken($primary-1-colour, 30%);
+$secondary-1-text-colour: darken($secondary-1-colour, 20%);
 
 $border-colour: #3e3f44;

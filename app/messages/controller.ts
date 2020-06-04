@@ -3,6 +3,7 @@ import { A } from "@ember/array";
 import { sort } from "@ember/object/computed";
 import { Message } from "jikan-ga-nai/interfaces/message";
 import { getObservable } from "ember-apollo-client";
+import { tracked } from "@glimmer/tracking";
 
 export default class Messages extends Controller {
   constructor() {
@@ -13,12 +14,27 @@ export default class Messages extends Controller {
   msgCache = A<Message>();
 
   msgObserver?: any;
+  @tracked
+  windowInFocus = false;
 
   onRouteActivate = () => {
     this.msgCache.clear();
 
     this.msgObserver = getObservable(this.model);
+    window.onfocus = () => {
+      console.log("focus window!");
+      this.windowInFocus = true;
+    };
+    window.onblur = () => {
+      console.log("good bye window");
+      this.windowInFocus = false;
+    };
   };
+
+  onLeaving() {
+    window.onfocus = null;
+    window.onblur = null;
+  }
 
   get isLoading() {
     // not sure when this is meant to change...

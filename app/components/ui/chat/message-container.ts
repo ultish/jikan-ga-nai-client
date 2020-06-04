@@ -18,7 +18,9 @@ import queryMessages from "jikan-ga-nai/gql/queries/messages.graphql";
 import mutateCreateMessage from "jikan-ga-nai/gql/mutations/createMessage.graphql";
 import subMessageCreated from "jikan-ga-nai/gql/subscriptions/message-created.graphql";
 
-interface UiChatMessageContainerArgs {}
+interface UiChatMessageContainerArgs {
+  windowInFocus: boolean;
+}
 
 /**
  * the container will fetch messages and subscribe to message creation.
@@ -61,7 +63,7 @@ export default class UiChatMessageContainer extends Component<
   /**
    * The debounce does 2 things, stop us from spamming the scroll from
    * new messages being rendered, and actually allow the next runloop
-   * to ocurr as this.chatContents and this.chatContainer aren't set
+   * to occur as this.chatContents and this.chatContainer aren't set
    * until then.
    */
   @action
@@ -70,6 +72,9 @@ export default class UiChatMessageContainer extends Component<
   }
 
   scrollToPosition() {
+    if (!this.args.windowInFocus) {
+      return;
+    }
     const chatHeight = this.chatContents?.clientHeight;
     if (chatHeight) {
       this.chatContainer?.scroll(0, chatHeight);
