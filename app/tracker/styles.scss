@@ -12,7 +12,8 @@ $headerHeight: 80px;
   }
 }
 .tracked-days {
-  width: 200px;
+  width: 195px;
+  border-right: 1px solid $border-colour;
   height: calc(100vh - #{$headerHeight});
   position: absolute;
   top: 0;

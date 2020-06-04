@@ -79,6 +79,7 @@ $containerHeight: calc(100vh - #{$timesheetHeight} - #{$headerHeight});
 }
 
 .timesheet {
+  border-top: 1px solid $border-colour;
   height: $timesheetHeight - 10px;
   width: calc(100vw - (#{$sideWidth} + 10px));
   padding-left: 10px;

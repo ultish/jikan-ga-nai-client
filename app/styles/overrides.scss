@@ -31,7 +31,7 @@
   background-color: initial;
 }
 .ember-power-select-multiple-option {
-  border: 1px solid darken($primary-1-colour, 30%); // #5ba9ff;
-  color: #ffffff;
-  background-color: $primary-1-colour; //#076ddf;
+  border: 1px solid darken($secondary-1-colour, 30%); // #5ba9ff;
+  color: $secondary-1-text-colour;
+  background-color: $secondary-1-colour; //#076ddf;
 }
