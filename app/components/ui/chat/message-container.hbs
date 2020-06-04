@@ -1,37 +1,44 @@
 <div
     id='chat-container'
     local-class="chat-container"
-  {{ref this 'chatContainer'}}
+
+    {{did-insert this.didInsert}}
+    {{ref this 'chatContainer'}}
 >
-  <div local-class="chat-contents" {{ref this 'chatContents'}}>
-    <div class="uk-inline uk-flex">
-      <button
-          disabled={{this.moarDisabled}}
-          type="button"
-          class="uk-button uk-button-default uk-flex-1"
-        {{on "click" this.fetchMore}}
-      >
-        Load Older...
-      </button>
+    <div local-class="chat-contents" {{ref this 'chatContents'}}>
+        <div class="uk-inline uk-flex">
+            <button
+                disabled={{this.moarDisabled}}
+                type="button"
+                class="uk-button uk-button-default uk-flex-1"
+                {{on "click" this.fetchMore}}
+            >
+                Load Older...
+            </button>
+        </div>
+        {{#each this.sortedMsgs as |msg|}}
+            <Ui::Chat::Message
+                @message={{msg}}
+                @notifyAction={{fn this.notifyScroll}}
+                @lastViewed={{eq this.lastViewedId msg.id}}
+                @lastObject={{eq msg this.sortedMsgs.lastObject}}
+            />
+        {{/each}}
     </div>
-    {{#each this.sortedMsgs as |msg|}}
-      <Ui::Chat::Message @message={{msg}} @notifyAction={{fn this.notifyScroll}} />
-    {{/each}}
-  </div>
 </div>
 <hr/>
 
 <form class="uk-flex" {{on "submit" this.createMessage}}>
-  <div class="uk-inline uk-flex-1">
-    <span class="uk-form-icon" uk-icon="icon: comment"></span>
-    <Input @value={{this.text}} class="uk-input" @autofocus="true"/>
-  </div>
-  <br/>
-  <Input
-      @type="submit"
-      @value="Send"
-      class="uk-button uk-button-primary uk-flex-none"
-  />
+    <div class="uk-inline uk-flex-1">
+        <span class="uk-form-icon" uk-icon="icon: comment"></span>
+        <Input @value={{this.text}} class="uk-input" @autofocus="true"/>
+    </div>
+    <br/>
+    <Input
+        @type="submit"
+        @value="Send"
+        class="uk-button uk-button-primary uk-flex-none"
+    />
 </form>
 
 {{yield}}

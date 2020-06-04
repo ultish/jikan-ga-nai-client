@@ -5,4 +5,6 @@ export interface Message {
   text: string;
   createdAt: Date;
   user: IUser;
+  seen?: boolean;
+  lastViewed?: boolean;
 }

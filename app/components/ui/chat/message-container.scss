@@ -1,7 +1,16 @@
 .chat-container {
   height: calc(100vh - 200px);
   overflow-y: auto;
+  padding-bottom: 10px;
 }
 
 .chat-contents {
+  > div {
+    &:global(.new-messages) {
+      text-align: center;
+      font-size: 9px;
+      color: $secondary-1-text-colour;
+      text-transform: uppercase;
+    }
+  }
 }

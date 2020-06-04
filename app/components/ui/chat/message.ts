@@ -7,6 +7,8 @@ import Authentication from "jikan-ga-nai/services/authentication";
 interface UiChatMessageArgs {
   message: Message;
   notifyAction: Function;
+  lastViewed: boolean;
+  lastObject: boolean;
 }
 
 /**

@@ -18,9 +18,7 @@ import queryMessages from "jikan-ga-nai/gql/queries/messages.graphql";
 import mutateCreateMessage from "jikan-ga-nai/gql/mutations/createMessage.graphql";
 import subMessageCreated from "jikan-ga-nai/gql/subscriptions/message-created.graphql";
 
-interface UiChatMessageContainerArgs {
-  windowInFocus: boolean;
-}
+interface UiChatMessageContainerArgs {}
 
 /**
  * the container will fetch messages and subscribe to message creation.
@@ -40,6 +38,14 @@ export default class UiChatMessageContainer extends Component<
   hasNextPage = false;
   @tracked
   text = "";
+  @tracked
+  windowInFocus = true;
+  @tracked
+  prevViewedSet = false;
+  @tracked
+  lastViewedId?: string;
+  @tracked
+  firstLoad = true;
 
   cursor: null | string = null;
   getMessagesQuery: null | GetMessages = null;
@@ -51,6 +57,9 @@ export default class UiChatMessageContainer extends Component<
   limit = 30;
 
   willDestroy() {
+    window.onfocus = null;
+    window.onblur = null;
+
     if (this.getMessagesQuery) {
       // remove our subscription to the watchQuery
       unsubscribe(this.getMessagesQuery);
@@ -60,6 +69,20 @@ export default class UiChatMessageContainer extends Component<
     }
   }
 
+  @action
+  didInsert() {
+    this.scrollToPosition();
+
+    // set initial state
+    this.windowInFocus = document.hasFocus();
+
+    window.onfocus = () => {
+      this.windowInFocus = true;
+    };
+    window.onblur = () => {
+      this.windowInFocus = false;
+    };
+  }
   /**
    * The debounce does 2 things, stop us from spamming the scroll from
    * new messages being rendered, and actually allow the next runloop
@@ -68,13 +91,15 @@ export default class UiChatMessageContainer extends Component<
    */
   @action
   notifyScroll() {
+    if (this.sortedMsgs && this.windowInFocus) {
+      const lastMsg = [...this.sortedMsgs].pop();
+      console.log("updating last sview", lastMsg.id);
+      this.lastViewedId = lastMsg.id;
+    }
     debounce(this, this.scrollToPosition, 200);
   }
 
   scrollToPosition() {
-    if (!this.args.windowInFocus) {
-      return;
-    }
     const chatHeight = this.chatContents?.clientHeight;
     if (chatHeight) {
       this.chatContainer?.scroll(0, chatHeight);
@@ -151,6 +176,24 @@ export default class UiChatMessageContainer extends Component<
 
     this.hasNextPage = messages.pageInfo.hasNextPage;
 
+    if (this.firstLoad) {
+      this.firstLoad = false;
+      const sorted = messages.edges.sort((a, b) => {
+        const aId = Number.parseInt(a.id);
+        const bId = Number.parseInt(b.id);
+
+        if (aId > bId) {
+          return 1;
+        } else if (aId < bId) {
+          return -1;
+        }
+        return 0;
+      });
+      if (sorted.length) {
+        this.lastViewedId = [...sorted].pop()?.id;
+      }
+    }
+
     return messages;
   };
 
@@ -179,6 +222,18 @@ export default class UiChatMessageContainer extends Component<
   })
   sortedMsgs!: [any];
 
+  sorter(a: any, b: any) {
+    const aId = Number.parseInt(a.id);
+    const bId = Number.parseInt(b.id);
+
+    if (aId > bId) {
+      return 1;
+    } else if (aId < bId) {
+      return -1;
+    }
+    return 0;
+  }
+
   /**
    * This function fetches more messages from the server using the
    * 'endCursor' that comes down as part of fetching messages. This
@@ -194,36 +249,40 @@ export default class UiChatMessageContainer extends Component<
    * in ED). This is a lot more work though than ED 😜
    */
   @action
-  fetchMore() {
-    this.observer?.fetchMore({
-      query: queryMessages,
-      variables: {
-        limit: this.limit,
-        cursor: this.cursor,
-      },
-      updateQuery: (previousResult: any, { fetchMoreResult }: any) => {
-        const previousEntry = previousResult.messages;
-        const newMessages = fetchMoreResult.messages.edges;
-        const newCursor = fetchMoreResult.messages.pageInfo.endCursor;
+  async fetchMore() {
+    try {
+      await this.observer?.fetchMore({
+        query: queryMessages,
+        variables: {
+          limit: this.limit,
+          cursor: this.cursor,
+        },
+        updateQuery: (previousResult: any, { fetchMoreResult }: any) => {
+          const previousEntry = previousResult.messages;
+          const newMessages = fetchMoreResult.messages.edges;
+          const newCursor = fetchMoreResult.messages.pageInfo.endCursor;
 
-        this.cursor = newCursor;
-        this.hasNextPage = fetchMoreResult.messages.pageInfo.hasNextPage;
+          this.cursor = newCursor;
+          this.hasNextPage = fetchMoreResult.messages.pageInfo.hasNextPage;
 
-        return {
-          messages: {
-            // By returning `cursor` here, we update the `fetchMore` function
-            // to the new cursor.
-            edges: [...newMessages, ...previousEntry.edges],
-            pageInfo: {
-              endCursor: newCursor,
-              hasNextPage: fetchMoreResult.messages.pageInfo.hasNextPage,
-              __typename: previousEntry.pageInfo.__typename,
+          return {
+            messages: {
+              // By returning `cursor` here, we update the `fetchMore` function
+              // to the new cursor.
+              edges: [...newMessages, ...previousEntry.edges],
+              pageInfo: {
+                endCursor: newCursor,
+                hasNextPage: fetchMoreResult.messages.pageInfo.hasNextPage,
+                __typename: previousEntry.pageInfo.__typename,
+              },
+              __typename: previousEntry.__typename,
             },
-            __typename: previousEntry.__typename,
-          },
-        };
-      },
-    });
+          };
+        },
+      });
+    } catch (e) {
+      console.warn("fetch more error", e);
+    }
   }
 
   @action

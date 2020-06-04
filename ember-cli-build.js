@@ -17,6 +17,9 @@ module.exports = function (defaults) {
     fingerprint: {
       exclude: ["images/spacex*"],
     },
+    invariantPlugin: {
+      errorCodes: false,
+    },
   });
 
   // Use `app.import` to add additional libraries to the generated

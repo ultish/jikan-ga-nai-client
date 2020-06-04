@@ -1,5 +1,22 @@
 .message {
-  padding-top: 15px;
+  margin-top: 15px;
+
+  &:global(.last-viewed) {
+    border-bottom: 1px solid $secondary-1-text-colour;
+    position: relative;
+
+    &:after {
+      content: "new messages";
+      text-align: center;
+      text-transform: uppercase;
+      font-size: 10px;
+      position: absolute;
+      bottom: 0px;
+      transform: translateY(100%);
+      right: 0;
+    }
+  }
+
   &:hover {
     background-color: $base-2-colour;
   }
