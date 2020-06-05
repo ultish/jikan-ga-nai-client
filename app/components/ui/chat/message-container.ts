@@ -41,7 +41,7 @@ export default class UiChatMessageContainer extends Component<
   @tracked
   windowInFocus = true;
   @tracked
-  prevViewedSet = false;
+  resetLastViewed = false;
   @tracked
   lastViewedId?: string;
   @tracked
@@ -78,6 +78,7 @@ export default class UiChatMessageContainer extends Component<
 
     window.onfocus = () => {
       this.windowInFocus = true;
+      this.resetLastViewed = true;
     };
     window.onblur = () => {
       this.windowInFocus = false;
@@ -93,7 +94,6 @@ export default class UiChatMessageContainer extends Component<
   notifyScroll() {
     if (this.sortedMsgs && this.windowInFocus) {
       const lastMsg = [...this.sortedMsgs].pop();
-      console.log("updating last sview", lastMsg.id);
       this.lastViewedId = lastMsg.id;
     }
     debounce(this, this.scrollToPosition, 200);
@@ -122,6 +122,17 @@ export default class UiChatMessageContainer extends Component<
         if (found) {
           // already have this msg
           return prev;
+        }
+
+        // when a new msg arrives, check if we are not in focus and if we need to reset the
+        // last viewed to be the last msg in the previous list
+        if (!this.windowInFocus && this.resetLastViewed) {
+          const latestMsg = [...prevMsgs].sortBy("id").pop();
+          if (latestMsg) {
+            // mark this msg as latest
+            this.lastViewedId = latestMsg.id;
+            this.resetLastViewed = false;
+          }
         }
 
         const newCache = {
@@ -292,62 +303,64 @@ export default class UiChatMessageContainer extends Component<
     if (!isPresent(this.text)) {
       return;
     }
+    try {
+      await this.apollo.mutate({
+        mutation: mutateCreateMessage,
+        variables: {
+          text: this.text,
+        },
+        update: (cache, result) => {
+          /*
+      we can read the query from the cache without providing any variables
+      here because we've set the messages.graphql with a @connection
+      directive that gives the query a stable key in the cache. Because
+      the paramaters in the directive ignore all other fields, any read
+      request from the cache for queryMessages will result in the same
+      object being returned.
 
-    await this.apollo.mutate({
-      mutation: mutateCreateMessage,
-      variables: {
-        text: this.text,
-      },
-      update: (cache, result) => {
-        /*
-        we can read the query from the cache without providing any variables
-        here because we've set the messages.graphql with a @connection
-        directive that gives the query a stable key in the cache. Because
-        the paramaters in the directive ignore all other fields, any read
-        request from the cache for queryMessages will result in the same
-        object being returned.
+      This means you can have multiple readQuery/writeQuery components all
+      updating each other and returning the same result.
+      */
+          const cachedMessages: any = cache.readQuery({
+            query: queryMessages,
+          });
 
-        This means you can have multiple readQuery/writeQuery components all
-        updating each other and returning the same result.
-        */
-        const cachedMessages: any = cache.readQuery({
-          query: queryMessages,
-        });
+          const newMessage = result?.data?.createMessage;
 
-        const newMessage = result?.data?.createMessage;
+          // use ?? to default values, won't be interpreted until necessary unlike ||
+          const currentMessages = cachedMessages?.messages?.edges ?? [];
+          const currentPageInfo = cachedMessages.messages.pageInfo;
 
-        // use ?? to default values, won't be interpreted until necessary unlike ||
-        const currentMessages = cachedMessages?.messages?.edges ?? [];
-        const currentPageInfo = cachedMessages.messages.pageInfo;
+          const found = currentMessages.find(
+            (msg: Message) => msg.id === newMessage.id
+          );
 
-        const found = currentMessages.find(
-          (msg: Message) => msg.id === newMessage.id
-        );
+          let messages = [...currentMessages];
+          if (!found) {
+            messages.pushObject(newMessage);
+          }
 
-        let messages = [...currentMessages];
-        if (!found) {
-          messages.pushObject(newMessage);
-        }
-
-        const newCache = {
-          messages: {
-            edges: messages,
-            pageInfo: {
-              endCursor: currentPageInfo.endCursor,
-              hasNextPage: currentPageInfo.hasNextPage,
-              __typename: currentPageInfo.__typename,
+          const newCache = {
+            messages: {
+              edges: messages,
+              pageInfo: {
+                endCursor: currentPageInfo.endCursor,
+                hasNextPage: currentPageInfo.hasNextPage,
+                __typename: currentPageInfo.__typename,
+              },
+              __typename: cachedMessages.messages.__typename,
             },
-            __typename: cachedMessages.messages.__typename,
-          },
-        };
+          };
 
-        cache.writeQuery({
-          query: queryMessages,
-          data: newCache,
-        });
-      },
-    });
-
+          cache.writeQuery({
+            query: queryMessages,
+            data: newCache,
+          });
+        },
+      });
+    } catch (e) {
+      console.log(e);
+    }
     this.text = "";
   }
 

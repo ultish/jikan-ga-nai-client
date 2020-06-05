@@ -14,7 +14,7 @@ import moment from "moment";
 import { A } from "@ember/array";
 
 import { TrackedTask } from "jikan-ga-nai/interfaces/tracked-task";
-
+import { inject as service } from "@ember/service";
 import { DayMode } from "jikan-ga-nai/interfaces/day-mode";
 import subTimesheetUpdated from "jikan-ga-nai/gql/subscriptions/timesheet-updated.graphql";
 import mutationCreateTrackedTask from "jikan-ga-nai/gql/mutations/createTrackedTask.graphql";
@@ -30,6 +30,7 @@ const TIMEBLOCK_WIDTH = 60;
 
 export default class TrackerDay extends Controller {
   @queryManager({ service: "custom-apollo" }) apollo!: CustomApolloService;
+  @service notifications!: any;
 
   @tracked containerWidth = 0;
   @tracked startTime = moment().startOf("day");
@@ -100,49 +101,57 @@ export default class TrackerDay extends Controller {
 
   @action
   modeChange(mode: DayMode) {
-    this.apollo.mutate({
-      mutation: mutationUpdateTrackedDay,
-      variables: {
-        id: this.model.trackedDay.id,
-        mode: mode,
-      },
-      updateQueries: {
-        trackedDay: (prev, { mutationResult, queryVariables }) => {
-          if (prev.trackedDay.id === queryVariables.trackedDayId) {
-            set(
-              prev.trackedDay,
-              "mode",
-              mutationResult?.data?.updateTrackedDay.mode
-            );
-          }
-          return prev;
+    try {
+      this.apollo.mutate({
+        mutation: mutationUpdateTrackedDay,
+        variables: {
+          id: this.model.trackedDay.id,
+          mode: mode,
         },
-      },
-    });
+        updateQueries: {
+          trackedDay: (prev, { mutationResult, queryVariables }) => {
+            if (prev.trackedDay.id === queryVariables.trackedDayId) {
+              set(
+                prev.trackedDay,
+                "mode",
+                mutationResult?.data?.updateTrackedDay.mode
+              );
+            }
+            return prev;
+          },
+        },
+      });
+    } catch (e) {
+      this.notifications.error("Apollo Error");
+    }
   }
   @action
   addTrackedTask() {
     // add here
     const trackedDayId = this.model.trackedDay.id;
-    this.apollo.mutate({
-      mutation: mutationCreateTrackedTask,
-      variables: {
-        trackedDayId: trackedDayId,
-      },
-      updateQueries: {
-        trackedTasks: (prev, { mutationResult, queryVariables }) => {
-          if (queryVariables.trackedDayId === this.model.trackedDay.id) {
-            if (mutationResult?.data?.createTrackedTask) {
-              // prev.timeBlocks.pushObject(mutationResult.data.createTimeBlock);
-              prev.trackedTasks.edges.pushObject(
-                mutationResult.data.createTrackedTask
-              );
-            }
-          }
-          return prev;
+    try {
+      this.apollo.mutate({
+        mutation: mutationCreateTrackedTask,
+        variables: {
+          trackedDayId: trackedDayId,
         },
-      },
-    });
+        updateQueries: {
+          trackedTasks: (prev, { mutationResult, queryVariables }) => {
+            if (queryVariables.trackedDayId === this.model.trackedDay.id) {
+              if (mutationResult?.data?.createTrackedTask) {
+                // prev.timeBlocks.pushObject(mutationResult.data.createTimeBlock);
+                prev.trackedTasks.edges.pushObject(
+                  mutationResult.data.createTrackedTask
+                );
+              }
+            }
+            return prev;
+          },
+        },
+      });
+    } catch (e) {
+      this.notifications.error("Apollo Error");
+    }
   }
 
   @action

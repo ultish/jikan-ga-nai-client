@@ -5,6 +5,7 @@ import Authentication from "jikan-ga-nai/services/authentication";
 
 export default class Application extends Controller {
   @service authentication!: Authentication;
+  @service notifications: any;
 
   @tracked
   greetings = "";

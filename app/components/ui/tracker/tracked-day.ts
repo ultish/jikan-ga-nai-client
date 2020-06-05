@@ -13,8 +13,9 @@ interface UiTrackedDayArgs {
   day: TrackedDay;
 }
 export default class UiTrackedDay extends Component<UiTrackedDayArgs> {
-  @service
-  router!: RouterService;
+  @service router!: RouterService;
+  @service notifications!: any;
+
   @queryManager({ service: "custom-apollo" }) apollo!: CustomApolloService;
 
   constructor(owner: unknown, args: UiTrackedDayArgs) {
@@ -32,27 +33,31 @@ export default class UiTrackedDay extends Component<UiTrackedDayArgs> {
 
     this.router.transitionTo("tracker");
 
-    this.apollo.mutate({
-      mutation: mutationDeleteTrackedDay,
-      variables: {
-        id: this.args.day.id,
-      },
-
-      updateQueries: {
-        trackedDays: (prev, { mutationResult }) => {
-          const deletedId = mutationResult?.data?.deleteTrackedDay;
-          if (deletedId) {
-            const toRemove = prev.trackedDays.edges.find(
-              (td: TrackedDay) => td.id === deletedId
-            );
-            if (toRemove) {
-              prev.trackedDays.edges.removeObject(toRemove);
-            }
-          }
-          return prev;
+    try {
+      this.apollo.mutate({
+        mutation: mutationDeleteTrackedDay,
+        variables: {
+          id: this.args.day.id,
         },
-      },
-    });
+
+        updateQueries: {
+          trackedDays: (prev, { mutationResult }) => {
+            const deletedId = mutationResult?.data?.deleteTrackedDay;
+            if (deletedId) {
+              const toRemove = prev.trackedDays.edges.find(
+                (td: TrackedDay) => td.id === deletedId
+              );
+              if (toRemove) {
+                prev.trackedDays.edges.removeObject(toRemove);
+              }
+            }
+            return prev;
+          },
+        },
+      });
+    } catch (e) {
+      this.notifications.error("Apollo Error");
+    }
   }
 
   @action

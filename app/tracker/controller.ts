@@ -21,6 +21,7 @@ import mutationCreateTrackedDay from "jikan-ga-nai/gql/mutations/createTrackedDa
 
 export default class Tracker extends Controller {
   @service router!: RouterService;
+  @service notifications!: any;
   @queryManager({ service: "custom-apollo" }) apollo!: CustomApolloService;
 
   @tracked
@@ -52,22 +53,25 @@ export default class Tracker extends Controller {
     if (!date) {
       return;
     }
-
-    this.apollo.mutate({
-      mutation: mutationCreateTrackedDay,
-      variables: {
-        date: date.valueOf(),
-        mode: DayMode.NORMAL,
-      },
-      updateQueries: {
-        trackedDays: (prev, { mutationResult }) => {
-          prev.trackedDays.edges.pushObject(
-            mutationResult?.data?.createTrackedDay
-          );
-          return prev;
+    try {
+      this.apollo.mutate({
+        mutation: mutationCreateTrackedDay,
+        variables: {
+          date: date.valueOf(),
+          mode: DayMode.NORMAL,
         },
-      },
-    });
+        updateQueries: {
+          trackedDays: (prev, { mutationResult }) => {
+            prev.trackedDays.edges.pushObject(
+              mutationResult?.data?.createTrackedDay
+            );
+            return prev;
+          },
+        },
+      });
+    } catch (e) {
+      this.notifications.error("Apollo Error");
+    }
   }
 
   @action

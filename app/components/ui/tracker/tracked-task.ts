@@ -2,6 +2,7 @@ import Component from "@glimmer/component";
 import { TrackedDay } from "jikan-ga-nai/interfaces/tracked-day";
 import moment from "moment";
 import { action, computed } from "@ember/object";
+import { inject as service } from "@ember/service";
 import { ScaleTime } from "d3-scale";
 import { tracked } from "@glimmer/tracking";
 // @ts-ignore
@@ -63,6 +64,7 @@ class DateBlock {
 
 export default class UiTrackedDay extends Component<UiTrackedTaskArgs> {
   @queryManager({ service: "custom-apollo" }) apollo!: CustomApolloService;
+  @service notifications!: any;
 
   lastBlockClicked: number | null = null;
   selectedBlocks: number[] = [];
@@ -95,29 +97,33 @@ export default class UiTrackedDay extends Component<UiTrackedTaskArgs> {
 
   @action
   deleteTrackedTask() {
-    this.apollo.mutate({
-      mutation: mutationDeleteTrackedTask,
-      variables: {
-        id: this.args.trackedTask.id,
-      },
-      updateQueries: {
-        trackedTasks: (prev, { mutationResult, queryVariables }) => {
-          this.args.trackedTask;
-          if (this.args.trackedDay.id === queryVariables.trackedDayId) {
-            let deletedId = mutationResult?.data?.deleteTrackedTask;
-            if (deletedId) {
-              const toRemove = prev.trackedTasks.edges.find(
-                (task: TrackedTask) => task.id === deletedId
-              );
-              if (toRemove) {
-                prev.trackedTasks.edges.removeObject(toRemove);
+    try {
+      this.apollo.mutate({
+        mutation: mutationDeleteTrackedTask,
+        variables: {
+          id: this.args.trackedTask.id,
+        },
+        updateQueries: {
+          trackedTasks: (prev, { mutationResult, queryVariables }) => {
+            this.args.trackedTask;
+            if (this.args.trackedDay.id === queryVariables.trackedDayId) {
+              let deletedId = mutationResult?.data?.deleteTrackedTask;
+              if (deletedId) {
+                const toRemove = prev.trackedTasks.edges.find(
+                  (task: TrackedTask) => task.id === deletedId
+                );
+                if (toRemove) {
+                  prev.trackedTasks.edges.removeObject(toRemove);
+                }
               }
             }
-          }
-          return prev;
+            return prev;
+          },
         },
-      },
-    });
+      });
+    } catch (e) {
+      this.notifications.error("Apollo Error");
+    }
   }
 
   @action
@@ -128,13 +134,17 @@ export default class UiTrackedDay extends Component<UiTrackedTaskArgs> {
     const chargeCodeIds: string[] = [];
     selection.forEach((cc) => chargeCodeIds.push(cc.id));
 
-    this.apollo.mutate({
-      mutation: mutationUpdateTrackedTask,
-      variables: {
-        id: this.args.trackedTask.id,
-        chargeCodeIds: chargeCodeIds,
-      },
-    });
+    try {
+      this.apollo.mutate({
+        mutation: mutationUpdateTrackedTask,
+        variables: {
+          id: this.args.trackedTask.id,
+          chargeCodeIds: chargeCodeIds,
+        },
+      });
+    } catch (e) {
+      this.notifications.error("Apollo Error");
+    }
   }
 
   @action
@@ -145,13 +155,17 @@ export default class UiTrackedDay extends Component<UiTrackedTaskArgs> {
       const notes = target.value;
 
       if (notes !== this.args.trackedTask.notes) {
-        this.apollo.mutate({
-          mutation: mutationUpdateTrackedTask,
-          variables: {
-            id: this.args.trackedTask.id,
-            notes: notes,
-          },
-        });
+        try {
+          this.apollo.mutate({
+            mutation: mutationUpdateTrackedTask,
+            variables: {
+              id: this.args.trackedTask.id,
+              notes: notes,
+            },
+          });
+        } catch (e) {
+          this.notifications.error("Apollo Error");
+        }
       }
     }
   }
@@ -230,54 +244,64 @@ export default class UiTrackedDay extends Component<UiTrackedTaskArgs> {
       run updateQueries to update the cache as it will auto-update, like
       how updateChargeCodes function works.
       */
-      // create a TimeBlock
-      yield this.apollo.mutate({
-        mutation: mutationCreateTimeBlock,
-        variables: {
-          trackedTaskId: this.args.trackedTask.id,
-          startTime: block.date.getTime(),
-          minutes: null,
-        },
-        updateQueries: {
-          timeBlocks: (prev, { mutationResult, queryVariables }) => {
-            if (queryVariables.trackedTaskId === this.args.trackedTask.id) {
-              if (mutationResult?.data?.createTimeBlock) {
-                prev.timeBlocks.pushObject(mutationResult.data.createTimeBlock);
-              }
-            }
-            return prev;
+      try {
+        // create a TimeBlock
+        yield this.apollo.mutate({
+          mutation: mutationCreateTimeBlock,
+          variables: {
+            trackedTaskId: this.args.trackedTask.id,
+            startTime: block.date.getTime(),
+            minutes: null,
           },
-        },
-      });
+          updateQueries: {
+            timeBlocks: (prev, { mutationResult, queryVariables }) => {
+              if (queryVariables.trackedTaskId === this.args.trackedTask.id) {
+                if (mutationResult?.data?.createTimeBlock) {
+                  prev.timeBlocks.pushObject(
+                    mutationResult.data.createTimeBlock
+                  );
+                }
+              }
+              return prev;
+            },
+          },
+        });
+      } catch (e) {
+        this.notifications.error("Apollo Error");
+      }
     } else if (block.getTimeBlockId()) {
       const timeBlockId = block.getTimeBlockId();
 
       // optimistacally setting this before graphql results for speed
       // block.checked = false;
 
-      // delete a TimeBlock
-      yield this.apollo.mutate({
-        mutation: mutationDeleteTimeBlock,
-        variables: {
-          id: timeBlockId,
-        },
-        updateQueries: {
-          timeBlocks: (prev, { mutationResult, queryVariables }) => {
-            if (queryVariables.trackedTaskId === this.args.trackedTask.id) {
-              const id = mutationResult?.data?.deleteTimeBlock;
-              if (id) {
-                const removed = prev.timeBlocks.findBy("id", id);
-                if (removed) {
-                  prev.timeBlocks.removeObject(removed);
-                  block.setTimeBlock(null);
+      try {
+        // delete a TimeBlock
+        yield this.apollo.mutate({
+          mutation: mutationDeleteTimeBlock,
+          variables: {
+            id: timeBlockId,
+          },
+          updateQueries: {
+            timeBlocks: (prev, { mutationResult, queryVariables }) => {
+              if (queryVariables.trackedTaskId === this.args.trackedTask.id) {
+                const id = mutationResult?.data?.deleteTimeBlock;
+                if (id) {
+                  const removed = prev.timeBlocks.findBy("id", id);
+                  if (removed) {
+                    prev.timeBlocks.removeObject(removed);
+                    block.setTimeBlock(null);
+                  }
                 }
               }
-            }
 
-            return prev;
+              return prev;
+            },
           },
-        },
-      });
+        });
+      } catch (e) {
+        this.notifications.error("Apollo Error");
+      }
     }
 
     // yield timeout(25);

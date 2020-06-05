@@ -3,7 +3,6 @@
     class={{if (and @lastViewed (not @lastObject)) 'last-viewed'}}
     {{did-insert this.setScrollPosition this}}
 >
-    {{@lastViewed}} {{@lastObject}} {{@message.id}}
     <div local-class="meta">
         <div local-class="user" class={{if this.isMe 'me'}}>{{@message.user.username}}</div>
         <div local-class="date">

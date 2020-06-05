@@ -22,7 +22,7 @@ const wsLink = new WebSocketLink({
 export default class CustomApollo extends ApolloService {
   @service router!: RouterService;
   @service authentication!: Authentication;
-
+  @service notifications: any;
   apolloClient: any;
 
   link() {
@@ -30,13 +30,17 @@ export default class CustomApollo extends ApolloService {
 
     // Middleware
     let authMiddleware = setContext(async (request, context) => {
-      // let token: string | null = this.authentication.getToken;
-      let token = this.authentication.getToken();
+      try {
+        // let token: string | null = this.authentication.getToken;
+        let token = this.authentication.getToken();
 
-      if (token) {
-        context.headers = {
-          "x-token": token,
-        };
+        if (token) {
+          context.headers = {
+            "x-token": token,
+          };
+        }
+      } catch (e) {
+        this.notifications.error("Apollo Error");
       }
       return context;
     });
@@ -44,6 +48,7 @@ export default class CustomApollo extends ApolloService {
     // Afterware
     const resetToken = onError((err) => {
       console.warn(err);
+      this.notifications.error("Apollo Error");
       const { graphQLErrors, networkError } = err;
 
       const error = networkError as ServerError;
@@ -54,6 +59,7 @@ export default class CustomApollo extends ApolloService {
 
       if (graphQLErrors) {
         console.error("i detect error 🤖", graphQLErrors);
+        this.notifications.error("Apollo Error");
       }
     });
 
