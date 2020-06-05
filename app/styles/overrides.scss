@@ -11,6 +11,10 @@
 .uk-button {
   color: $base-1-text-colour;
 }
+.uk-button-small {
+  line-height: 28px;
+  font-size: 0.875rem;
+}
 .uk-button-primary {
   background-color: $primary-1-colour;
   color: $primary-1-text-colour;
