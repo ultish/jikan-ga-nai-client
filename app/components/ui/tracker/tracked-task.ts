@@ -234,7 +234,7 @@ export default class UiTrackedDay extends Component<UiTrackedTaskArgs> {
   // @task({ enqueue: true })
   // updateCache: any = function* () {};
 
-  @task({ enqueue: true, maxConcurrency: 5 })
+  @task({ enqueue: true, maxConcurrency: 1 })
   timeBlockStateChange: any = function* (
     this: UiTrackedDay,
     block: DateBlock,
