@@ -9,7 +9,6 @@
 }
 
 .total {
-  //font-weight: bold;
   background: $secondary-1-colour;
   color: $secondary-1-text-colour;
 }
@@ -17,22 +16,23 @@
 .total-chargecode {
   background: $secondary-1-colour;
   color: $secondary-1-text-colour;
-  //font-weight: bold;
 }
 
-.yeti-table {
+table.yeti-table {
   &:global(.yeti-table) {
     color: $primary-1-text-colour;
   }
-  th {
-    &:global(.active) {
-      font-weight: bold;
-      color: white;
-    }
-  }
   thead {
     tr {
+      color: darken($primary-1-text-colour, 15%);
       background-color: $primary-1-colour;
+      th:global(.yeti-table-sorted) {
+        color: $primary-1-text-colour;
+      }
+      th:global(.active) {
+        font-weight: bold;
+        color: #f1f1f1;
+      }
     }
   }
   tbody {

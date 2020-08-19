@@ -8,6 +8,10 @@
   }
 }
 
+.uk-navbar-nav > li > a {
+  color: $base-1-text-colour;
+}
+
 .uk-button {
   color: $base-1-text-colour;
 }
@@ -31,6 +35,14 @@
   color: $base-1-text-colour;
 }
 
+.ember-basic-dropdown-content {
+  background-color: $base-2-colour;
+  color: $base-2-text-colour;
+}
+.ember-power-select-option[aria-selected="true"] {
+  background-color: $primary-1-colour;
+  color: $primary-1-text-colour;
+}
 .ember-power-select-trigger {
   background-color: initial;
 }

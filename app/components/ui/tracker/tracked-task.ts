@@ -122,7 +122,8 @@ export default class UiTrackedDay extends Component<UiTrackedTaskArgs> {
         },
       });
     } catch (e) {
-      this.notifications.error("Apollo Error");
+      // this.notifications.error("Apollo Error");
+      console.error("Apollo Error", e);
     }
   }
 
@@ -130,7 +131,10 @@ export default class UiTrackedDay extends Component<UiTrackedTaskArgs> {
   didResize() {}
 
   @action
-  updateChargeCodes(selection: ChargeCode[]) {
+  updateChargeCodes(selection: ChargeCode[], eps: any) {
+    // manually close eps
+    eps?.actions?.close();
+
     const chargeCodeIds: string[] = [];
     selection.forEach((cc) => chargeCodeIds.push(cc.id));
 
@@ -143,7 +147,8 @@ export default class UiTrackedDay extends Component<UiTrackedTaskArgs> {
         },
       });
     } catch (e) {
-      this.notifications.error("Apollo Error");
+      // this.notifications.error("Apollo Error");
+      console.error("Apollo Error", e);
     }
   }
 
@@ -164,7 +169,8 @@ export default class UiTrackedDay extends Component<UiTrackedTaskArgs> {
             },
           });
         } catch (e) {
-          this.notifications.error("Apollo Error");
+          // this.notifications.error("Apollo Error");
+          console.error("Apollo Error", e);
         }
       }
     }
@@ -267,7 +273,8 @@ export default class UiTrackedDay extends Component<UiTrackedTaskArgs> {
           },
         });
       } catch (e) {
-        this.notifications.error("Apollo Error");
+        // this.notifications.error("Apollo Error");
+        console.error("Apollo Error", e);
       }
     } else if (block.getTimeBlockId()) {
       const timeBlockId = block.getTimeBlockId();
@@ -300,7 +307,8 @@ export default class UiTrackedDay extends Component<UiTrackedTaskArgs> {
           },
         });
       } catch (e) {
-        this.notifications.error("Apollo Error");
+        // this.notifications.error("Apollo Error");
+        console.error("Apollo Error", e);
       }
     }
 

@@ -20,6 +20,10 @@ module.exports = function (environment) {
     apollo: {
       apiURL: `http://${process.env.GRAPHQL_HOST}:${process.env.GRAPHQL_PORT}/graphql`,
     },
+    "ember-cli-notifications": {
+      autoClear: true,
+      clearDuration: 1000,
+    },
 
     APP: {
       // Here you can pass flags/options to your application instance

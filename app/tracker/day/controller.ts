@@ -122,7 +122,8 @@ export default class TrackerDay extends Controller {
         },
       });
     } catch (e) {
-      this.notifications.error("Apollo Error");
+      // this.notifications.error("Apollo Error");
+      console.error("Apollo Error", e);
     }
   }
   @action
@@ -150,7 +151,8 @@ export default class TrackerDay extends Controller {
         },
       });
     } catch (e) {
-      this.notifications.error("Apollo Error");
+      // this.notifications.error("Apollo Error");
+      console.error("Apollo Error", e);
     }
   }
 

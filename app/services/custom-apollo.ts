@@ -40,15 +40,14 @@ export default class CustomApollo extends ApolloService {
           };
         }
       } catch (e) {
-        this.notifications.error("Apollo Error");
+        console.error("oh no...", e);
+        this.notifications.error("Apollo Authentication Error");
       }
       return context;
     });
 
     // Afterware
     const resetToken = onError((err) => {
-      console.warn(err);
-      this.notifications.error("Apollo Error");
       const { graphQLErrors, networkError } = err;
 
       const error = networkError as ServerError;
@@ -57,9 +56,14 @@ export default class CustomApollo extends ApolloService {
         this.authentication.logout(true);
       }
 
-      if (graphQLErrors) {
-        console.error("i detect error 🤖", graphQLErrors);
-        this.notifications.error("Apollo Error");
+      if (graphQLErrors && graphQLErrors.length) {
+        console.error("graphQL error 🤖", graphQLErrors);
+        debugger;
+        this.notifications.error(graphQLErrors[0]?.message, {
+          position: "bottom-right",
+        });
+      } else {
+        console.error("error: ", err);
       }
     });
 

@@ -56,7 +56,8 @@ export default class UiTrackedDay extends Component<UiTrackedDayArgs> {
         },
       });
     } catch (e) {
-      this.notifications.error("Apollo Error");
+      // this.notifications.error("Apollo Error");
+      console.error("Apollo Error", e);
     }
   }
 

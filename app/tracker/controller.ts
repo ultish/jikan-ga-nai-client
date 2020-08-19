@@ -49,12 +49,12 @@ export default class Tracker extends Controller {
   currentRouteName!: string;
 
   @action
-  dateAction(date: Date) {
+  async dateAction(date: Date) {
     if (!date) {
       return;
     }
     try {
-      this.apollo.mutate({
+      const output: any = await this.apollo.mutate({
         mutation: mutationCreateTrackedDay,
         variables: {
           date: date.valueOf(),
@@ -69,8 +69,20 @@ export default class Tracker extends Controller {
           },
         },
       });
+
+      const newId = output?.createTrackedDay?.id;
+      if (newId) {
+        this.transitionToRoute("tracker.day", newId);
+      }
     } catch (e) {
-      this.notifications.error("Apollo Error");
+      if (e.errors.length) {
+        const existingId = e.errors[0]?.extensions?.trackeddayId;
+        if (existingId) {
+          this.transitionToRoute("tracker.day", existingId);
+        }
+      } else {
+        console.error("Apollo Error", e);
+      }
     }
   }
 
