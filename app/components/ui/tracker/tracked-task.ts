@@ -421,7 +421,8 @@ export default class UiTrackedDay extends Component<UiTrackedTaskArgs> {
         // filter the ones in selected that don't match setCheckAll
         selected = selected
           .filter((square) => square.checked !== setCheckAll)
-          .sortBy("date");
+          .sortBy("date")
+          .uniqBy("date");
 
         for (let block of selected) {
           await this.timeBlockStateChange.perform(block, setCheckAll);
